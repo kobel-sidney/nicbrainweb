@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ 				xmlns="http://www.w3.org/1999/xhtml"
+	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:h="http://java.sun.com/jsf/html"
+	  			xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  			xmlns:p="http://primefaces.org/ui">
+
+	<f:view afterPhase="#{bbConfigDinamica.afterPhase}"/>
+
+	<div class="menu-esquerdo">
+		<h:panelGrid columns="1" width="100%" style="text-align:left">
+
+			<p:dataList value="#{bbConfigDinamica.modulosComItems}" var="menu"
+				type="definition">
+				<h:graphicImage value="#{menu.urlIcone}" id="menu"
+					styleClass="botaoMenu" />
+				<p:tooltip for="menu" value="#{menu.descricao}"
+					showEvent="mouseover" hideEvent="mouseout" showEffect="fade"
+					hideEffect="fade" style="color:black !important" />
+
+				
+				<p:tieredMenu model="#{bbSubMenu.getModel(menu.id)}"
+					style="width:250px" backLabel="#{i18n['button.back']}"
+					overlay="true" trigger="menu" my="left center" at="right bottom">
+				</p:tieredMenu>
+ 				
+			</p:dataList>
+
+		</h:panelGrid>
+
+	</div>
+	<script type="text/javascript">
+            var v = $("li.ui-widget.ui-menuitem.ui-corner-all.ui-menu-parent");
+            $(v).bind("mouseover",function(event){
+                var target = event.target;
+                var mItem;
+
+                if($(target).is("a")){
+                    mItem = $(target).siblings("ul.ui-menu-list");
+                }
+                else if($(target).is("span")){
+                    mItem = $(target).parent().siblings("ul.ui-menu-list"); 
+                }
+
+                if(mItem!=undefined){
+                 R   var parnt = $(mItem).parent();
+                    try{
+                        var parpos = $(parnt).offset();
+                        var x = parpos.left;
+                        var y = parpos.top;
+                        $(mItem).css('top',y);
+                        $(mItem).css('position','fixed');
+
+                    }catch(err){}
+                }
+            });
+        </script>
+
+</ui:composition>

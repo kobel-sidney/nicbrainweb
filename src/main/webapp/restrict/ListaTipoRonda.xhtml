@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core" 
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="layout.xhtml">
+	  
+	<ui:define name="tarefas">
+	
+	<h:form prependId="true" id="formtable"  >
+			<div align="center" class="estiloDiv">
+			<p:panel id="panel" style="width:50%">      
+<!--                 <h:panelGrid columns="1" > -->
+                
+                	<p:growl id="msg1" showDetail="true" />
+                	
+                	<p:contextMenu for="idTabela">  
+				        <p:menuitem value="#{i18n['button.delete']}" update=":formtable:idTabela :formtable:msg1" icon="ui-icon-close" 
+				                    actionListener="#{tipoRondaBean.excluir}"/>  
+				    </p:contextMenu>  
+				    	
+				     <p:dataTable id="idTabela" var="item" rowKey="#{item.id}" value="#{tipoRondaBean.tipoRondas}"
+							paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+							{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+							selectionMode="single">
+							
+							<p:ajax event="rowSelect" listener="#{tipoRondaBean.onSelect}" /> 
+	        				
+	        				 <p:column headerText="Tipo de Ronda" style="text-align:center">  							
+								<h:outputText value="#{item.nome}"/>
+							</p:column>	
+							
+							<p:column headerText="#{i18n['label.action']}" style="width: 20px;">
+							<p:commandButton id="btnConfirm"
+									title="#{i18n['button.delete']}" icon="ui-icon-trash" action="#{tipoRondaBean.excluir}">
+								<f:setPropertyActionListener value="#{item}" target="#{tipoRondaBean.tipoRonda}" />
+								<p:confirm header="Confirmação de exclusão"
+										message="Deseja excluir esse tipo de ronda permanentemente?"
+										icon="ui-icon-alert" />
+							</p:commandButton>
+						</p:column>
+							
+							<f:facet name="footer">  
+					        	<p:commandButton value="Novo Tipo de Ronda" process="@this" update="@form"
+					        					 action="#{tipoRondaBean.novo}"
+					        					 style="width:100%;text-align:center">
+						        </p:commandButton>
+				       		</f:facet> 
+					</p:dataTable>
+					        
+<!--                 </h:panelGrid> -->
+            </p:panel>
+            </div>
+            
+            <p:confirmDialog global="true">
+				<p:commandButton value="#{i18n['label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="#{i18n['label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+        </h:form>
+    </ui:define>
+ </ui:composition>
+				    
+							
+						

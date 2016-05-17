@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form id="formSetor">
+			<p:panel header="#{i18n['label.registration_official']}">
+
+				<p:messages closable="true" id="messages" />
+
+				<h:panelGrid id="gridPerson" columns="2" cellpadding="2">
+
+					<h:outputLabel for="usuario" value="#{i18n['label.user']}:" />
+					<p:selectOneMenu id="usuario" label="#{i18n['label.user']}"
+						value="#{funcionarioBean.usuario.id}" required="true">
+						<f:selectItem
+							itemLabel="#{i18n['label.select_a']} #{i18n['label.user']}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{bbUsuario.usuariosPorContexto}" var="user"
+							itemLabel="#{user.nome} - #{user.pessoa.nome}" itemValue="#{user.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="turno" value="#{i18n['label.rotation']}:" />
+					<p:selectOneMenu id="turno" label="#{i18n['label.rotation']}"
+						value="#{funcionarioBean.turno.id}">
+						<f:selectItem
+							itemLabel="#{i18n['label.select_a']} #{i18n['label.rotation']}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{bbTurno.turnos}" var="turno"
+							itemLabel="#{turno.nome}" itemValue="#{turno.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="cargo" value="#{i18n['label.post']}:" />
+					<p:selectOneMenu id="cargo" label="#{i18n['label.post']}"
+						value="#{funcionarioBean.cargo.id}" required="true">
+						<f:selectItem
+							itemLabel="#{i18n['label.select_a']} #{i18n['label.post']}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{bbCargo.cargos}" var="cargo"
+							itemLabel="#{cargo.nome}" itemValue="#{cargo.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="departamento"
+						value="#{i18n['label.department']}:" />
+					<p:selectOneMenu id="departamento"
+						label="#{i18n['label.department']}"
+						value="#{funcionarioBean.departamento.id}">
+						<f:selectItem
+							itemLabel="#{i18n['label.select_a']} #{i18n['label.department']}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{bbDepartamento.departamentos}" var="dep"
+							itemLabel="#{dep.nome}" itemValue="#{dep.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="func" value="#{i18n['label.immediate_superior']}:" />
+					<p:selectOneMenu id="func" label="#{i18n['label.immediate_superior']}"
+						value="#{funcionarioBean.funcionarioSuperior.id}">
+						<f:selectItem
+							itemLabel="#{i18n['label.select_a']} #{i18n['label.immediate_superior']}"
+							noSelectionOption="true" />
+						<f:selectItems value="#{bbFuncionario.funcionariosPorContratante}" var="func"
+							itemLabel="#{func.usuario.pessoa.nome}" itemValue="#{func.id}" />
+					</p:selectOneMenu>
+					
+					<h:outputLabel for="ativo" rendered="#{funcionarioBean.campoAtivoHabilitado}" value="#{i18n['label.active']}:" />
+					<p:selectBooleanCheckbox id="ativo" rendered="#{funcionarioBean.campoAtivoHabilitado}" value="#{funcionarioBean.funcionario.ativo}" label="#{i18n['label.active']}" />
+				</h:panelGrid>
+				<hr />
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{funcionarioBean.salvarOuAtualizar}" update="messages" />
+				<p:commandButton value="#{i18n['button.cancel']}" immediate="true"
+					action="#{funcionarioBean.cancelar}" update="messages" />
+
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

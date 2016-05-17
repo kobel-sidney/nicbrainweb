@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui">
+	
+	<div class="cabecalho">   
+		<div class="cabecalho-esquerda">
+			<p:graphicImage url="../images/cabecalho/logotipo.png" height="50" />
+		</div>
+		<div class="cabecalho-centro">
+			<h:outputLabel value="#{i18n['label.administrative_panel']}"
+				styleClass="estilo-label-titulo" />
+			<br/>
+			<h:outputLabel value="#{i18n['label.user']}:"
+				styleClass="estilo-label-titulo" />	
+			<h:outputLabel value="#{bbUsuarioLogado.userSession.nome}"
+				styleClass="estilo-label-titulo" />				
+		</div>		
+		<div class="cabecalho-direito1">		
+				<h:outputLabel value=""/> 
+<!-- 			<p:graphicImage url="#{bbConfigDinamica.urlLogotipo}" -->
+<!-- 			cache="false"  rendered="true" alt="urlLogotipo"/>			 -->
+		</div>				
+		<div class="cabecalho-direito2">			
+			<h:commandLink immediate="true">
+				<f:actionListener type="br.com.kolss.bbeans.BbLocale" />
+				<f:attribute name="languageCode" value="pt" />
+				<p:graphicImage url="../images/iconesNovos/idioma-port.png"
+					alt="Português" title="Português" width="20%" height="20%"
+					style="border: 0px; margin-right: 1em;" />
+			</h:commandLink>			
+			<h:commandLink immediate="true">
+				<f:actionListener type="br.com.kolss.bbeans.BbLocale" /> 
+				<f:attribute name="languageCode" value="en" />
+				<p:graphicImage url="../images/iconesNovos/idioma-ingles.png"
+						alt="English" title="English"
+						width="20%" height="20%" style="border: 0px; margin-right: 1em;" />
+			</h:commandLink>
+		</div>
+		<div class="cabecalho-direito3">
+			<p:button outcome="Logout" value="#{i18n['button.logout']}"
+				icon="ui-icon-home"
+				href="#{facesContext.externalContext.requestContextPath}/j_spring_security_logout" />
+		</div>
+
+
+	</div>
+</ui:composition>

@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formTurno">
+			<p:panel id="panel" header="#{i18n['label.rotation']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="id" value="#{turnoBean.model.id}" />
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="20" value="#{turnoBean.model.nome}"
+						required="true" label="nome"
+						requiredMessage="#{i18n['message.required_field.name']}">
+						<f:validateLength minimum="2" />
+					</p:inputText>
+
+					<h:outputLabel for="descricao"
+						value="#{i18n['label.description']}:&nbsp;" />
+					<p:inputText id="descricao" size="40"
+						value="#{turnoBean.model.descricao}" required="false"
+						label="descricao">
+					</p:inputText>
+
+					<h:outputLabel for="ativo" value="#{i18n['label.active']}:" />
+					<p:selectOneRadio id="ativo" value="#{turnoBean.model.ativo}"
+						label="#{i18n['label.active']}">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+					<h:outputLabel for="turnDuration"
+						value="#{i18n['label.turn_duration']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="turnDuration" size="11"
+						value="#{turnoBean.model.duracaoTurno}" required="true"
+						label="turnDuration">
+					</p:inputText>
+
+					<h:outputLabel for="horaInicio"
+						value="#{i18n['label.start_time']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:calendar id="horaInicio" value="#{turnoBean.model.horaInicio}"
+						required="true" pattern="HH:mm a" timeOnly="true" />
+
+					<h:outputLabel for="horaFim"
+						value="#{i18n['label.end_time']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:calendar id="horaFim" value="#{turnoBean.model.horaFim}"
+						required="true" pattern="HH:mm a" timeOnly="true" />
+
+					<h:outputLabel for="observacao"
+						value="#{i18n['label.observacao']}:&nbsp;" />
+					<p:inputText id="observacao" size="40"
+						value="#{turnoBean.model.observacao}" required="false"
+						label="observacao">
+					</p:inputText>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{turnoBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{turnoBean.cancel}" icon="ui-icon ui-icon-close"
+					update="@form" process="@this" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

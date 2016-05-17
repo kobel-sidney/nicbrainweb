@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+    <ui:define name="tarefas">
+
+        <h:form id="formTrocaVeiculo">
+            <p:growl id="msg0" autoUpdate="true" />
+
+            <p:panel id="panel" header="Ronda" style="margin-bottom:10px;">
+
+                <h:panelGrid columns="2">
+                    <h:outputLabel for="nome" value="Nome: *" />
+                    <p:inputText required="true" id="nome" value="#{rondaBean.ronda.descricao}" disabled="#{rondaBean.ronda.fim != null}" />
+
+                    <h:outputLabel for="somVeiculo" value="#{i18n['label.vehicle']}: " />
+                    <p:selectOneMenu id="somVeiculo" value="#{rondaBean.ronda.veiculo.id}" disabled="#{rondaBean.ronda.fim != null}"
+                                     requiredMessage="#{i18n['message.required_field.choice_a_vehicle']}">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"	noSelectionOption="true" />
+                        <f:selectItems value="#{bbVeiculo.veiculosPorCliente}" var="item" itemValue="#{item.id}" itemLabel="#{item.nome}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="local"
+                                   value="#{i18n['label.venue']}:&nbsp;#{i18n['label.token.required_field']}" />
+                    <p:selectOneMenu id="local" value="#{rondaBean.ronda.local.id}" disabled="#{rondaBean.ronda.fim != null}"
+                                     required="true"
+                                     requiredMessage="#{i18n['message.required_field.choice_a_venue']}">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" noSelectionOption="true" />
+                        <f:selectItems value="#{bbLocal.locaisPorCliente}" var="item"
+                                       itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="comboSetor"
+                                   value="#{i18n['label.setor']}: " />
+                    <p:selectOneMenu id="comboSetor"
+                                     value="#{rondaBean.ronda.setor.id}" disabled="#{rondaBean.ronda.fim != null}"
+                                     requiredMessage="#{i18n['message.required_field.choice_a_setor']}">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" noSelectionOption="true" />
+                        <f:selectItems value="#{bbSetor.setoresPorCliente}" var="item"
+                                       itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="tipo"
+                                   value="Tipo de ronda: *" />
+                    <p:selectOneMenu id="tipo"
+                                     value="#{rondaBean.ronda.tipoRonda.id}" required="true" disabled="#{rondaBean.ronda.fim != null}"
+                                     requiredMessage="Escolha um tipo">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" noSelectionOption="true" />
+                        <f:selectItems value="#{bbTipoRonda.tipos}" var="item"
+                                       itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="responsavelRonda"
+                                   value="Responsável pela ronda: *" />
+                    <p:selectOneMenu id="responsavelRonda"
+                                     value="#{rondaBean.ronda.responsavelRonda.id}" required="true" disabled="#{rondaBean.ronda.fim != null}"
+                                     requiredMessage="Escolha um responsável">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" noSelectionOption="true" />
+                        <f:selectItems value="#{bbUsuario.usuariosPorContratante}" var="item"
+                                       itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+
+            </p:panel>
+
+            <p:panel id="addPersonPanel" header="#{i18n['label.vehicle_occupants']}" >
+
+                <h:panelGrid columns="3">
+
+                    <h:outputLabel for="pessoa"
+                                   value="Pessoa: " />
+                    <p:selectOneMenu id="pessoa"
+                                     value="#{rondaBean.pessoa.id}" disabled="#{rondaBean.ronda.fim != null}" >
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="-1" />
+                        <f:selectItems value="#{bbPessoa.pessoas}" var="item"
+                                       itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="#{i18n['button.add']}&nbsp;#{i18n['label.person']}" disabled="#{rondaBean.ronda.fim != null}" id="cmdAddPerson" update="tabelaPessoa"  
+                                     icon="ui-icon-plus" action="#{rondaBean.adicionarTripulante}" process="@form" />
+
+                </h:panelGrid>
+
+                <p:dataTable id="tabelaPessoa" var="item" value="#{rondaBean.tripulantes}" 
+                             paginator="false" rows="5"	emptyMessage="#{i18n['message.registry.not_found']}" style="padding-bottom: 10px;">
+
+                    <p:column style="text-align:center" headerText="#{i18n['label.name']}">
+                        <h:outputText value="#{item.nome}" />
+                    </p:column>
+
+                    <p:column style="width:25px;text-align:center" headerText="#{i18n['label.action']}">
+                        <p:commandButton icon="ui-icon-trash" action="#{rondaBean.removerTripulante}" update="tabelaPessoa" >
+                            <f:setPropertyActionListener target="#{rondaBean.pessoa}" value="#{item}" />
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:commandButton value="Ronda Finalizada" rendered="#{rondaBean.ronda.fim != null}" />
+                <p:commandButton value="Voltar para Lista" actionListener="#{rondaBean.cancelar}" rendered="#{rondaBean.ronda.fim != null}" />
+
+                <p:commandButton value="Salvar"	action="#{rondaBean.iniciarRonda}" id="withIcon" update="@form" icon="ui-icon-disk" rendered="#{rondaBean.ronda.inicio == null or rondaBean.ronda.fim == null}" />
+                <p:commandButton value="#{i18n['button.cancel']}" actionListener="#{rondaBean.cancelar}" icon="ui-icon ui-icon-close" update="@form" process="@this" rendered="#{rondaBean.ronda.inicio == null or rondaBean.ronda.fim == null}" />
+
+                <p:spacer width="75%;" height="0px;"></p:spacer>
+                <p:commandButton value="Finalizar Ronda" action="#{rondaBean.finalizarRonda}" rendered="#{rondaBean.ronda.inicio != null and rondaBean.ronda.fim == null}" />
+            </p:panel>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

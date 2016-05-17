@@ -1,0 +1,67 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+    <ui:define name="tarefas">
+
+        <h:form id="formUser">
+            <div align="center" class="estiloDiv">
+                <p:panel id="panel" style="width:50%">
+                    <p:growl id="msg1" showDetail="true" />
+
+                    <p:dataTable id="userTable" var="user"
+                                 emptyMessage="#{i18n['message.empty_table']}" paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                                 {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" rows="10" paginatorAlwaysVisible="false"
+                                 value="#{bbUsuario.usuariosDTO}" selectionMode="single"
+                                 rowKey="#{user.idUsuario}}" style="margin-top: 10px; margin-bottom: 10px">
+
+                        <p:ajax event="rowSelect" listener="#{usuarioBean.rowSelect}" />
+
+                        <p:column filterBy="#{user.nomeCliente}" headerText="Cliente">
+                            <h:outputText value="#{user.nomeCliente}" />
+                        </p:column>
+
+                        <p:column headerText="Usuário">
+                            <h:outputText value="#{user.nome}" />
+                        </p:column>
+
+                        <p:column headerText="#{i18n['label.email']}">
+                            <h:outputText value="#{user.email}" />
+                        </p:column>
+
+                        <p:column headerText="#{i18n['label.action']}"
+                                  style="width: 30px;">
+                            <p:commandButton title="#{i18n['button.delete']}"
+                                             icon="ui-icon-trash"
+                                             action="#{usuarioBean.excluir}"
+                                             update=":formUser:userTable">
+                                <f:setPropertyActionListener value="#{user}"
+                                                             target="#{usuarioBean.usuarioDTO}" />
+                                <p:confirm header="Confirmação de exclusão"
+                                           message="Deseja excluir esse usuário permanentemente? Se deseja somente desativá-la use o campo ativo do formulário."
+                                           icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="#{i18n['button.new_user']}"
+                                             action="#{usuarioBean.criarNovo}"
+                                             style="width:100%;text-align:center" />
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </div>
+
+            <p:confirmDialog global="true">
+                <p:commandButton value="#{i18n['label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{i18n['label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>
+

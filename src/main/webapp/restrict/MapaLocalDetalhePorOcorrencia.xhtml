@@ -1,0 +1,450 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+		
+	<ui:define name="tarefas">
+		<p:growl id="msg1" showDetail="true"/>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"/>
+		<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"/>
+		<script type="text/javascript">
+//<![CDATA[
+
+var mainMap;
+var plantaBaixaL0Overlay;
+var plantaBaixaL1Overlay;
+var plantaBaixarRioCentroOverlay;
+
+var ocorrenciaMarkers;
+var ambulanciaMarkers;
+var bombeiroMarkers;
+var policiaMarkers;
+var cameraMarkers;
+
+var ocArray = new Array();
+var amArray = new Array();
+var bmArray = new Array();
+var poArray = new Array();
+var l0Array = new Array();
+var l1Array = new Array();
+
+var infoWindowSingleton = new google.maps.InfoWindow();
+//]]>
+	</script>
+
+		<h:form prependId="false" id="formMapa">
+			
+			<h:inputHidden id="mainLat" value="#{mapaLocalDetalheBean.local.latitude}"/>
+			<h:inputHidden id="mainLng" value="#{mapaLocalDetalheBean.local.longitude}"/>
+			
+			<!-- ultimas ocorrencias -->
+			<p:remoteCommand name="getCoordenadasOcorrencia" update=":formMapa:coordenadasOcorrencia" resetValues="true"/>
+			<h:inputHidden id="coordenadasOcorrencia" value="#{mapaLocalDetalheBean.ocorrencias}"/>
+			
+			<!-- ambulancia -->
+			<p:remoteCommand name="getCoordenadasAmbulancia" update=":formMapa:coordenadasAmbulancia" resetValues="true"/>
+			<h:inputHidden id="coordenadasAmbulancia" value="#{mapaLocalDetalheBean.ambulancias}"/>
+			
+			<!-- bombeiro -->
+			<p:remoteCommand name="getCoordenadasBombeiro" update=":formMapa:coordenadasBombeiro" resetValues="true"/>
+			<h:inputHidden id="coordenadasBombeiro" value="#{mapaLocalDetalheBean.bombeiros}"/>
+			
+			<!-- policia -->
+			<p:remoteCommand name="getCoordenadasPolicia" update=":formMapa:coordenadasPolicia" resetValues="true"/>
+			<h:inputHidden id="coordenadasPolicia" value="#{mapaLocalDetalheBean.policias}"/>
+			
+			<!-- camera L0 -->
+			<p:remoteCommand name="getCoordenadasCameraL0" update=":formMapa:coordenadasCameraL0" resetValues="true"/>
+			<h:inputHidden id="coordenadasCameraL0" value="#{mapaLocalDetalheBean.camerasL0}"/>
+			
+			<!-- camera L1 -->
+			<p:remoteCommand name="getCoordenadasCameraL1" update=":formMapa:coordenadasCameraL1" resetValues="true"/>
+			<h:inputHidden id="coordenadasCameraL1" value="#{mapaLocalDetalheBean.camerasL1}"/>
+			
+			<div class="estiloDiv">
+				<p:panel id="pnlButtons">
+				
+					<!-- 
+					<p:selectBooleanCheckbox onchange="showPlantaBaixa();" />
+					<h:outputText value="Exibir planta baixa"/>
+					&nbsp;
+					<p:selectBooleanCheckbox onchange="showOcorrencias(this);" />
+					<h:outputText value="Exibir Ocorr&ecirc;ncias"/>
+					&nbsp;
+					<p:selectBooleanCheckbox onchange="showAmbulancias(this);" />
+					<h:outputText value="Exibir Ambul&acirc;ncias"/>
+					-->
+					
+					<!-- TODO: Retirar este c�digo chumbado -->
+					<p:selectOneButton id="maracanaBtn" onchange="showPlantaBaixa(this);"
+							rendered="#{mapaLocalDetalheBean.local.id == '4'}">
+						<f:selectItem itemLabel="#{i18n['label.without_map']}" itemValue="0" />
+						<f:selectItem itemLabel="#{i18n['label.level']}:&nbsp;0" itemValue="1" />
+						<f:selectItem itemLabel="#{i18n['label.level']}:&nbsp;1" itemValue="2" />
+					</p:selectOneButton>
+					<p:selectOneButton id="rioCentroBtn" onchange="showPlantaBaixaRioCentro(this);"
+							rendered="#{mapaLocalDetalheBean.local.id == 17}">
+						<f:selectItem itemLabel="#{i18n['label.without_map']}" itemValue="0" />
+						<f:selectItem itemLabel="#{i18n['label.level']}:&nbsp;0" itemValue="1" />
+					</p:selectOneButton>
+					
+					&nbsp;
+					<p:selectBooleanButton onLabel="#{i18n['label.ocurrences']}" offLabel="#{i18n['label.ocurrences']}"
+							onIcon="ui-icon-check" offIcon="ui-icon-close" onchange="showOcorrencias(this);" />
+					&nbsp;
+					<p:selectBooleanButton onLabel="#{i18n['label.ambulances']}" offLabel="#{i18n['label.ambulances']}"
+							onIcon="ui-icon-check" offIcon="ui-icon-close" onchange="showAmbulancias(this)" />
+					&nbsp;
+					<p:selectBooleanButton onLabel="#{i18n['label.firemen']}" offLabel="#{i18n['label.firemen']}"
+							onIcon="ui-icon-check" offIcon="ui-icon-close" onchange="showBombeiros(this)" />
+					&nbsp;
+					<p:selectBooleanButton onLabel="#{i18n['label.police']}" offLabel="#{i18n['label.police']}"
+							onIcon="ui-icon-check" offIcon="ui-icon-close" onchange="showPolicias(this)" />
+				</p:panel>
+			
+					<div id="map-canvas" style="width:100%;height:90%;position:absolute;"></div>			
+			</div>
+		</h:form>
+		
+		<script type="text/javascript">
+//<![CDATA[
+
+function initialize() {
+	
+	// Monta o mapa:
+	var newark = new google.maps.LatLng(
+			document.getElementById('mainLat').value,
+			document.getElementById('mainLng').value);
+	var mapOptions = {
+			zoom: 17,
+			mapTypeId: google.maps.MapTypeId.HYBRID,
+			center: newark
+			};
+	mainMap = new google.maps.Map(
+			document.getElementById('map-canvas'),
+			mapOptions);
+	
+	var imageBounds = new google.maps.LatLngBounds(
+			new google.maps.LatLng(-22.914108, -43.232133)
+			,
+			new google.maps.LatLng(-22.910132, -43.228336)
+			);
+
+	// planta baixa L0:
+	plantaBaixaL0Overlay = new google.maps.GroundOverlay(
+			'../images/estadios/maracana-L0-planta_baixa.png',
+			imageBounds);
+	
+	// planta baixa L1:
+	plantaBaixaL1Overlay = new google.maps.GroundOverlay(
+			'../images/estadios/maracana-L1-planta_baixa.png',
+			imageBounds);
+	
+	// planta baixa Rio Centro:
+	var imageBoundsRioCentro = new google.maps.LatLngBounds(
+			new google.maps.LatLng(-22.983250, -43.417616),
+			new google.maps.LatLng(-22.974524, -43.407624));
+	
+	plantaBaixarRioCentroOverlay =  new google.maps.GroundOverlay(
+			'../images/estadios/riocentro-L0-planta_baixa.png',
+			imageBoundsRioCentro);
+
+
+	// Markers das ocorrencias:
+	ocorrenciaMarkers = new MarkerClusterer(mainMap);
+	
+	// Markers das ambulancias:
+	ambulanciaMarkers = new MarkerClusterer(mainMap);
+	
+	// Markers dos bombeiros:
+	bombeiroMarkers = new MarkerClusterer(mainMap);
+	
+	// Markers da policia:
+	policiaMarkers = new MarkerClusterer(mainMap);
+	
+	// Markers da cameras:
+	cameraMarkers = new MarkerClusterer(mainMap);
+}
+
+/**
+ * Exibe/Oculta a planta baixa do estadio 
+ */
+function showPlantaBaixa(sel) {
+	plantaBaixaL0Overlay.setMap(null);
+	showCamerasL0(false);
+	plantaBaixaL1Overlay.setMap(null);
+	showCamerasL1(false);
+	
+	switch(sel.value) {
+	case '1':
+		plantaBaixaL0Overlay.setMap(mainMap);
+		showCamerasL0(true);
+	  break;
+	case '2':
+		plantaBaixaL1Overlay.setMap(mainMap);
+		showCamerasL1(true);
+	  break;
+	}
+}
+
+ /**
+  * Exibe/Oculta a planta baixa do Rio Centro
+  */
+function showPlantaBaixaRioCentro(sel) {
+	plantaBaixarRioCentroOverlay.setMap(null);
+	showCamerasL0(false);
+	
+	switch(sel.value) {
+	case '1':
+		plantaBaixarRioCentroOverlay.setMap(mainMap);
+		showCamerasL0(true);
+	  break;
+	}
+}
+
+
+/**
+ * Exibe/Oculta os markers de ocorrencia.
+ *
+ * chk: Componente checkbox que indica se deve-se exibir ou ocultar as 
+ * ocorrencias.
+ */
+function showOcorrencias(chk) {
+	getCoordenadasOcorrencia();
+	if (chk.checked) {
+		ocArray = new Array();
+		var markersData = document.getElementById("coordenadasOcorrencia").value.split(",");
+		for (var i = 0; i < markersData.length; i++) {
+			
+			// FIXME: N�o pode mudar (ainda) a ordem das vari�veis:
+			var _title = markersData[i++];
+			var _lat = markersData[i++];
+			var _lng = markersData[i++];
+			var classificacao = markersData[i++];
+			var horaInicio = markersData[i++];
+			var nomeResponsavel = markersData[i++];
+			var foto_img = markersData[i];
+			
+			var _infoWindowContent = "<div>"
+				+ "<h1>" + "#{i18n['label.details']}" + "</h1>"
+				+ "<div>"
+				+ "<p>"
+				+ "<b>#{i18n['label.classification']}:</b>&nbsp;" + classificacao + "</br>"
+				+ "<b>#{i18n['label.date_time']}:</b>&nbsp;" + horaInicio + "</br>"
+				+ "<b>#{i18n['label.responsible']}:</b>&nbsp;" + nomeResponsavel + "</br>"
+				+ "</p>"
+				+ ((foto_img == null || foto_img == undefined || foto_img.length <= 0) ? "" : "<img src='data:image/PNG;base64," + foto_img + "' width='256' height='128'/></br>")
+				+ "</div>";
+				+ "</div>";
+			
+			var oc = new google.maps.Marker({
+				draggable: false,
+				title: _title,
+				animation: google.maps.Animation.DROP,
+				html: _infoWindowContent,
+				position: new google.maps.LatLng(
+						_lat,
+						_lng)
+			});
+			
+			ocArray.push(oc);
+			
+			// Monta o InfoWindow:
+			google.maps.event.addListener(oc, 'click', function() {
+				infoWindowSingleton.setContent(this.html);
+				infoWindowSingleton.open(mainMap, this);
+			});
+			
+		}
+		
+		ocorrenciaMarkers.addMarkers(ocArray);
+		
+	} else {
+		removerMarkers(ocorrenciaMarkers, ocArray);
+	}
+}
+
+/**
+ * Exibe/Oculta os markers de ambulancia.
+ *
+ * chk: Componente checkbox que indica se deve-se exibir ou ocultar as 
+ * ambulancias.
+ */
+function showAmbulancias(chk) {
+	getCoordenadasAmbulancia();
+	if (chk.checked) {
+		amArray = new Array();
+		popularMarkers(ambulanciaMarkers, amArray, "coordenadasAmbulancia");
+	} else {
+		removerMarkers(ambulanciaMarkers, amArray);
+	}
+}
+
+/**
+ * Exibe/Oculta os markers de bombeiros.
+ *
+ * chk: Componente checkbox que indica se deve-se exibir ou ocultar os 
+ * bombeiros.
+ */
+function showBombeiros(chk) {
+	getCoordenadasBombeiro();
+	if (chk.checked) {
+		bmArray = new Array();
+		popularMarkers(bombeiroMarkers, bmArray, "coordenadasBombeiro");
+	} else {
+		removerMarkers(bombeiroMarkers, bmArray);
+	}
+}
+
+/**
+ * Exibe/Oculta os markers dos postos de policia.
+ *
+ * chk: Componente checkbox que indica se deve-se exibir ou ocultar os postos
+ * de policia.
+ */
+function showPolicias(chk) {
+	getCoordenadasPolicia();
+	if (chk.checked) {
+		poArray = new Array();
+		popularMarkers(policiaMarkers, poArray, "coordenadasPolicia");
+	} else {
+		removerMarkers(policiaMarkers, poArray);
+	}
+}
+
+/**
+ * Exibe/Oculta os markers das cameras do n�vel L0
+ *
+ * chk: Componente checkbox que indica se deve-se exibir ou ocultar as cameras 
+ * do n�vel L0
+ */
+function showCamerasL0(isVisivel) {
+	getCoordenadasCameraL0();
+	if (isVisivel) {
+		l0Array = new Array();
+		popularCameraMarkers(cameraMarkers, l0Array, "coordenadasCameraL0");
+	} else {
+		removerMarkers(cameraMarkers, l0Array);
+	}
+}
+
+ /**
+  * Exibe/Oculta os markers das cameras do n�vel L1
+  *
+  * chk: Componente checkbox que indica se deve-se exibir ou ocultar as cameras 
+  * do n�vel L1
+  */
+ function showCamerasL1(isVisivel) {
+	getCoordenadasCameraL1();
+ 	if (isVisivel) {
+ 		l1Array = new Array();
+ 		popularCameraMarkers(cameraMarkers, l1Array, "coordenadasCameraL1");
+ 	} else {
+ 		removerMarkers(cameraMarkers, l1Array);
+ 	}
+ }
+
+/**
+ * 
+ * markerClusterer: Um 'MarkerClusterer' que armazena o grupo de Markers.
+ * markers: Array de Markers a ser removido do 'MarkerClusterer'.
+ */
+function popularMarkers(markerClusterer, markers, hiddenData) {
+	var markersData = document.getElementById(hiddenData).value.split(",");
+	for (var i = 0; i < markersData.length; i++) {
+		var _title = markersData[i++];
+		var _marker = new google.maps.Marker({
+			draggable: false,
+			title: _title,
+			icon: "data:image/PNG;base64," + markersData[i++],
+			position: new google.maps.LatLng(
+					markersData[i++],
+					markersData[i])
+		});
+		
+		markers.push(_marker);
+	}
+	
+	markerClusterer.addMarkers(markers);
+}
+
+/**
+ * 
+ * markerClusterer: Um 'MarkerClusterer' que armazena o grupo de Markers.
+ * markers: Array de Markers a ser removido do 'MarkerClusterer'.
+ */
+function popularCameraMarkers(markerClusterer, markers, hiddenData) {
+	var markersData = document.getElementById(hiddenData).value.split(",");
+	for (var i = 0; i < markersData.length; i++) {
+		
+		// FIXME: N�o pode mudar (ainda) a ordem das vari�veis:
+		var _id = "modal_camera_id_" + markersData[i++];
+		var _title = markersData[i++];
+		var _icone = markersData[i++];
+		var _lat = markersData[i++];
+		var _lng = markersData[i++];
+		var nomeEquipamento = markersData[i++];
+		var modeloEquipamento = markersData[i++];
+		var link = markersData[i];
+		
+		var _infoWindowContent = "<div>"
+			+ "<h2>" + nomeEquipamento + "</h2>"
+			+ "<div>"
+			+ "<object classid='clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921' width='200' height='150' codebase='http://www.videolan.org/vlc/#download'>"
+			+ "<embed type='application/x-vlc-plugin' pluginspage='http://www.videolan.org' id='" + _id + "' width='200' height='150' autoplay='true' controls='true' mute='true' target='" + link + "'/>"
+			+ "</object>"
+
+			+ "</div>"
+			+ "</div>";
+		
+		var _marker = new google.maps.Marker({
+//  			idEmbed : _id,
+			draggable: false,
+			title: _title,
+			icon: "data:image/PNG;base64," + _icone,
+			html: _infoWindowContent,
+			position: new google.maps.LatLng(
+					_lat,
+					_lng)
+			});
+		
+		markers.push(_marker);
+		
+		// Monta o InfoWindow:
+		google.maps.event.addListener(_marker, 'click', function() {
+			infoWindowSingleton.setContent(this.html);
+			infoWindowSingleton.open(mainMap, this);
+
+			// Bug do plugin do VLC: ao iniciar o streaming, ele reseta os valores da barra de controle:
+//  		var vlc = document.getElementById(this.idEmbed);
+//  		vlc.audio.mute = true;
+//  		vlc.audio.volume = 0;
+		});		
+	}
+	
+	markerClusterer.addMarkers(markers);
+}
+
+
+/**
+ * Remove todos os markers de um 'markerClusterer'.
+ *
+ * markerClusterer: Um 'MarkerClusterer' que armazena o grupo de Markers.
+ * markers: Array de Markers a ser removido do 'MarkerClusterer'.
+ */
+function removerMarkers(markerClusterer, markers) {
+	for (var i=0; i < markers.length; i++) {
+		markerClusterer.removeMarker(markers[i]);
+	}
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+//]]>
+		</script>
+	</ui:define>
+</ui:composition>

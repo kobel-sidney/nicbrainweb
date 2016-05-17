@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+    <ui:define name="tarefas">
+
+        <h:form prependId="true" id="formVeiculo">
+
+            <p:panel id="panel" header="#{i18n['label.vehicle']}" style="margin-bottom:10px;">
+
+                <p:growl id="msg0" />
+
+                <h:panelGrid columns="2">
+                    <h:outputLabel />
+                    <h:inputHidden id="id" value="#{veiculoBean.model.id}" />
+
+                    <h:outputLabel for="nome" 	value="#{i18n['label.description']}: *" />
+                    <p:inputText id="nome" size="30" value="#{veiculoBean.model.nome}" 
+                                 label="nome" required="true">
+                        <f:validateLength minimum="3" />
+                    </p:inputText>
+
+                    <h:outputLabel for="tipoVeiculo" value="#{i18n['label.vehicle_type']}: *" />
+                    <p:selectOneMenu id="tipoVeiculo" value="#{veiculoBean.model.veiculoTipo}" required="true" converter="#{converterVeiculoTipo}"
+                                     requiredMessage="#{i18n['message.required_field.choice_a_type_vehicle']}">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"	noSelectionOption="true" />
+                        <f:selectItems value="#{veiculoBean.veiculoTipos}" var="item" itemValue="#{item}" itemLabel="#{item.nome}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="marca" 	value="#{i18n['label.brand']}: *" />
+                    <p:inputText id="marca" size="30" value="#{veiculoBean.model.marca}" 
+                                 label="nome" required="true">
+                        <f:validateLength minimum="3" />
+                    </p:inputText>
+
+                    <h:outputLabel for="modelo" 	value="#{i18n['label.model']}: *" />
+                    <p:inputText id="modelo" size="30" value="#{veiculoBean.model.modelo}" 
+                                 label="nome" required="true">
+                        <f:validateLength minimum="3" />
+                    </p:inputText>
+
+                    <h:outputLabel for="cor" 	value="#{i18n['label.color']}: *" />
+                    <p:inputText id="cor" size="30" value="#{veiculoBean.model.cor}" 
+                                 label="cor" required="true">
+                        <f:validateLength minimum="3" />
+                    </p:inputText>
+
+                    <h:outputLabel for="placaVeiculo" 	value="#{i18n['label.vehicle_board']}: *" />
+
+                    <p:inputMask id="placaVeiculo" value="#{veiculoBean.model.placa}" mask="aaa-9*99" size="8" 
+                                 label="placaVeiculo" required="true"> 
+                    </p:inputMask>
+
+                    <h:outputLabel for="anoFabricacao" 	value="#{i18n['label.manufacture_year']}: " />
+                    <p:inputMask id="anoFabricacao" size="5" value="#{veiculoBean.model.anoFabricacao}"  mask="9999"
+                                 label="ano" >
+                    </p:inputMask>
+
+                    <h:outputLabel for="anoModelo" 	value="#{i18n['label.model_year']}: " />
+                    <p:inputMask id="anoModelo" size="5" value="#{veiculoBean.model.anoModelo}"  mask="9999"
+                                 label="anoModelo" >
+                    </p:inputMask>
+
+                </h:panelGrid>
+            </p:panel>
+            <div class="estiloDiv">
+                <p:commandButton value="#{i18n['button.save']}"	action="#{veiculoBean.add}" id="withIcon" update="@form" icon="ui-icon-disk" ajax="false" />
+                <p:commandButton value="#{i18n['button.cancel']}" actionListener="#{veiculoBean.cancel}" icon="ui-icon ui-icon-close" update="@form" process="@this" />
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

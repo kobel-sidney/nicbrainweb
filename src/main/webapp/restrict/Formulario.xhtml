@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formStatus">
+			<p:panel id="panel" header="#{i18n['label.form']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="id" value="#{formularioBean.model.id}" />
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.form_name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="20"
+						value="#{formularioBean.model.nome}" required="true" label="name"
+						requiredMessage="#{i18n['message.required_field.form']}">
+						<f:validateLength minimum="3" />
+					</p:inputText>
+
+					<h:outputLabel for="descricao"
+						value="#{i18n['label.description']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="descricao" size="40"
+						value="#{formularioBean.model.descricao}" required="false"
+						label="descricao"
+						requiredMessage="#{i18n['message.required_field.description']}">
+					</p:inputText>
+
+
+
+					<h:outputLabel for="ativo"
+						value="#{i18n['label.active']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="ativo" value="#{formularioBean.model.ativo}"
+						required="true" label="#{i18n['label.active']}"
+						requiredMessage="#{i18n['message.required_field.active']}">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{formularioBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{formularioBean.cancel}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

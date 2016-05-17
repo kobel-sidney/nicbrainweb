@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core" 
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formFuncaoCargo">
+			<p:panel id="panel" header="#{i18n['label.function']}" style="margin-bottom:10px;">
+				<p:growl id="msg0"/>
+				<h:panelGrid columns="2">
+					<h:outputLabel/>
+					<h:inputHidden id="idFuncao" value="#{funcaoCargoBean.cargo.idCargo}"/>
+					
+					<h:outputLabel for="nomeFuncao" value="#{i18n['label.function']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nomeFuncao" size="20" value="#{funcaoCargoBean.cargo.nomeCargo}"
+							required="true" label="#{i18n['label.function']}" 
+							requiredMessage="#{i18n['message.required_field.function']}">                    
+                    	<f:validateLength minimum="3" />
+                    </p:inputText>
+                    
+                    <h:outputLabel for="nomeSegmento" value="#{i18n['label.segment']}:&nbsp;#{i18n['label.token.required_field']}" />
+                    <h:selectOneMenu id="nomeSegmento" value="#{funcaoCargoBean.cargo.descricaoCargo}" required="true"
+                    		 label="#{i18n['label.segment']}" requiredMessage="#{i18n['message.required_field.segment']}">
+                    	<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+                    	<f:selectItems value="#{bbSegmento.segmentos}" var="item_segmento"
+                    			itemLabel="#{item_segmento.nomeSegmento}" itemValue="#{item_segmento.idSegmento}"/>
+                    </h:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+			
+			<p:commandButton value="#{i18n['button.save']}" action="#{funcaoCargoBean.addFuncaoCargo}" 
+					id="withIcon" update="@form" icon="ui-icon-disk" ajax="false"/>
+					
+			<p:commandButton value="#{i18n['button.cancel']}" actionListener="#{funcaoCargoBean.cancelFuncao}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this"/>           
+		</h:form>
+		
+		
+	</ui:define>
+	
+</ui:composition>

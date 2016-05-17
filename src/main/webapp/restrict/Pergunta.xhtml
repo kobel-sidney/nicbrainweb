@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formPergunta">
+			<p:panel id="panel" header="#{i18n['label.question']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idPergunta"
+						value="#{perguntaBean.pergunta.id.idPergunta}" />
+
+					<h:outputLabel for="formulario"
+						value="#{i18n['label.form']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="formulario"
+						value="#{perguntaBean.pergunta.id.idFormulario}" required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_form']}"
+						disabled="#{perguntaBean.desabilitarCombo}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select.form']}" itemValue="" />
+						<f:selectItems value="#{bbFormulario.formularios}"
+							var="formulario" itemValue="#{formulario.idFormulario}"
+							itemLabel="#{formulario.nomeFormulario}" />
+						<p:ajax update="topico" listener="#{perguntaBean.formularioChange}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="topico"
+						value="#{i18n['label.topic']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="topico"
+						value="#{perguntaBean.pergunta.id.idTopico}" required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_topic']}"
+						disabled="#{perguntaBean.desabilitarCombo}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select.topic']}"
+							itemValue="" />
+						<f:selectItems value="#{perguntaBean.topicos}" var="topico"
+							itemValue="#{topico.idTopico}" itemLabel="#{topico.tituloTopico}" />
+					</p:selectOneMenu>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<h:outputLabel for="descricaoPergunta"
+						value="#{i18n['label.description']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="descricao" size="100"
+						value="#{perguntaBean.pergunta.descricaoPergunta}" required="true"
+						label="Descricao"
+						requiredMessage="#{i18n['message.required_field.description']}">
+					</p:inputText>
+
+					<h:outputLabel for="respostaMultipla"
+						value="#{i18n['label.multiple_response']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="respostaMultipla"
+						value="#{perguntaBean.pergunta.respostaMultipla}" required="true">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+					<h:outputLabel for="tipoPontuacao"
+						value="#{i18n['label.score_type']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="tipoPontuacao"
+						value="#{perguntaBean.pergunta.tipoPontuacao}" required="true">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+					<h:outputLabel for="obrigatotio"
+						value="#{i18n['label.required']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="obrigatorio"
+						value="#{perguntaBean.pergunta.obrigatorio}" required="true">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+					<h:outputLabel for="ativo"
+						value="#{i18n['label.active']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="ativo" value="#{perguntaBean.pergunta.ativo}"
+						required="true">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+					<h:outputLabel for="qtdVezes"
+						value="#{i18n['label.amount_times']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="qtdVezes" size="3"
+						value="#{perguntaBean.pergunta.qtdVezes}" required="false"
+						label="Formulario"
+						requiredMessage="#{i18n['message.required_field.function']}">
+					</p:inputText>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{perguntaBean.addPergunta}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{perguntaBean.cancelPergunta}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+	
+	<ui:define name="tarefas">
+		
+		<h:form prependId="true" id="formtable">
+			<div align="center">
+				<p:panel id="filtroPanel" style="width:90%">
+					<h:panelGrid columns="4">
+						<h:outputLabel for="filtroSelectLocal" value="#{i18n['label.venue']}:"/>
+						<p:selectOneMenu id="filtroSelectLocal" value="#{localEventoBean.filtroIdLocal}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+							<f:selectItems value="#{bbLocal.locais}" var="item"
+	                    			itemLabel="#{item.nomeLocal}" itemValue="#{item.id.idLocal}"/>
+						</p:selectOneMenu>
+						<h:outputLabel for="filtroSelectCliente" value="#{i18n['label.client']}:"/>
+						<p:selectOneMenu id="filtroSelectCliente" value="#{localEventoBean.filtroIdPessoaResponsavel}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+							<f:selectItems value="#{bbCliente.clientes}" var="item"
+	                    			itemLabel="#{item.nomeFantasia}" itemValue="#{item.id.idCliente}"/>
+						</p:selectOneMenu>
+
+						
+						<p:commandButton value="#{i18n['button.search']}" action="#{localEventoBean.search}"
+								id="withIcon" update="@form" icon="ui-icon-search" ajax="false"/>
+					</h:panelGrid>
+				</p:panel>
+			
+			
+			<p:panel id="panel" style="width:90%">      
+<!--                 <h:panelGrid columns="1" > -->
+					<p:growl id="msg1" showDetail="true"/>
+					
+					<p:dataTable id="idTabela" var="item_model" value="#{localEventoBean.dataModel}"
+							paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+								{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+							selection="#{localEventoBean.model}" selectionMode="single"
+							stickyHeader="true">
+						
+				    	<p:ajax event="rowSelect" listener="#{localEventoBean.onRowSelect}" update=":formtable:msg1"/>
+				    	<p:ajax event="rowUnselect" listener="#{localEventoBean.onRowUnselect}" update=":formtable:msg1"/>
+				    	
+						<p:column headerText="#{i18n['label.venue']}">
+							<h:outputText value="#{item_model.local.nomeLocal}"/>
+						</p:column>
+						<p:column headerText="#{i18n['label.event']}">
+							<h:outputText value="#{item_model.nomeEvento}"/>
+						</p:column>
+						<p:column headerText="#{i18n['label.start_date']}">
+							<h:outputText value="#{item_model.dtHrInicioEvento}" >
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="#{i18n['label.end_date']}">
+							<h:outputText value="#{item_model.dtHrFimEvento}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+							</h:outputText>
+						</p:column>
+						
+						<p:column headerText="#{i18n['label.client']}">
+							<h:outputText value="#{item_model.local.cliente.nomeFantasia}"/>
+						</p:column>
+						
+						<p:column headerText="#{i18n['label.active']}">
+							<h:outputText value="#{i18n['label.yes']}" rendered="#{item_model.ativo}"/>
+							<h:outputText value="#{i18n['label.no']}"  rendered="#{not item_model.ativo}"/>
+						</p:column>
+						
+						<!-- 
+						<f:facet name="footer">
+							<p:commandButton value="#{i18n['button.new_event']}" process="@this" update="@form"
+									action="#{localEventoBean.novo}"
+									style="width:100%;text-align:center">
+								<f:setPropertyActionListener target="#{localEventoBean.model}" value="#{model}"/>
+							</p:commandButton>
+						</f:facet>
+						-->
+					</p:dataTable>
+					
+<!-- 				</h:panelGrid> -->
+			</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+	<ui:define name="tarefas">
+		<script language="javascript" src="../script/primefaces-calendar-l10n.js" />
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<h:form prependId="true" id="formtable">
+			<!-- Comentando o auto-refresh 
+			<p:poll interval="20" update="idTabela"/>
+			 -->
+			<div class="estiloDiv">
+				<p:panel id="mainPanel" style="margin-bottom:10px;" header="#{ListaOcorrenciaBean.cabecalho}">
+					<p:growl id="msg1" showDetail="true" />
+					<p:panel id="filtroPanel" style="width:90%">
+						<div align="center">
+							<h:panelGrid columns="4">
+								<h:outputLabel for="filtroSelectLocal" value="#{i18n['label.ocurrence_venue']}:" />
+								<p:selectOneMenu id="filtroSelectLocal" value="#{ListaOcorrenciaBean.filtroIdLocal}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+									<f:selectItems value="#{bbLocal.locaisPorContexto}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroSelectClassificacao" value="#{i18n['label.classification']}:" />
+								<p:selectOneMenu id="filtroSelectClassificacao" value="#{ListaOcorrenciaBean.filtroIdClassificacao}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+									<f:selectItems value="#{bbClassificacaoOcorrencia.classificacoesOcorrencias}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroTipoClassificacao" value="#{i18n['label.ocurrences_type']}:" />
+								<p:selectOneMenu id="filtroTipoClassificacao" value="#{ListaOcorrenciaBean.filtroIdTipoClassificacao}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+									<f:selectItems value="#{bbTipoClassificacao.tiposClassificacoes}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroSelectResponsavel" value="#{i18n['label.responsible']}:" />
+								<p:selectOneMenu id="filtroSelectResponsavel" value="#{ListaOcorrenciaBean.filtroIdResponsavel}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+									<f:selectItems value="#{bbUsuario.usuariosPorContexto}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroDataInicio" value="#{i18n['label.start_date']}:" />
+								<p:calendar id="filtroDataInicio" value="#{ListaOcorrenciaBean.dataInicio}" label="#{i18n['label.start_date']}" mode="popup" effect="fold" navigator="true" showOn="button"
+									popupIconOnly="true" pattern="dd/MM/yyyy HH:mm" locale="#{bbLocale.currentLocale.language}" />
+								<h:outputLabel for="filtroSuperior" value="Superior:" />
+								<p:selectOneMenu id="filtroSuperior" value="#{ListaOcorrenciaBean.filtroIdSuperior}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+									<f:selectItems value="#{bbUsuario.usuariosSuperioresPorContexto}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroSelectStatus" value="#{i18n['label.status']}:" />
+								<p:selectOneMenu id="filtroSelectStatus" value="#{ListaOcorrenciaBean.filtroIdStatus}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+									<f:selectItems value="#{bbStatus.statusAlteraveis}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								<p:commandButton value="#{i18n['button.search']}" action="#{ListaOcorrenciaBean.search}" id="withIcon" update="@form" icon="ui-icon-search" ajax="false" />
+							</h:panelGrid>
+						</div>
+					</p:panel>
+					<p:panel id="panel" style="width:100%">
+						<!--                 <h:panelGrid columns="1" > -->
+						<p:dataTable id="idTabela" var="item" value="#{ListaOcorrenciaBean.dataModel}" paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+									{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" selection="#{ListaOcorrenciaBean.model}" selectionMode="single">
+							<p:ajax event="rowToggle" listener="#{ListaOcorrenciaBean.onRowToggle}" />
+							<p:column headerText="#{i18n['label.resume']}" style="width:5%">
+								<p:rowToggler id="idLinhaExp" />
+							</p:column>
+							<p:column headerText="#{i18n['button.event']}">
+								<h:outputText value="#{item.evento.local.nome}" />
+								<br />
+								<h:outputText value="#{item.evento.nome}" />
+							</p:column>
+							<p:column headerText="#{i18n['label.classification']}">
+								<h:outputText value="#{item.classificacaoOcorrencia.nome}" />
+							</p:column>
+							<p:column headerText="#{i18n['label.severity_level']}">
+								<h:outputText value="#{item.gravidadeOcorrencia.nome}" />
+							</p:column>
+							<p:column headerText="#{i18n['label.description']}">
+								<h:outputText value="#{item.descricaoOcorrencia}" />
+							</p:column>
+							<p:column headerText="#{i18n['label.start_date']}">
+								<h:outputText value="#{item.dataInicio}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{i18n['label.status']}">
+								<h:outputText value="#{item.status.nome}" />
+							</p:column>
+							<p:column headerText="#{i18n['label.ocurrence_venue']}">
+								<p:commandButton id="mapButton" update=":formtable:mapDlg" oncomplete="PF('mapDialog').show()" icon="ui-icon-pin-s" title="View">
+									<f:setPropertyActionListener value="#{item}" target="#{ListaOcorrenciaBean.model}" />
+								</p:commandButton>
+							</p:column>
+							<p:rowExpansion>
+								<h:panelGrid columns="2">
+									<h:outputLabel value="#{i18n['label.ocurrence_venue']}" />
+									<h:outputLabel value="#{item.evento.local.nome}" />
+									<h:outputLabel value="#{i18n['label.responsible_for_opening']}" />
+									<h:outputLabel value="#{item.usuarioResponsavel.pessoa.nome}" />
+									<h:outputLabel value="#{i18n['label.contacts']}" />
+									<h:panelGrid columns="2">
+										<h:outputLink value="mailto:#{item.usuarioResponsavel.pessoa.emailAtual}" title="#{item.usuarioResponsavel.pessoa.emailAtual}">
+											<p:commandButton type="button" icon="ui-icon-mail-closed" />
+											<h:outputLabel value="#{item.usuarioResponsavel.pessoa.emailAtual}" />
+										</h:outputLink>
+										<h:outputLink value="tel:#{item.usuarioResponsavel.pessoa.celularContato}" title="#{item.usuarioResponsavel.pessoa.celularContato}">
+											<p:commandButton type="button" icon="ui-icon-comment" />
+											<h:outputLabel value="#{item.usuarioResponsavel.pessoa.celularContato}" />
+										</h:outputLink>
+									</h:panelGrid>
+								</h:panelGrid>
+								<br />
+								<p:dataTable id="idTabelaAtividadeOcorrencia" var="item_atv" value="#{ListaOcorrenciaBean.atividadeOcorrenciaDataModel}" paginator="true" rows="10"
+									emptyMessage="#{i18n['message.registry.not_found']}"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+											{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" selectionMode="single">
+									<f:facet name="header">
+										<h:outputText value="#{i18n['label.activity_occurrence']}" />
+									</f:facet>
+									<p:column headerText="N&uacute;mero do Item">
+										<h:outputText value="#{item_atv.numeroItem}" />
+									</p:column>
+									<p:column headerText="#{i18n['label.description']}">
+										<h:outputText value="#{item_atv.nome}" />
+									</p:column>
+									<p:column headerText="#{i18n['label.start_date']}">
+										<h:outputText value="#{item_atv.dataInicio}">
+											<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="#{i18n['label.end_date']}">
+										<h:outputText value="#{item_atv.dataFim}">
+											<f:convertDateTime pattern="dd/MM/yyyy - HH:mm" />
+										</h:outputText>
+									</p:column>
+									<p:column headerText="#{i18n['label.status']}" id="rowStatusAtividadeOcorrencia">
+										<h:outputText value="#{item_atv.status.nome}" />
+									</p:column>
+									<p:column headerText="#{i18n['label.observacao']}">
+										<h:outputText value="#{item_atv.observacao}" />
+									</p:column>
+									<p:column headerText="#{i18n['label.accomplished']}">
+										<h:outputText value="#{i18n['label.yes']}" rendered="#{item_atv.status.id == 6}" />
+										<h:outputText value="#{i18n['label.no']}" rendered="#{item_atv.status.id == 5}" />
+										<p:commandButton id="btnOk" value="#{i18n['label.yes']}" update=":formtable:msg1 :formtable:idTabela"
+											action="#{ListaOcorrenciaBean.concluirAtividadeOcorrencia}" icon="ui-icon-check" title="#{i18n['label.yes']}"
+											rendered="#{item_atv.status.id != 5 and item_atv.status.id != 6}">
+											<f:setPropertyActionListener value="#{item_atv}" target="#{ListaOcorrenciaBean.atividadeOcorrenciaModel}" />
+										</p:commandButton>
+										<p:commandButton id="btnNoOk" value="#{i18n['label.no']}" oncomplete="document.getElementById('formDialogObs:txtObservacao').value = '';PF('obsDialog').show();"
+											icon="ui-icon-close" title="#{i18n['label.no']}" rendered="#{item_atv.status.id != 5 and item_atv.status.id != 6}">
+											<f:setPropertyActionListener value="#{item_atv}" target="#{ListaOcorrenciaBean.atividadeOcorrenciaModel}" />
+										</p:commandButton>
+									</p:column>
+								</p:dataTable>
+							</p:rowExpansion>
+						</p:dataTable>
+						<p:dialog header="#{i18n['label.ocurrence_venue']}:&nbsp;#{ListaOcorrenciaBean.model.evento.local.nome}" widgetVar="mapDialog" resizable="false" id="mapDlg" showEffect="fade"
+							hideEffect="explode" modal="true" appendToBody="true" closeOnEscape="true">
+							<h:panelGrid id="display" style="margin:0 auto;">
+								<p:gmap center="#{ListaOcorrenciaBean.model.latitude}, #{ListaOcorrenciaBean.model.longitude}" rendered="true" zoom="15" type="ROADMAP" disableDefaultUI="true"
+									style="width:650px;height:450px" model="#{ListaOcorrenciaBean.ocorrenciaMap}">
+									<p:ajax event="overlaySelect" listener="#{ListaOcorrenciaBean.onMarkerSelect}" />
+									<p:gmapInfoWindow>
+										<p:outputPanel style="text-align:center; display:block; width:300px; height:300px" id="outPutPanelFoto">
+											<h:panelGrid columns="1" id="panelFoto">
+												<div id="divOcorrenciaFoto" align="center">
+													<b> <h:outputText value="#{ListaOcorrenciaBean.marker.title}" />
+													</b>
+													<p:graphicImage id="ocorrenciaFoto" cache="false" library="images" width="144px" height="256px" value="#{ListaOcorrenciaBean.image}"
+														rendered="#{not empty ListaOcorrenciaBean.model.foto}">
+														<f:param name="timemillis" value="#{bbUtil.timemillis}" />
+													</p:graphicImage>
+													<h:outputText value="#{i18n['label.no_image']}" rendered="#{empty ListaOcorrenciaBean.model.foto}" />
+												</div>
+											</h:panelGrid>
+										</p:outputPanel>
+									</p:gmapInfoWindow>
+								</p:gmap>
+							</h:panelGrid>
+						</p:dialog>
+						<!--                 </h:panelGrid> -->
+					</p:panel>
+				</p:panel>
+			</div>
+		</h:form>
+		<p:dialog header="#{i18n['label.failure_occurrence_activity']}" widgetVar="obsDialog" resizable="false" id="obsDlg" showEffect="fade" hideEffect="explode" modal="true"
+			appendToBody="true" closeOnEscape="true">
+			<h:form id="formDialogObs">
+				<h:panelGrid columns="1">
+					<p:inputTextarea id="txtObservacao" rows="10" cols="50" counter="counter" maxlength="200" value="#{ListaOcorrenciaBean.atividadeOcorrenciaModel.observacao}"
+						counterTemplate="{0} #{i18n['label.characters_remaining']}" autoResize="false">
+					</p:inputTextarea>
+					<h:outputText id="counter" />
+				</h:panelGrid>
+				<p:commandButton id="btnConfirmarFalha" value="#{i18n['button.confirm_fault']}" update=":formtable:msg1 :formtable:idTabela"
+					action="#{ListaOcorrenciaBean.confirmarFalhaAtividadeOcorrencia}" onsuccess="PF('obsDialog').hide();" icon="ui-icon-disk" title="#{i18n['button.confirm_fault']}">
+				</p:commandButton>
+				<p:commandButton id="btnCancelNoOk" value="#{i18n['button.cancel']}" type="button" icon="ui-icon ui-icon-close" onclick="PF('obsDialog').hide();" />
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

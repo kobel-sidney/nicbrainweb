@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formEndereco">
+			<p:panel id="panel" header="#{i18n['label.address']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idEndereco"
+						value="#{enderecoBean.endereco.idEndereco}" />
+
+					<h:outputLabel for="tipoLogradouro"
+						value="#{i18n['button.logradouro']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<h:selectOneMenu id="tipoLogradouro"
+						value="#{enderecoBean.endereco.tipoLogradouro.idTipoLogradouro}"
+						required="true" label="#{i18n['label.person']}"
+						requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+						disabled="#{enderecoBean.desabilitarCombobox}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbTipoLogradouro.tipoLogradouros}"
+							var="item" itemLabel="#{item.nomeTipoLogradouro}"
+							itemValue="#{item.idTipoLogradouro}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="40"
+						value="#{enderecoBean.endereco.nome}" required="true" label="Nome"
+						requiredMessage="#{i18n['message.required_field.name']}">
+						<f:validateLength minimum="0" />
+					</p:inputText>
+
+					<h:outputLabel for="numero"
+						value="#{i18n['label.number2']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="numero" size="5"
+						value="#{enderecoBean.endereco.numero}" required="true"
+						label="Numero"
+						requiredMessage="#{i18n['message.required_field.name']}">
+						<f:validateLength minimum="0" />
+					</p:inputText>
+
+					<h:outputLabel for="complemento"
+						value="#{i18n['label.complement']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="complemento" size="20"
+						value="#{enderecoBean.endereco.complemento}" required="false"
+						label="Complemento"
+						requiredMessage="#{i18n['message.required_field.name']}">
+					</p:inputText>
+
+					<h:outputLabel for="bairro"
+						value="#{i18n['label.bairro']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="bairro" size="20"
+						value="#{enderecoBean.endereco.bairro}" required="false"
+						label="bairro"
+						requiredMessage="#{i18n['message.required_field.name']}">
+					</p:inputText>
+
+					<h:outputLabel for="cep"
+						value="#{i18n['label.cep']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputMask id="cep" size="9" required="true" label="cep"
+						mask="99999-999" value="#{enderecoBean.endereco.cep}"
+						requiredMessage="#{i18n['message.required_field.phone']}">
+					</p:inputMask>
+
+					<h:outputLabel for="Pais"
+						value="#{i18n['label.countries']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<h:selectOneMenu id="Pais"
+						value="#{enderecoBean.endereco.municipio.estado.pais.idPais}"
+						required="true" label="#{i18n['label.countries']}"
+						requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+						disabled="#{enderecoBean.desabilitarCombobox}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbPais.paises}" var="item"
+							itemLabel="#{item.nomePais}" itemValue="#{item.idPais}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel for="Estado"
+						value="#{i18n['button.state']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<h:selectOneMenu id="Estado"
+						value="#{enderecoBean.endereco.municipio.estado.id.idEstado}"
+						required="true" label="#{i18n['button.state']}"
+						requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+						disabled="#{enderecoBean.desabilitarCombobox}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbEstado.estados}" var="item"
+							itemLabel="#{item.nomeEstado}" itemValue="#{item.idEstado}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel for="Municipio"
+						value="#{i18n['label.city']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<h:selectOneMenu id="Municipio"
+						value="#{enderecoBean.endereco.municipio.id.idMunicipio}"
+						required="true" label="#{i18n['label.city']}"
+						requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+						disabled="#{enderecoBean.desabilitarCombobox}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbMunicipio.municipios}" var="item"
+							itemLabel="#{item.nomeMunicipio}" itemValue="#{item.idMunicipio}" />
+					</h:selectOneMenu>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{enderecoBean.addEndereco}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{enderecoBean.cancelEndereco}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

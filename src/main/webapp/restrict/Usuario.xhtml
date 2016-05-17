@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form id="formSetor">
+			<p:growl id="messages" showDetail="true" />
+							
+			<p:tabView>
+		        <p:tab title="#{i18n['label.registration_user']}">
+		            <h:panelGrid id="gridPerson" columns="2" cellpadding="2">
+						<h:outputLabel for="nome" value="#{i18n['label.user']}: *" />
+						<p:inputText
+							id="nome" 
+							size="40"
+							value="#{usuarioBean.usuarioDTO.nome}" 
+							required="true"
+							label="#{i18n['label.user']}"
+							requiredMessage="#{i18n['message.required_field.name']}">
+							<f:validateLength minimum="2" />
+						</p:inputText>
+						
+						<h:outputLabel 
+							for="senha"
+							value="#{i18n['label.password']}: *" />
+						<p:password 
+							id="senha" 
+							size="30" 
+							maxlength="22" 
+							feedback="true"
+							redisplay="true" 
+							required="true" 
+							match="confSenha"
+							value="#{usuarioBean.usuarioDTO.senha}"
+							promptLabel="#{i18n['message.alert.type_password']}"
+							weakLabel="#{i18n['message.alert.weak_password']}"
+							goodLabel="#{i18n['message.alert.good_password']}"
+							strongLabel="#{i18n['message.alert.strong_password']}"
+							requiredMessage="#{i18n['message.required_field.password']}"
+							validatorMessage="#{i18n['message.alert.password_not_match']}">
+						</p:password>
+	
+						<h:outputLabel 
+							for="confSenha"
+							value="#{i18n['label.confirm_password']}: *"/>
+						<p:password 
+							id="confSenha" 
+							size="30" 
+							maxlength="22"
+							redisplay="true" 
+							required="true"
+							value="#{usuarioBean.usuarioDTO.senha}"
+							promptLabel="#{i18n['message.confirm.password']}"
+							requiredMessage="#{i18n['message.required_field.confirm_password']}">
+						</p:password>
+						
+						<h:outputLabel 
+							for="email"
+							value="#{i18n['label.email']}: *" />
+						<p:inputText 
+							id="email" 
+							size="40" 
+							maxlength="40" 
+							required="true"
+							label="#{i18n['label.email']}" 
+							value="#{usuarioBean.usuarioDTO.email}"
+							requiredMessage="#{i18n['message.required_field.email']}">
+							<f:validator validatorId="emailValidator" />
+						</p:inputText>
+						
+						<h:outputLabel 
+							for="bloqueado"
+							value="#{i18n['label.blocked']}: *" />
+						<p:selectBooleanCheckbox id="bloqueado"
+							value="#{usuarioBean.usuarioDTO.bloqueado}" 
+							required="true"
+							label="#{i18n['label.blocked']}" />
+							
+						<h:outputLabel 
+							for="vencimentoConta"
+							value="#{i18n['label.account_expiration_date']}:" />
+						<p:calendar 
+							id="vencimentoConta"
+							label="#{i18n['label.account_expiration_date']}"
+							value="#{usuarioBean.usuarioDTO.dataValidadeConta}"
+							pattern="dd/MM/yyyy" 
+							showOn="button" />
+							
+						<h:outputLabel 
+							for="vencimentoSenha"
+							value="#{i18n['label.password_expiration_date']}:" />
+						<p:calendar 
+							id="vencimentoSenha"
+							label="#{i18n['label.password_expiration_date']}"
+							value="#{usuarioBean.usuarioDTO.dataValidadeSenha}"
+							pattern="dd/MM/yyyy" 
+							showOn="button" />
+							
+						<h:outputLabel 
+							for="perfil" 
+							value="#{i18n['label.profile']}: *" />
+						<p:selectOneMenu 
+							id="perfil" 
+							value="#{usuarioBean.usuarioDTO.idPerfil}"
+							label="#{i18n['label.profile']}"
+							effect="fold"
+							required="true">
+	
+							<f:selectItem 
+								itemLabel="#{i18n['text.select_item_3dots']}"
+								noSelectionOption="true" />
+							<f:selectItems 
+								value="#{bbPerfilAcessoUsuario.perfis}" 
+								var="item"
+								itemValue="#{item.id}" 
+								itemLabel="#{item.nome}">
+							</f:selectItems>
+						</p:selectOneMenu>
+						
+						<h:outputLabel 
+							for="tipo" 
+							value="#{i18n['label.user_type']}: *" />
+						<p:selectOneMenu 
+							id="tipo" 
+							value="#{usuarioBean.usuarioDTO.idTipoUsuario}"
+							label="#{i18n['label.user_type']}"
+							effect="fold"
+							required="true">
+	
+							<f:selectItem 
+								itemLabel="#{i18n['text.select_item_3dots']}"
+								noSelectionOption="true" />
+							<f:selectItems 
+								value="#{bbTipoUsuario.tipoUsuarios}" 
+								var="item"
+								itemValue="#{item.id}" 
+								itemLabel="#{item.nome}">
+							</f:selectItems>
+						</p:selectOneMenu>
+							
+						<h:outputLabel 
+							for="pessoa" 
+							value="#{i18n['label.person']}: *" />
+						<p:selectOneMenu 
+							id="pessoa" 
+							value="#{usuarioBean.usuarioDTO.idPessoa}"
+							label="#{i18n['label.person']}"
+							effect="fold"
+							required="true">
+	
+							<f:selectItem 
+								itemLabel="#{i18n['text.select_item_3dots']}"
+								noSelectionOption="true" />
+							<f:selectItems 
+								value="#{bbPessoa.pessoas}" 
+								var="item"
+								itemValue="#{item.id}" 
+								itemLabel="#{item.nome}">
+							</f:selectItems>
+						</p:selectOneMenu>
+						
+						<h:outputLabel 
+							for="cliente" 
+							value="#{i18n['label.client']}: *" />
+						<p:selectOneMenu 
+							id="cliente" 
+							value="#{usuarioBean.usuarioDTO.idCliente}"
+							label="#{i18n['label.client']}"
+							effect="fold"
+							required="true">
+	
+							<f:selectItem 
+								itemLabel="#{i18n['text.select_item_3dots']}"
+								noSelectionOption="true" />
+							<f:selectItems 
+								value="#{bbCliente.clientesPorContratante}" 
+								var="item"
+								itemValue="#{item.id}" 
+								itemLabel="#{item.nomeFantasia}">
+							</f:selectItems>
+						</p:selectOneMenu>
+						
+						<h:outputLabel for="ativo" rendered="#{usuarioBean.campoAtivoHabilitado}" value="#{i18n['label.active']}:" />
+						<p:selectBooleanCheckbox id="ativo" value="#{usuarioBean.usuarioDTO.ativo}" rendered="#{usuarioBean.campoAtivoHabilitado}" label="#{i18n['label.active']}" />
+					</h:panelGrid>
+		        </p:tab>
+		        <p:tab title="Regras">
+		        
+		            <p:pickList value="#{usuarioBean.regras}" var="regra" itemLabel="#{regra.nome}" itemValue="#{regra}" converter="regra" />
+		        
+		        </p:tab>
+		        <p:tab title="Eventos">
+		           
+		           	<p:pickList value="#{usuarioBean.eventos}" var="evento" itemLabel="#{evento.nome}" itemValue="#{evento}" converter="evento" />
+		           
+		        </p:tab>
+		    </p:tabView>
+				<hr />
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{usuarioBean.salvarOuAtualizar}" update="messages" />
+				<p:commandButton value="#{i18n['button.cancel']}" immediate="true"
+					action="#{usuarioBean.cancelar}" update="messages" />
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

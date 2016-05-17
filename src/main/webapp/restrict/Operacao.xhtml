@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core" 
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<p:growl id="msg1" showDetail="true"/>
+	
+		<p:gmap center="-15,-55"
+			    zoom="4"
+			    type="HYBRID"
+			    rendered="true"
+			    style="width:100%;height:475px"
+	        	model="#{operacaoBean.mapaOperacao}"> 
+	        	  
+				<p:ajax event="overlaySelect" listener="#{operacaoBean.onMarkerSelect}" update="msg1" /> 
+	 	</p:gmap>
+	
+	</ui:define>
+	
+</ui:composition>

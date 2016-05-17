@@ -1,0 +1,64 @@
+/* Red */
+
+p.tagline,
+.tagline, #single .meta-post a
+{
+	color: #EC5D46;
+}
+.information {
+	background: #EC5D46;
+}
+h2.teaser-title span{
+	color:#EC5D46 !important;
+}			
+a.view-portfolio span.inner{
+	background:#EC5D46;
+}			
+.post .more, .aside-date {
+	color:#EC5D46;
+}
+.company-address h4, .prices .price h5, .prices .price p {
+	color:#EC5D46;
+}
+.prices, .price p{
+	color:#EC5D46 !important;
+}	
+@media only screen and (max-width: 964px) {
+	.mean-container .mean-nav ul li a, .mean-container .mean-nav ul li ul.sub-menu a, .sub-menu a, .sub-menu .sub-menu a, .sub-menu .sub-menu .sub-menu a {
+		border-top:1px solid #EC5D46 !important;
+	}
+}			
+@media only screen and (max-width: 767px) {
+	.header-bottom .container .row{
+	background:#EC5D46;
+	}
+}		
+.purchase-teaser h3 a, .member-list .title-member span, .member .member-desc h3, .post .meta-post .category a, .highlight, .post-single a, span.category-visible-mobile a, .category-meta a, .post-single table#wp-calendar a, .sidebar table#wp-calendar td a{
+	color:#EC5D46 !important;
+}			
+/* button */
+.about-more .read-more, button.read-more, a.read-more, .sign, button, input[type=button], input[type=reset], input[type=submit], button#submit {
+	background:#EC5D46 !important;
+}			
+.about-more .read-more:hover, button.read-more:hover, a.read-more:hover, .sign:hover, button:hover, input[type=button]:hover, input[type=reset]:hover, input[type=submit]:hover, button#submit:hover {
+	opacity:0.8;
+}			
+.post.featured .read-more, .prices .price-detail .sign-up {
+	background:#EC5D46 !important;
+}
+.post.featured .read-more:hover, .prices .price-detail .sign-up:hover {			
+	opacity:0.8;
+}
+.portfolio-sort li a:hover, .portfolio-sort li a.active {
+	background:#EC5D46 !important;
+}	
+.prices.active .price {
+	/* background:#EC5D46;	*/
+	background:#EC5D46 url('../../resources/images_login/price-circle.png') no-repeat 1px 0;
+}			
+.ie8 .prices.active .price {	
+	background:transparent url(../../resources/images_login/package_active_bg.png) no-repeat;
+}	
+.bypostauthor .comment-avatar img{
+	border:1px solid #EC5D46;
+}			

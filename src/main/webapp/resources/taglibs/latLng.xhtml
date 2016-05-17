@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <cc:interface>
+        <cc:attribute 
+            name="labelBotao" 
+            displayName="Label do botão"
+            default="Buscar no mapa"
+            shortDescription="Defini nome para o botão que abre o modal com o mapa. Valor padrão: Buscar no mapa" />
+        <cc:attribute 
+            name="tituloDialogo" 
+            displayName="Título do dialog"
+            default="Pesquisar no mapa"
+            shortDescription="Defini nome para o título do modal. Valor padrão: Pesquisar no mapa" />
+        <cc:attribute 
+            name="valorLatitude" 
+            required="true"
+            displayName="Valor da latitude"
+            shortDescription="Define o valor da latitude. Atributo obrigatório. O valor deve apontar para uma propriedade no managed bean." />
+        <cc:attribute 
+            name="labelLatitude"
+            displayName="Label da latitude"
+            default="Latitude"
+            shortDescription="Define o label da latitude. Valor padrão: Latitude." />
+        <cc:attribute 
+            name="valorLongitude" 
+            required="true"
+            displayName="Valor da longitude"
+            shortDescription="Define o valor da longitude. Atributo obrigatório. O valor deve apontar para uma propriedade no managed bean." />
+        <cc:attribute 
+            name="labelLongitude"
+            displayName="Label da longitude"
+            default="Longitude"
+            shortDescription="Define o label da longitude. Valor padrão: Longitude." />
+        <!-- <cc:attribute 
+                name="inline" 
+                type="java.lang.Boolean" 
+                default="true" /> -->
+        <cc:attribute 
+            name="limitarRaio" 
+            type="java.lang.Boolean"
+            default="false"
+            shortDescription="Quando definido para true um campo e um raio de limite são acrescentados no mapa. Valor padrão: False." />
+        <cc:attribute 
+            name="valorLimite" 
+            required="#{cc.attrs.limitarRaio}"
+            displayName="Valor do limite"
+            shortDescription="Define o valor do limite. Atributo obrigatório caso 'limitarRaio' seja true. O valor deve apontar para uma propriedade no managed bean." />
+        <cc:attribute 
+            name="labelRaioLimite"
+            displayName="Label do raio limite"
+            default="Raio limite"
+            shortDescription="Define o label do raio limite. Valor padrão: Raio limite." />
+        <cc:attribute 
+            name="latPadraoMapa"
+            displayName="Latitude padrão do mapa"
+            default="-23.660311"
+            shortDescription="Define a latitude padrão do mapa. Valor padrão: -23.660311." />
+        <cc:attribute 
+            name="lngPadraoMapa"
+            displayName="Longitude padrão do mapa"
+            default="-46.528918"
+            shortDescription="Define a longitude padrão do mapa. Valor padrão: -46.528918." />
+    </cc:interface>
+
+    <cc:implementation>
+        <h:outputStylesheet library="css" name="maps/mapsStyle.css" />
+
+        <script
+        src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;signed_in=true&amp;libraries=places"></script>
+        <script src="../resources/js/maps/infobox.js" />
+        <script src="../resources/js/maps/LatLngController.js"></script>
+        <h:panelGrid
+            columns="2">
+            <h:outputLabel 
+                for="lat" 
+                value="#{cc.attrs.labelLatitude}:" />
+            <h:panelGroup>
+                <p:inputText 
+                    id="lat"
+                    value="#{cc.attrs.valorLatitude}" />
+                <p:spacer 
+                    width="5" />
+                <p:commandButton 
+                    id="latBtn" 
+                    icon="ui-icon-arrow-2-n-s"
+                    title="Latitude"
+                    onclick="PF('mapa').show();"
+                    immediate="true" />
+            </h:panelGroup>
+
+            <h:outputLabel 
+                for="lng" 
+                value="#{cc.attrs.labelLongitude}:" />
+            <h:panelGroup>
+                <p:inputText 
+                    id="lng" 
+                    value="#{cc.attrs.valorLongitude}" />
+                <p:spacer width="5" />
+                <p:commandButton 
+                    id="lngBtn" 
+                    icon="ui-icon-arrow-2-e-w"
+                    title="Longitude"
+                    onclick="PF('mapa').show();" 
+                    immediate="true" />
+            </h:panelGroup>
+
+            <h:outputLabel 
+                for="limiteRaio" 
+                value="#{cc.attrs.labelRaioLimite}:" 
+                rendered="#{cc.attrs.limitarRaio}" />
+            <h:panelGroup>
+                <p:inputText 
+                    id="limiteRaio"
+                    value="#{cc.attrs.valorLimite}" 
+                    rendered="#{cc.attrs.limitarRaio}" />
+                <p:spacer 
+                    width="5" 
+                    rendered="#{cc.attrs.limitarRaio}" />
+                <p:commandButton
+                    value="Definir no mapa"
+                    onclick="PF('mapa').show();"
+                    rendered="#{cc.attrs.limitarRaio}"
+                    immediate="true" />
+            </h:panelGroup>
+            <h:inputHidden 
+                id="temLimite" 
+                value="#{cc.attrs.limitarRaio}" />
+            <h:inputHidden 
+                id="latPadraoMapa" 
+                value="#{cc.attrs.latPadraoMapa}" />
+            <h:inputHidden 
+                id="lngPadraoMapa" 
+                value="#{cc.attrs.lngPadraoMapa}" />
+        </h:panelGrid>
+
+        <p:dialog 
+            header="#{cc.attrs.tituloDialogo}" 
+            widgetVar="mapa"
+            resizable="false"
+            styleClass="dialog-mapa"
+            width="800" 
+            height="500"
+            onShow="LatLngController.atualizarMapa();">
+            <p:panel>
+                <h:outputLabel 
+                    for="endereco_maps" 
+                    value="Endereço: " />
+                <p:spacer 
+                    width="2" />
+                <p:inputText 
+                    id="endereco_maps" 
+                    size="98" />
+                <p:spacer 
+                    width="5" />
+            </p:panel>
+
+            <div 
+                id="map-canvas" 
+                class="map-canvas" 
+                style="width: 100%; 
+                height: 450px;"></div>
+
+            <f:facet 
+                name="footer">
+                <p:commandButton 
+                    value="Limpar raio limite"
+                    onclick="LatLngController.limparRaioLimite();" 
+                    rendered="#{cc.attrs.limitarRaio}" immediate="true" />	
+                <p:commandButton 
+                    value="Limpar endereço"
+                    onclick="LatLngController.limparEndereco();" immediate="true" />
+
+                <p:commandButton 
+                    value="Concluir" 
+                    onclick="PF('mapa').hide();" immediate="true" />
+            </f:facet>
+        </p:dialog>
+    </cc:implementation>
+</html>

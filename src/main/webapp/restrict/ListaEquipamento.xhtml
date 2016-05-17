@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formtable">
+			<div align="center" class="estiloDiv">
+				<p:panel id="panel" style="width:50%">
+					<!--                 <h:panelGrid columns="1" > -->
+
+					<p:growl id="msg1" showDetail="true" />
+
+					<p:contextMenu for="idTabela">
+						<p:menuitem value="#{i18n['button.delete']}"
+							update=":formtable:idTabela :formtable:msg1" icon="ui-icon-close"
+							actionListener="#{equipamentoBean.deleteEquipamento}" />
+					</p:contextMenu>
+
+					<p:dataTable id="idTabela" var="equipamento"
+						value="#{equipamentoBean.listaEquipamentos}" paginator="true"
+						rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+	                    {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+						selection="#{equipamentoBean.equipamento}" selectionMode="single">
+
+						<p:ajax event="rowSelect"
+							listener="#{equipamentoBean.onRowSelect}"
+							update=":formtable:msg1" />
+						<p:ajax event="rowUnselect"
+							listener="#{equipamentoBean.onRowUnselect}"
+							update=":formtable:msg1" />
+
+						<p:column headerText="Equipamento" style="width:80px;text-align:center">
+							<h:outputText value="#{equipamento.nomeEquipamento}" />
+						</p:column>
+						
+						<p:column filterBy="#{equipamento.setor.nome}" headerText="Setor" style="width:80px;text-align:center">
+                            <h:outputText value="#{equipamento.setor.nome}" />
+                        </p:column>
+						
+						<p:column filterBy="#{equipamento.setor.local.nome}" headerText="Local" style="width:80px;text-align:center">
+                            <h:outputText value="#{equipamento.setor.local.nome}" />
+                        </p:column>
+						
+                        <p:column filterBy="#{equipamento.setor.local.cliente.nomeFantasia}" headerText="Cliente" style="width:80px;text-align:center">
+                            <h:outputText value="#{equipamento.setor.local.cliente.nomeFantasia}" />
+                        </p:column>
+
+						<f:facet name="footer">
+							<p:commandButton value="#{i18n['button.new_equipment2']}"
+								process="@this" update="@form"
+								action="#{equipamentoBean.novoEquipamento}"
+								style="width:100%;text-align:center">
+								<f:setPropertyActionListener
+									target="#{equipamentoBean.equipamento}" value="#{equipamento}" />
+							</p:commandButton>
+						</f:facet>
+
+					</p:dataTable>
+					<!--              	</h:panelGrid> -->
+				</p:panel>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+

@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:nic="http://java.sun.com/jsf/composite/taglibs"
+                xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+    <ui:define name="tarefas">
+        <h:form prependId="false" id="formPostoServico">
+            <p:panel id="panel" header="#{i18n['label.service_station']}"
+                     style="margin-bottom:10px;">
+                <p:growl id="msg0" />
+                <h:panelGrid columns="2">
+                    <h:outputLabel />
+                    <h:inputHidden id="idPostoServico"
+                                   value="#{postoServicoBean.model.id}" />
+
+                    <h:outputLabel for="inputNome"
+                                   value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+                    <p:inputText id="inputNome" size="20"
+                                 value="#{postoServicoBean.model.nome}" label="inputNome">
+                        <f:validateLength minimum="2" />
+                    </p:inputText>
+
+                    <h:outputLabel for="radioAtivo" value="#{i18n['label.active']}:" />
+                    <p:selectOneRadio id="radioAtivo"
+                                      value="#{postoServicoBean.model.ativo}"
+                                      label="#{i18n['label.active']}">
+                        <f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+                        <f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:outputLabel for="inputTelefonePosto"
+                                   value="#{i18n['label.telephone.service_station']}:&nbsp;" />
+                    <p:inputMask id="inputTelefonePosto"
+                                 value="#{postoServicoBean.model.telefonePosto}"
+                                 mask="(99) 9999-9999" size="11" />
+
+                    <h:outputLabel for="inputObservacao"
+                                   value="#{i18n['label.observacao']}:&nbsp;" />
+                    <p:inputText id="inputObservacao" size="30"
+                                 value="#{postoServicoBean.model.observacao}"
+                                 label="inputObservacao">
+                    </p:inputText>
+
+                    <h:outputLabel for="inputResponsavel"
+                                   value="#{i18n['label.responsible']}:&nbsp;" />
+                    <p:inputText id="inputResponsavel" size="20"
+                                 value="#{postoServicoBean.model.responsavel}"
+                                 label="inputResponsavel">
+                    </p:inputText>
+
+                    <h:outputLabel for="inputTelefoneResponsavel"
+                                   value="#{i18n['label.telephone.responsavel']}:&nbsp;" />
+                    <p:inputMask id="inputTelefoneResponsavel"
+                                 value="#{postoServicoBean.model.telefoneResponsavel}"
+                                 mask="(99) 9999-9999" size="11" />
+
+                    <h:outputLabel for="inputCelularResponsavel"
+                                   value="#{i18n['label.cel_responsible']}:&nbsp;" />
+                    <p:inputMask id="inputCelularResponsavel"
+                                 value="#{postoServicoBean.model.celularResponsavel}"
+                                 mask="(99) 99999-9999" size="12" />
+
+                    <h:outputLabel for="inputEmailResponsavel"
+                                   value="#{i18n['label.email_responsavel']}:&nbsp;" />
+                    <p:inputText id="inputEmailResponsavel" size="30"
+                                 value="#{postoServicoBean.model.emailResponsavel}"
+                                 label="inputEmailResponsavel">
+                    </p:inputText>
+
+                    <h:outputLabel for="comboSetor"
+                                   value="#{i18n['label.setor']}:&nbsp;#{i18n['label.token.required_field']}" />
+                    <p:selectOneMenu id="comboSetor"
+                                     value="#{postoServicoBean.model.setor.id}" required="true"
+                                     requiredMessage="#{i18n['message.required_field.choice_a_setor']}">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                      itemValue="" />
+                        <f:selectItems value="#{bbSetor.setoresPorContexto}" var="item"
+                                       itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="comboTipoServico"
+                                   value="#{i18n['label.service_type']}:&nbsp;#{i18n['label.token.required_field']}" />
+                    <p:selectOneMenu id="comboTipoServico"
+                                     value="#{postoServicoBean.model.tipoServico.id}" required="true"
+                                     requiredMessage="#{i18n['message.required_field.choice_a_service_type']}">
+                        <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                      itemValue="" />
+                        <f:selectItems value="#{bbTipoServicos.tipoServicosPorContratante}" var="item"
+                                       itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                    </p:selectOneMenu>
+
+                    <h:outputLabel for="inputLatitude"
+                                   value="#{i18n['label.latitude']}:&nbsp;" />
+                    <p:inputText id="inputLatitude" size="10"
+                                 value="#{postoServicoBean.model.latitude}" label="inputLatitude">
+                    </p:inputText>
+
+                    <h:outputLabel for="inputLongitude"
+                                   value="#{i18n['label.longitude']}:&nbsp;" />
+                    <p:inputText id="inputLongitude" size="10"
+                                 value="#{postoServicoBean.model.longitude}" label="inputLongitude">
+                    </p:inputText>
+                </h:panelGrid>
+            </p:panel>
+
+            <div class="estiloDiv">
+                <p:commandButton value="#{i18n['button.save']}"
+                                 action="#{postoServicoBean.add}" id="withIcon" update="@form"
+                                 icon="ui-icon-disk" ajax="false" />
+
+                <p:commandButton value="#{i18n['button.cancel']}"
+                                 actionListener="#{postoServicoBean.cancel}"
+                                 icon="ui-icon ui-icon-close" update="@form" process="@this" />
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

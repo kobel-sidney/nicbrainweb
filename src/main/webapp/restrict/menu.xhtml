@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ 				xmlns="http://www.w3.org/1999/xhtml"
+	  			xmlns:f="http://java.sun.com/jsf/core"
+	  			xmlns:h="http://java.sun.com/jsf/html"
+	  			xmlns:c="http://java.sun.com/jsp/jstl/core"
+	  			xmlns:p="http://primefaces.org/ui">
+	  			
+	  			
+
+	<div class="menu-esquerdo">
+			<h:panelGrid columns="1" width="100%" style="text-align:center">				
+				<h:graphicImage value="/images/iconesNovos/contratante.png" id="contratante" styleClass="botaoMenu"/>				
+					<p:tooltip for="contratante"  value="Contratante" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade"  style="color:black !important" /> 
+				
+				<h:graphicImage value="/images/iconesNovos/perfil-acesso.png" id="cadeado" styleClass="botaoMenu"/>
+					<p:tooltip for="cadeado" value="Perfil de Acesso" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+								  
+				<h:graphicImage value="/images/iconesNovos/usuario.png" id="usuario" styleClass="botaoMenu"/>
+					<p:tooltip for="usuario" value="Usuário" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+								
+				<h:graphicImage value="/images/iconesNovos/dados-mestre.png" id="database" styleClass="botaoMenu"/>
+					<p:tooltip for="database" value="Dados Mestres" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+								
+				<h:graphicImage value="/images/iconesNovos/controle-acesso.png" id="acesso" styleClass="botaoMenu"/>
+					<p:tooltip for="acesso" value="Controle de Acesso" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+								
+				<h:graphicImage value="/images/iconesNovos/ocorrencias.png" id="ocorrencia" styleClass="botaoMenu"/>
+					<p:tooltip for="ocorrencia" value="Ocorrência" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+								 
+				<h:graphicImage value="/images/iconesNovos/check-list.png" id="checklist" styleClass="botaoMenu"/>
+					<p:tooltip for="checklist" value="Checklist" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+								
+				<h:graphicImage value="/images/iconesNovos/monitorar.png" id="monitorar" styleClass="botaoMenu"/>
+					<p:tooltip for="monitorar" value="Monitorar" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+					
+				<h:graphicImage value="/images/iconesNovos/rastrear.png" id="rastrear" styleClass="botaoMenu"/>
+					<p:tooltip for="rastrear" value="Rastrear" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+				
+				<h:graphicImage value="/images/iconesNovos/relatorios.png" id="relatorio" styleClass="botaoMenu"/>
+					<p:tooltip for="relatorio" value="Relatórios" showEvent="mouseover" hideEvent="mouseout" showEffect="fade"  hideEffect="fade" style="color:black !important"/>
+			</h:panelGrid>
+						
+			<!-- Menu Contratante -->
+			 <p:tieredMenu style="width:285px" backLabel="#{i18n['button.back']}" 
+             	overlay="true" trigger="contratante" my="left top" at="right center" >
+             		<p:menuitem value="#{i18n['button.contractor']}" url="ListaContratante.nicbrain" ajax="true" />
+             		<p:menuitem value="Consulta Contratante"  url="/restrict/layout.nicbrain" ajax="true" />             		
+             		<p:menuitem value="#{i18n['button.clients_list']}" url="ListaCliente.nicbrain" ajax="true" />
+             		<p:menuitem value="Local"  url="/restrict/layout.nicbrain" ajax="true" />
+             		<p:menuitem value="#{i18n['button.event']}" url="ListaEvento.nicbrain" ajax="true"/>
+             		<p:menuitem value="CheckList e Atividades" url="/restrict/layout.nicbrain" ajax="true" />
+             		<p:menuitem value="Funcionario"  url="/restrict/layout.nicbrain" ajax="true" />
+			</p:tieredMenu>
+			
+			<!-- Menu Perfil de Acesso -->
+			 <p:tieredMenu style="width:285px" backLabel="#{i18n['button.back']}" 
+             	overlay="true" trigger="cadeado" my="left top" at="right center" >
+             	<p:menuitem value="#{i18n['label.profile']}" url="ListaPerfil.nicbrain" ajax="true"   />
+             </p:tieredMenu>
+             
+             <!-- Menu Usuário -->
+			 <p:tieredMenu style="width:285px"  backLabel="#{i18n['button.back']}"
+             	overlay="true" trigger="usuario" my="left top" at="right center" >
+             	<p:menuitem value="#{i18n['button.users.config']}" url="ListaUsuarioFuncionario.nicbrain" ajax="true"  />
+             </p:tieredMenu>
+			
+			<!-- Menu Dados Mestres -->
+			 <p:tieredMenu style="width:285px"  
+             	overlay="true" trigger="database" my="left botton" at="right center" >    
+             			<p:menuitem value="#{i18n['label.post']}" url="ListaCargo.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.default_checklist']}" url="ListaChecklistPadrao.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.ocurrences_classification']}" url="ListaClassificacaoOcorrencia.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.address']}" url="ListaEndereco.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.state']}" url="ListaEstado.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.form']}" url="ListaFormulario.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.ocurrences_gravity']}" url="ListaGravidadeOcorrencia.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.groups']}" url="ListaGrupo.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.menu']}" url="ListaMenu.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.city']}" url="ListaMunicipio.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.countries']}" url="ListaPais.nicbrain" ajax="true" />	
+             			<p:menuitem value="#{i18n['label.question']}" url="ListaPergunta.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.status']}" url="ListaStatus.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.telephone.util']}" url="ListaTelefoneUtil.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.send_type']}" url="ListaTipoEnvio.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.equipment']}" url="ListaTipoEquipamento.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.logradouro']}" url="ListaTipoLogradouro.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.message_type']}" url="ListaTipoMensagem.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.ocurrences_type']}" url="ListaTipoOcorrencia.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.vehicle_type']}" url="ListaTipoVeiculo.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.person']}" url="ListaTipoPessoa.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['button.telephone']}" url="ListaTipoTelefone.nicbrain" ajax="true" />
+             			<p:menuitem value="#{i18n['label.topic']}" url="ListaTopico.nicbrain" ajax="true" />
+             			
+            </p:tieredMenu>
+			
+			 <!-- Menu Controle de Acesso -->
+			 <p:tieredMenu style="width:285px"  backLabel="#{i18n['button.back']}"
+             	overlay="true" trigger="acesso" my="left top" at="right center" >
+             	<p:menuitem value="#{i18n['button.pessoa']}" url="ListaPessoa.nicbrain" ajax="true" />
+             	<p:menuitem value="Bloqueio de Pessoas"  url="/restrict/layout.nicbrain" ajax="true" />
+             	<p:menuitem value="Veículos"  url="/restrict/layout.nicbrain" ajax="true" />
+             	<p:menuitem value="Bloqueio de Veículos"  url="/restrict/layout.nicbrain" ajax="true" />
+             	<p:menuitem value="Liberar Acesso"  url="/restrict/layout.nicbrain" ajax="true" />
+             </p:tieredMenu>
+			
+			<!-- Menu Ocorrência -->
+			 <p:tieredMenu style="width:285px"  backLabel="#{i18n['button.back']}"
+             	overlay="true" trigger="ocorrencia" my="left top" at="right center" >
+             	<p:menuitem value="Cadastro de Ocorr&ecirc;ncia"  url="/restrict/layout.nicbrain" ajax="true" />
+             	<p:menuitem value="#{i18n['button.list']}" url="ListaOcorrencia.nicbrain" ajax="true" />
+             	<p:menuitem value="#{i18n['button.map']}" url="Operacao.nicbrain" ajax="true" />
+             </p:tieredMenu>
+             
+             <!-- Menu Checklist -->
+			 <p:tieredMenu style="width:285px"  backLabel="#{i18n['button.back']}"
+			 		overlay="true" trigger="checklist" my="left top" at="right center" >
+             	<p:menuitem value="#{i18n['button.events']}" url="ListaEventoPorChecklist.nicbrain" ajax="true"/>
+             	<p:menuitem value="#{i18n['button.map']}" url="MapaLocalPorChecklist.nicbrain" ajax="true"/>
+             </p:tieredMenu>
+
+			<!-- Menu Monitorar -->
+			 <p:tieredMenu style="width:285px"  backLabel="#{i18n['button.back']}"
+             	overlay="true" trigger="monitorar" my="left top" at="right center" >
+             	<p:menuitem value="Visualizar Imagem"  url="/restrict/layout.nicbrain" ajax="true" />             	
+             	<p:menuitem value="Recuperar Imagem"  url="/restrict/layout.nicbrain" ajax="true" />
+             </p:tieredMenu>
+
+			<!-- Menu Rastrear -->
+			 <p:tieredMenu style="width:285px"  backLabel="#{i18n['button.back']}"
+             	overlay="true" trigger="rastrear" my="left top" at="right center" >
+             	<p:menuitem value="Rastrear Pessoas"  url="/restrict/layout.nicbrain" ajax="true" />             	
+             	<p:menuitem value="Rastrear Veículos"  url="/restrict/layout.nicbrain" ajax="true" />
+             </p:tieredMenu>
+             
+             <!-- Menu Relatórios-->
+			 <p:tieredMenu style="width:285px"  backLabel="#{i18n['button.back']}"
+             	overlay="true" trigger="relatorio" my="left botton" at="right center" >
+             	<p:menuitem value="OS de Segurança"  url="/restrict/layout.nicbrain" ajax="true" />             	
+             	<p:menuitem value="OS de Serviço"  url="/restrict/layout.nicbrain" ajax="true" />
+             	<p:menuitem value="OS de Limpeza"  url="/restrict/layout.nicbrain" ajax="true" />             	
+             	<p:menuitem value="Os's com Respostas Semelhantes"  url="/restrict/layout.nicbrain" ajax="true" />
+             	<p:menuitem value="Checklists"  url="/restrict/layout.nicbrain" ajax="true" />             	
+             	<p:menuitem value="Ocorrências"  url="/restrict/layout.nicbrain" ajax="true" />
+             </p:tieredMenu>
+             
+	  			
+<!-- 			<p:commandButton id="dynaButton" value="#{i18n['label.menu']}" type="button" icon="ui-icon-extlink"/>   -->
+<!--              <p:tieredMenu style="width:285px" backLabel="#{i18n['button.back']}"  -->
+<!--              	overlay="true" trigger="dynaButton" my="left top" at="left bottom" > -->
+<!--              	   <p:menuitem value="#{i18n['button.profile_acess']}" url="ListaPerfilAcessoUsuario.nicbrain" ajax="true"  icon="ui-icon-document" />             	    -->
+<!--              	   <p:separator /> -->
+<!--              	   <p:menuitem value="#{i18n['button.users.config']}" url="ListaUsuarioFuncionario.nicbrain" ajax="true" icon="ui-icon-person" />				    -->
+<!--                    <p:separator /> -->
+<!--                    <p:submenu label="#{i18n['button.control_persons']}"  icon="ui-icon-gear"> -->
+<!--                    		<p:menuitem value="#{i18n['button.pessoa']}" url="ListaPessoa.nicbrain" ajax="true" icon="ui-icon-person" /> -->
+<!--                    </p:submenu>				    -->
+<!--                    <p:separator /> -->
+<!-- 					<p:submenu label="#{i18n['button.data_master']}"  icon="ui-icon-gear"> -->
+<!-- 						<p:menuitem value="#{i18n['button.segment']}" url="ListaSegmento.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.groups']}" url="ListaGrupo.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.checklist_group']}" url="ListaGrupoChecklist.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.checklist']}" url="ListaChecklist.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.procedure']}" url="ListaProcedimento.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.event']}" url="ListaEvento.nicbrain" ajax="true"/> -->
+<!-- 						<p:menuitem value="#{i18n['button.activityStatus']}" url="ListaStatusAtividade.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.functions']}" url="ListaFuncaoCargo.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.countries']}" url="ListaPais.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.lougradouro']}" url="ListaTipoLougradouro.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.person']}" url="ListaTipoPessoa.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.telephone']}" url="ListaTipoTelefone.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.equipment']}" url="ListaTipoEquipamento.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.provider']}" url="ListaFornecedor.nicbrain" ajax="true" />       -->
+<!-- 						<p:menuitem value="#{i18n['button.integration']}" url="ListaTipoDeIntegracao.nicbrain" ajax="true" />    -->
+<!-- 						<p:menuitem value="#{i18n['button.alert']}" url="ListaTipoDeAlerta.nicbrain" ajax="true" />                                                    -->
+<!-- 						<p:menuitem value="#{i18n['label.telephone.util']}" url="ListaTelefoneUtil.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.module']}" url="ListaModulo.nicbrain" ajax="true" /> -->
+<!-- 						<p:menuitem value="#{i18n['button.perimeter']}" url="ListaPerimetro.nicbrain" ajax="true" />    -->
+<!-- 						<p:menuitem value="#{i18n['button.contractor']}" url="ListaContratante.nicbrain" ajax="true" />  -->
+<!--                    </p:submenu> -->
+<!-- 	               <p:separator />                    -->
+<!--                    <p:menuitem value="#{i18n['button.clients_list']}" url="ListaCliente.nicbrain" ajax="true" icon="ui-icon-contact" /> -->
+<!--                    <p:separator /> -->
+<!--                    <p:submenu label="#{i18n['button.checklist']}"  icon="ui-icon-check"> -->
+<!-- 	                   	<p:menuitem value="#{i18n['button.list']}" url="ListaEventoChecklist.nicbrain" ajax="true" icon="ui-icon-calculator"/> -->
+<!-- 	                   	<p:menuitem value="#{i18n['button.map']}" url="/restrict/layout.nicbrain" ajax="true" icon="ui-icon-image"/> -->
+<!--                    </p:submenu> -->
+<!--                    <p:separator /> -->
+<!--                    <p:submenu label="#{i18n['button.ocurrence']}"  icon="ui-icon-notice"> -->
+<!--                    		<p:menuitem value="#{i18n['button.list']}" url="ListaOcorrencia.nicbrain" ajax="true" icon="ui-icon-calculator"/> -->
+<!-- 	                   	<p:menuitem value="#{i18n['button.map']}" url="Operacao.nicbrain" ajax="true" icon="ui-icon-image" /> -->
+<!--                    </p:submenu> -->
+<!--                    <p:separator />   -->
+<!-- 					<p:submenu label="#{i18n['button.reports']}" icon="ui-icon-print">   -->
+<!--                        <p:menuitem value="XPTO" url="/restrict/layout.nicbrain"/>   -->
+<!--                    </p:submenu> -->
+<!--                    <p:separator />             -->
+
+<!--              </p:tieredMenu>	 -->
+             </div>
+
+</ui:composition>

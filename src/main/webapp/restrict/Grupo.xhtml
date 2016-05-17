@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formGrupo">
+			<p:panel id="panel" header="#{i18n['label.group']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="id" value="#{grupoBean.model.id}" />
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.group']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="20" value="#{grupoBean.model.nome}"
+						required="true" label="nome"
+						requiredMessage="#{i18n['message.required_field.name']}">
+						<f:validateLength minimum="2" />
+					</p:inputText>
+
+					<h:outputLabel for="usuarioResponsavel"
+						value="#{i18n['label.responsible']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="usuarioResponsavel"
+						value="#{grupoBean.idUsuarioResponsavel}" required="false"
+						requiredMessage="#{i18n['message.required_field.responsible']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{grupoBean.usuariosResponsaveis}"
+							var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{grupoBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{grupoBean.cancel}" icon="ui-icon ui-icon-close"
+					update="@form" process="@this" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

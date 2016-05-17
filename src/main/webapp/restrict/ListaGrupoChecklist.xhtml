@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+	
+	<ui:define name="tarefas">
+		
+		<h:form prependId="true" id="formtable">
+			<div align="center">
+				<p:panel id="panel" style="width:50%">
+<!--                 <h:panelGrid columns="1" > -->
+
+					<p:growl id="msg1" showDetail="true"/>
+					
+					<p:contextMenu for="idTabela">
+						<p:menuitem value="#{i18n['button.delete']}"
+								update=":formtable:idTabela :formtable:msg1"
+								icon="ui-icon-close"
+								actionListener="#{grupoChecklistBean.delete}"/>
+					</p:contextMenu>
+					
+				    <p:dataTable id="idTabela" var="item_model" value="#{grupoChecklistBean.dataModel}"
+				    		paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+				    		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+				    				{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				    		rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+				    		selection="#{grupoChecklistBean.model}" selectionMode="single">
+				    	
+				    	<p:ajax event="rowSelect" listener="#{grupoChecklistBean.onRowSelect}" update=":formtable:msg1"/>
+				    	<p:ajax event="rowUnselect" listener="#{grupoChecklistBean.onRowUnselect}" update=":formtable:msg1"/>
+				    	<p:ajax event="rowToggle" listener="#{grupoChecklistBean.onRowToggle}" /> 
+				    	
+				    	<p:column style="width:2%">
+				    		<p:rowToggler id="idLinhaExp" />
+				    	</p:column>
+				    	
+				    	<p:column headerText="#{i18n['label.id']}">
+				    		<h:outputText value="#{item_model.idGrupoCheckList}"/>
+				    	</p:column>
+				    	
+				    	<p:column headerText="#{i18n['label.segment']}">
+				    		<h:outputText value="#{item_model.segmento.nomeSegmento}"/>
+				    	</p:column>
+				    	
+				    	<p:column headerText="#{i18n['label.checklist_group_type']}">
+				    		<h:outputText value="#{item_model.tipoGrupoChecklist.nome}"/>
+				    	</p:column>
+				    	
+				    	<p:rowExpansion>
+				    		<p:dataTable id="idTabelaRowExpansion"
+				    				var="item_row" value="#{grupoChecklistBean.checklistDataModel}"
+				    				paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+				    				paginatorPosition="bottom"
+				    				selectionMode="single">
+				    			
+				    			<p:column headerText="#{i18n['label.name']}">
+				    				<h:outputText value="#{item_row.nomeCheckList}"/>
+				    			</p:column>
+				    			<p:column headerText="#{i18n['label.description']}">
+				    				<h:outputText value="#{item_row.descricaoCheckList}"/>
+				    			</p:column>
+				    		</p:dataTable>
+
+				    	</p:rowExpansion>
+				    	
+				    	<f:facet name="footer">
+				    		<p:commandButton value="#{i18n['button.new_checklist_group']}" process="@this" update="@form"
+				    				action="#{grupoChecklistBean.novo}"
+				    				style="width:100%;text-align:center">
+				    			
+				    			<f:setPropertyActionListener target="#{grupoChecklistBean.model}" value="#{model}"/>
+				    		</p:commandButton>
+				    	</f:facet>
+				    	
+				    </p:dataTable>
+					        
+<!--                 </h:panelGrid> -->
+            </p:panel>
+            </div>
+        </h:form>
+    </ui:define>
+ </ui:composition>
+				    

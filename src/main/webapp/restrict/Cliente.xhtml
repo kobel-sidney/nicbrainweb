@@ -1,0 +1,280 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+    <ui:define name="tarefas">
+        <h:form id="formtable">
+            <p:growl id="messages" showDetail="true" autoUpdate="true" />
+            <p:wizard id="tabView" widgetVar="w_cliente" showNavBar="false"
+                      flowListener="#{clienteBean.mudarTab}">
+                <p:tab id="tab_cliente" title="#{i18n['label.client']}">
+                    <h:panelGrid id="gridPerson" columns="2" cellpadding="2">
+                        <h:panelGroup>								
+                            <p:graphicImage id="glogo" value="#{clienteBean.carregarImagem}" height="155" width="140">
+                                <f:param name="id" value="#{clienteBean.id}"/>
+                            </p:graphicImage>
+
+                            <p:fileUpload fileUploadListener="#{clienteBean.fileUpload}" 
+                                          style="width: 140px;" 
+                                          mode="advanced"
+                                          update="formtable:glogo" 
+                                          auto="true" 
+                                          sizeLimit="100000" 
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                          label="Carregar Logo" />
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:panelGrid columns="2" cellpadding="2">
+                                <p:outputLabel value="#{i18n['label.company']}:" />
+                                <input value="#{clienteBean.cliente.contratante.razaoSocial}"
+                                       readonly="readonly" />
+
+                                <p:outputLabel for="nomeFantasia" value="#{i18n['label.name']}:" />
+                                <p:inputText id="nomeFantasia" size="60" maxlength="50"
+                                             value="#{clienteBean.cliente.nomeFantasia}" />
+
+                                <p:outputLabel for="ativo" value="#{i18n['label.active']}:" />
+                                <p:selectOneRadio id="ativo" value="#{clienteBean.cliente.ativo}"
+                                                  required="true"
+                                                  requiredMessage="#{i18n['message.required_field.active']}">
+                                    <f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+                                    <f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+                                </p:selectOneRadio>
+
+                                <p:outputLabel for="razaoSocial"
+                                               value="#{i18n['label.razaosocial']}:" />
+                                <p:inputText id="razaoSocial" size="30"
+                                             value="#{clienteBean.cliente.razaoSocial}" required="true"
+                                             label="Cliente"
+                                             requiredMessage="#{i18n['message.required_field.razaosocial']}">
+                                    <f:validateLength minimum="3" />
+                                </p:inputText>
+
+                                <p:outputLabel for="CNPJcliente" value="#{i18n['label.cnpj']}:" />
+                                <p:inputMask id="CNPJcliente" size="25" required="true"
+                                             label="CNPJ" value="#{clienteBean.cliente.cnpj}"
+                                             requiredMessage="#{i18n['message.required_field.cnpj']}"
+                                             mask="99.999.999/9999-99">
+                                    <f:validator validatorId="cnpjValidator" />
+                                </p:inputMask>
+
+                                <p:outputLabel for="IEcliente"
+                                               value="#{i18n['label.inscrEstadual']}:" />
+                                <p:inputText id="IEcliente" size="20"
+                                             value="#{clienteBean.cliente.ie}" label="Inscri��o Estadual"
+                                             maxlength="14" />
+
+                                <p:outputLabel for="site" value="#{i18n['label.site']}:" />
+                                <p:inputText id="site" size="30"
+                                             value="#{clienteBean.cliente.site}" label="Cliente" />
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.next']}"
+                                         onclick="PF('w_cliente').next();" styleClass="ui-wizard-nav-next"></p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+
+                <p:tab id="tab_responsavel" title="#{i18n['label.responsible']}">
+                    <h:panelGrid columns="2" cellpadding="2">
+                        <p:outputLabel for="responsavelContratante"
+                                       value="#{i18n['label.responsible']}:" />
+                        <p:inputText id="responsavelContratante" size="30"
+                                     value="#{clienteBean.cliente.nomeContato}" required="true"
+                                     label="Contratante"
+                                     requiredMessage="#{i18n['message.required_field.responsible']}">
+                            <f:validateLength minimum="3" />
+                        </p:inputText>
+
+                        <p:outputLabel for="telefoneResponsavel"
+                                       value="#{i18n['label.telephone.responsavel']}:" />
+                        <p:inputMask id="telefoneResponsavel" size="14" required="true"
+                                     label="TelefoneContato" mask="(99) 9999-9999"
+                                     value="#{clienteBean.cliente.telefoneContato}"
+                                     requiredMessage="#{i18n['message.required_field.phone']}">
+                        </p:inputMask>
+
+                        <p:outputLabel for="celularResponsavel"
+                                       value="#{i18n['label.cel_responsible']}:" />
+                        <p:inputMask id="celularResponsavel" size="15"
+                                     label="CelularResponsavel" mask="(99) 99999-9999"
+                                     value="#{clienteBean.cliente.celularContato}">
+                        </p:inputMask>
+
+                        <p:outputLabel for="emailResponsavel"
+                                       value="#{i18n['label.email_responsavel']}:" />
+                        <p:inputText id="emailResponsavel" size="30"
+                                     value="#{clienteBean.cliente.emailContato}" label="Contratante" />
+                    </h:panelGrid>
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.back']}"
+                                         onclick="PF('w_cliente').back();" styleClass="ui-wizard-nav-back"></p:commandButton>
+                        <p:commandButton value="#{i18n['button.next']}"
+                                         oncomplete="PF('w_cliente').next();"
+                                         action="#{clienteBean.habilitaGrid}" immediate="true"
+                                         update="panel_enderecos" styleClass="ui-wizard-nav-next"></p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+
+                <p:tab id="tab_endereco" title="#{i18n['label.address']}">
+                    <h:panelGrid id="panel_enderecos" columns="2" cellpadding="5"
+                                 rendered="#{clienteBean.gridHabilitada}">
+                        <p:outputLabel for="c_paises" value="#{i18n['label.countries']}:" />
+                        <p:selectOneMenu id="c_paises" value="#{clienteBean.idPais}"
+                                         label="#{i18n['label.countries']}" required="true"
+                                         requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{clienteBean.paises}" var="item"
+                                           itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                            <p:ajax update="c_estado"
+                                    listener="#{clienteBean.carregarEstadosPorPais()}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="c_estado" value="#{i18n['button.state']}:" />
+                        <p:selectOneMenu id="c_estado" value="#{clienteBean.idEstado}"
+                                         label="#{i18n['button.state']}" required="true"
+                                         requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{clienteBean.estados}" var="item"
+                                           itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                            <p:ajax update="c_municipio"
+                                    listener="#{clienteBean.carregarMunicipiosPorEstado}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="c_municipio" value="#{i18n['label.city']}:" />
+                        <p:selectOneMenu id="c_municipio"
+                                         value="#{clienteBean.idMunicipio}" label="#{i18n['label.city']}"
+                                         required="true"
+                                         requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{clienteBean.municipios}" var="item"
+                                           itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="tipoLogradouro"
+                                       value="#{i18n['button.logradouro']}:" />
+                        <p:selectOneMenu id="tipoLogradouro"
+                                         value="#{clienteBean.endereco.tipoEndereco.id}"
+                                         label="#{i18n['label.person']}" required="true"
+                                         requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{bbTipoEndereco.tiposEnderecos}"
+                                           var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="logradouro"
+                                       value="#{i18n['label.logradouro']}:" />
+                        <p:inputText id="logradouro" size="40"
+                                     value="#{clienteBean.endereco.logradouro}" required="true"
+                                     requiredMessage="#{i18n['message.required_field.name']}">
+                            <f:validateLength minimum="0" />
+                        </p:inputText>
+
+                        <p:outputLabel for="numero" value="#{i18n['label.number2']}" />
+                        <p:inputText id="numero" size="5"
+                                     value="#{clienteBean.endereco.numero}" label="Numero">
+                        </p:inputText>
+
+                        <p:outputLabel for="complemento"
+                                       value="#{i18n['label.complement']}:" />
+                        <p:inputText id="complemento" size="20"
+                                     value="#{clienteBean.endereco.complemento}" label="Complemento">
+                        </p:inputText>
+
+                        <p:outputLabel for="bairro" value="#{i18n['label.bairro']}:" />
+                        <p:inputText id="bairro" size="20"
+                                     value="#{clienteBean.endereco.bairro}" label="bairro"
+                                     required="true"
+                                     requiredMessage="#{i18n['message.required_field.name']}">
+                        </p:inputText>
+
+                        <p:outputLabel for="cep" value="#{i18n['label.cep']}:" />
+                        <p:inputMask id="cep" size="9" label="cep" mask="99999-999"
+                                     required="true" value="#{clienteBean.endereco.cep}"
+                                     requiredMessage="#{i18n['message.required_field.phone']}">
+                        </p:inputMask>
+                        <p:commandButton value="#{i18n['button.save_address']}"
+                                         id="adicionar_endereco"
+                                         actionListener="#{clienteBean.salvarEndereco}"
+                                         update="t_enderecos,panel_enderecos" icon="ui-icon-disk" />
+                        <p:commandButton value="#{i18n['button.cancel']}" process="@this"
+                                         actionListener="#{clienteBean.limparEndereco}"
+                                         update="panel_enderecos" icon="ui-icon-disk" />
+                    </h:panelGrid>
+
+                    <h:panelGroup>
+                        <p:dataTable id="t_enderecos" var="endereco"
+                                     value="#{clienteBean.enderecoDataModel}" selectionMode="single"
+                                     rowKey="#{endereco.id}">
+                            <p:ajax event="rowSelect"
+                                    listener="#{clienteBean.onRowSelectEndereco}"
+                                    update=":formtable:panel_enderecos" />
+                            <p:ajax event="rowUnselect"
+                                    listener="#{clienteBean.onRowUnselectEndereco}"
+                                    update=":formtable:panel_enderecos" />
+                            <p:column
+                                headerText="#{i18n['label.address']}:&nbsp;#{i18n['label.token.required_field']}">
+                                <h:outputText
+                                    value="#{endereco.logradouro}, #{endereco.numero}, #{endereco.municipio.nome}, 
+                                    #{endereco.municipio.estado.nome}, #{endereco.municipio.estado.pais.nome}" />
+                            </p:column>
+                            <p:column headerText="#{i18n['label.action']}">
+                                <p:commandButton process="@this"
+                                                 actionListener="#{clienteBean.excluirEndereco(endereco)}"
+                                                 icon="ui-icon-trash" title="#{i18n['button.delete']}"
+                                                 update="t_enderecos" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.back']}"
+                                         onclick="PF('w_cliente').back();" styleClass="ui-wizard-nav-back"></p:commandButton>
+                        <p:commandButton value="#{i18n['button.next']}"
+                                         oncomplete="PF('w_cliente').next();" immediate="true"
+                                         action="#{clienteBean.desabilitaGrid}" update="panel_enderecos"
+                                         styleClass="ui-wizard-nav-next"></p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+                <p:tab id="tab_mensagens" title="#{i18n['label.message']}">
+                    <h:panelGrid id="panel_mensagens" columns="1" cellpadding="2">
+                        <p:pickList id="pickListMensagens" 
+                                    value="#{clienteBean.mensagens}" var="mensagem"
+                                    itemLabel="#{mensagem.descricao}"
+                                    itemValue="#{mensagem}"
+                                    converter="mensagemPickListConverter">
+
+                            <f:facet name="sourceCaption">#{i18n['label.availables']}</f:facet>
+                            <f:facet name="targetCaption">#{i18n['label.selecteds']}</f:facet>
+
+                        </p:pickList>
+                    </h:panelGrid>
+
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.back']}"
+                                         oncomplete="PF('w_cliente').back();"
+                                         action="#{clienteBean.habilitaGrid}" immediate="true"
+                                         update="panel_enderecos" styleClass="ui-wizard-nav-back"></p:commandButton>
+                        <p:commandButton value="#{i18n['button.save']}"
+                                         action="#{clienteBean.salvar}" id="withIcon" icon="ui-icon-disk" />
+                    </h:panelGroup>
+                </p:tab>
+
+            </p:wizard>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:b="http://www.springframework.org/schema/beans"
+		xsi:schemaLocation="
+				http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/security
+				http://www.springframework.org/schema/security/spring-security-3.0.4.xsd">
+
+	<http auto-config="true" use-expressions="true">
+		
+		<intercept-url pattern="/login.nicbrain" access="permitAll" />
+		<intercept-url pattern="/images/**" access="permitAll" />
+		<intercept-url pattern="/restrict/**" access="isAuthenticated()" />
+		
+		<!--  <intercept-url pattern="/**" access="isAuthenticated()" /> -->
+		<!-- <intercept-url pattern="/public/**" access="permitAll"/>-->
+		
+		<form-login login-page="/login.nicbrain"
+				authentication-success-handler-ref="authenticationSuccessHandler"
+				authentication-failure-handler-ref="authenticationFailureHandler"
+				authentication-failure-url="/login.nicbrain?erro=true"
+				default-target-url="/restrict/layout.nicbrain"/>
+		<access-denied-handler error-page="/acessonegado.nicbrain" />
+		
+		<logout logout-success-url="/login.nicbrain" />
+	</http>
+	
+	<b:bean id="authenticationSuccessHandler" class="br.com.kolss.util.LoginSuccessHandler"/>
+	<b:bean id="authenticationFailureHandler" class="br.com.kolss.util.LoginFailureHandler"/>
+	
+
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder hash="sha-256"/>
+<!-- 			<jdbc-user-service data-source-ref="dataSource" -->
+<!-- 					users-by-username-query="SELECT distinct p.CPFPessoa, u.SenhaUsuario, 'true' as enabled FROM usuario u, pessoa p, contexto c WHERE u.idPessoa = p.idPessoa and u.idPessoa = c.IdPessoa and u.ativo=1 and p.CPFPessoa=?" -->
+<!-- 					authorities-by-username-query="SELECT distinct p.CPFPessoa as username, u.Permissao as authorities FROM usuario u, pessoa p, contexto c WHERE u.idPessoa = p.idPessoa and u.idPessoa = c.IdPessoa and u.ativo=1 and p.CPFPessoa=?"/> -->
+				<jdbc-user-service data-source-ref="dataSource"
+					users-by-username-query="SELECT DISTINCT u.email_usuario, u.senha_usuario, 'true' as enabled FROM usuario u, contexto c WHERE lower(u.email_usuario)=lower(?) AND u.id_usuario = c.id_usuario AND u.ativo = 1"
+				    authorities-by-username-query="SELECT DISTINCT u.nome_usuario as username, r.nome_regra as authorities FROM usuario u, contexto c, regra r, usuario_regra ur WHERE r.id_regra = ur.id_regra AND u.id_usuario = ur.id_usuario AND u.id_usuario = c.id_usuario AND lower(u.email_usuario)=lower(?) AND r.ativo=1 AND u.ativo=1"/>
+		</authentication-provider>
+	</authentication-manager>
+	
+	
+	
+</b:beans>    

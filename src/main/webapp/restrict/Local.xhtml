@@ -1,0 +1,272 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form id="formLocal" enctype="multipart/form-data">
+			<p:growl id="messages" showDetail="true" autoUpdate="true" closable="true" />
+			<p:wizard id="tabView" widgetVar="w_local" showNavBar="false" flowListener="#{localBean.mudarTab}">
+				<p:tab id="tab_local" title="#{i18n['label.venue']}">
+					<h:panelGrid columns="2">
+						<p:outputLabel for="glogo" value="#{i18n['label.logo']}:"/>
+						<h:panelGrid columns="2">
+							<h:panelGrid columns="2">
+								<p:graphicImage id="glogo" value="#{localBean.carregarImagem()}" style="width=70px; height:66px;">
+            						<f:param name="id" value="#{localBean.id}"/> <!-- This is necessary for firefox bug -->
+            					</p:graphicImage>
+							</h:panelGrid>
+								<p:fileUpload fileUploadListener="#{localBean.fileUploadLogo}" mode="advanced" 
+            					dragDropSupport="false" sizeLimit="100000" auto="true" update="formLocal:glogo"
+            					allowTypes="/(\.|\/)(gif|jpeg|png)$/" label="#{i18n['button.choose']}"/>
+						</h:panelGrid>
+						
+						<p:outputLabel for="ativo" value="#{i18n['label.active']}:" />
+						<p:selectOneRadio id="ativo" value="#{localBean.local.ativo}" required="true"
+							requiredMessage="#{i18n['message.required_field.active']}">
+							<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+							<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+						</p:selectOneRadio>
+						
+						<p:outputLabel for="tipoLocal" value="#{i18n['label.location.type']}:" />
+						<p:selectOneMenu id="tipoLocal"
+							value="#{localBean.local.tipoLocal.id}" required="true"
+							requiredMessage="#{i18n['message.required_field.location_type']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+							<f:selectItems value="#{localBean.tiposLocal}" var="tipoLocal"
+								itemValue="#{tipoLocal.id}"
+								itemLabel="#{tipoLocal.nome}" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="cliente"
+							value="#{i18n['label.client']}:" />
+						<p:selectOneMenu id="cliente"
+							value="#{localBean.local.cliente.id}" required="true"
+							requiredMessage="#{i18n['message.required_field.choice_a_client']}">
+							<f:selectItem itemLabel="#{i18n['text.select.client']}" itemValue="" />
+							<f:selectItems value="#{bbCliente.clientesPorContexto}" var="cliente"
+								itemValue="#{cliente.id}"
+								itemLabel="#{cliente.nomeFantasia}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="nomeLocal"
+							value="#{i18n['label.name']}:" />
+						<p:inputText id="nomeLocal" size="30"
+							value="#{localBean.local.nome}" required="true" label="nome"
+							requiredMessage="#{i18n['message.required_field.name']}">
+						</p:inputText>
+
+						<p:outputLabel for="site" value="#{i18n['label.site']}:" />
+						<p:inputText id="site" size="30" value="#{localBean.local.site}" label="site"/>
+
+						<p:outputLabel for="telefoneLocal" value="#{i18n['label.telephone.venue']}:" />
+						<p:inputMask id="telefoneLocal" size="15"
+							label="TelefoneLocal" mask="(99) 9999-9999"
+							value="#{localBean.local.telefoneLocal}">
+						</p:inputMask>
+						
+						<p:outputLabel for="usuarioResponsavel"
+							value="Responsável pela Segurança:" />
+						<p:selectOneMenu id="usuarioResponsavel"
+							value="#{localBean.local.usuarioResponsavel.id}" required="true"
+							requiredMessage="#{i18n['message.required_field.choice_a_responsible']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+								itemValue="" />
+							<f:selectItems value="#{bbUsuario.usuariosPorContratante}" var="item"
+								itemLabel="#{item.nome} - #{item.pessoa.nome}" itemValue="#{item.id}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="observacao"
+							value="#{i18n['label.observacao']}:" />
+						<p:inputTextarea id="observacao"
+							value="#{localBean.local.observacao}" rows="3" cols="30"
+							maxlength="150" />
+					</h:panelGrid>
+					<h:panelGroup>
+						<p:commandButton value="#{i18n['button.next']}" onclick="PF('w_local').next();" styleClass="ui-wizard-nav-next"></p:commandButton>
+					</h:panelGroup>
+				</p:tab>
+				<p:tab id="tab_responsavel" title="#{i18n['label.responsible']}">
+					<h:panelGrid columns="2" cellpadding="2">
+						<p:outputLabel for="responsavelLocal"
+							value="Responsável no Local:" />
+						<p:inputText id="responsavelLocal" size="30"
+							value="#{localBean.local.responsavel}"
+							label="#{i18n['label.client']}">
+						</p:inputText>
+
+						<p:outputLabel for="telefoneResponsavel"
+							value="#{i18n['label.telephone.responsavel']}:" />
+						<p:inputMask id="telefoneResponsavel" size="15"
+							label="#{label.telephone.responsavel}" mask="(99) 9999-9999"
+							value="#{localBean.local.telefoneResponsavel}">
+						</p:inputMask>
+
+						<p:outputLabel for="celularResponsavel"
+							value="#{i18n['label.cel_responsible']}:" />
+						<p:inputMask id="celularResponsavel" size="15"
+							label="#{label.cel_responsible}" mask="(99) 99999-9999"
+							value="#{localBean.local.celularResponsavel}">
+						</p:inputMask>
+
+						<p:outputLabel for="emailResponsavel"
+							value="#{i18n['label.email_responsavel']}:" />
+						<p:inputText id="emailResponsavel" size="30"
+							value="#{localBean.local.emailResponsavel}"
+							label="#{label.email_responsavel}">
+						</p:inputText>
+					</h:panelGrid>
+					<h:panelGroup>
+						<p:commandButton value="#{i18n['button.back']}" onclick="PF('w_local').back();" 
+							styleClass="ui-wizard-nav-back"></p:commandButton>
+						<p:commandButton value="#{i18n['button.next']}" onclick="PF('w_local').next();" 
+							styleClass="ui-wizard-nav-next"></p:commandButton>
+					</h:panelGroup>
+				</p:tab>
+				<p:tab id="tab_coordenadas" title="#{i18n['label.coordinates']}">
+					<h:panelGrid id="panel_coordenadas" columns="2">
+						<p:outputLabel for="latitude" value="#{i18n['label.latitude']}:"/>
+						<p:inputText id="latitude" size="20" value="#{localBean.local.latitude}"/>
+						
+						<p:outputLabel for="longitude" value="#{i18n['label.longitude']}:"/>
+						<p:inputText id="longitude" size="20" value="#{localBean.local.longitude}"/>
+					</h:panelGrid>
+					<h:panelGroup>
+						<p:commandButton value="#{i18n['button.back']}" onclick="PF('w_local').back();" 
+							styleClass="ui-wizard-nav-back"></p:commandButton>
+						<p:commandButton value="#{i18n['button.next']}" oncomplete="PF('w_local').next();" 
+							action="#{localBean.habilitarGrid}" immediate="true" update="panel_enderecos" 
+							styleClass="ui-wizard-nav-next"></p:commandButton>
+					</h:panelGroup>
+				</p:tab>
+				<p:tab id="tab_endereco" title="#{i18n['label.address']}">
+					<h:panelGrid id="panel_enderecos" columns="2" cellpadding="5" rendered="#{localBean.gridHabilitada}">
+						<p:outputLabel for="c_paises" value="#{i18n['label.countries']}:" />
+						<p:selectOneMenu id="c_paises"
+							value="#{localBean.idPais}"
+							required="true"
+							requiredMessage="#{i18n['message.required_field.choice_a_persontype']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+							<f:selectItems value="#{localBean.paises}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+							<p:ajax update="c_estado" listener="#{localBean.buscarEstadosPorPais()}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="c_estado" value="#{i18n['button.state']}:"/>
+						<p:selectOneMenu id="c_estado"
+							value="#{localBean.idEstado}"
+							required="true"
+							requiredMessage="#{i18n['message.required_field.choice_a_persontype']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+							<f:selectItems value="#{localBean.estados}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+							<p:ajax update="c_municipio" listener="#{localBean.buscarMunicipiosPorEstado}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="c_municipio" value="#{i18n['label.city']}:"/>
+						<p:selectOneMenu id="c_municipio"
+							value="#{localBean.idMunicipio}"
+							required="true"
+							requiredMessage="#{i18n['message.required_field.choice_a_persontype']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+							<f:selectItems value="#{localBean.municipios}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="tipoLogradouro" value="#{i18n['button.logradouro']}:"/>
+						<p:selectOneMenu id="tipoLogradouro"
+							value="#{localBean.endereco.tipoEndereco.id}"
+							required="true"
+							requiredMessage="#{i18n['message.required_field.choice_a_persontype']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+							<f:selectItems value="#{bbTipoEndereco.tiposEnderecos}" var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel for="logradouro" value="#{i18n['label.logradouro']}:"/>
+						<p:inputText id="logradouro" size="40"
+							value="#{localBean.endereco.logradouro}"
+							required="true" requiredMessage="#{i18n['message.required_field.name']}">
+							<f:validateLength minimum="0" />
+						</p:inputText>
+							
+						<p:outputLabel for="numero" value="#{i18n['label.number2']}"/>
+						<p:inputText id="numero" size="5"
+							value="#{localBean.endereco.numero}"
+							label="Numero">
+						</p:inputText>
+
+						<p:outputLabel for="complemento" value="#{i18n['label.complement']}" />
+						<p:inputText id="complemento" size="20"
+							value="#{localBean.endereco.complemento}"
+							label="Complemento">
+						</p:inputText>
+
+						<p:outputLabel for="bairro" value="#{i18n['label.bairro']}:"/>
+						<p:inputText id="bairro" size="20"
+							value="#{localBean.endereco.bairro}"
+							label="bairro" required="true"
+							requiredMessage="#{i18n['message.required_field.name']}">
+						</p:inputText>
+
+						<p:outputLabel for="cep" value="#{i18n['label.cep']}:"/>
+						<p:inputMask id="cep" size="9" label="cep"
+							mask="99999-999" required="true"
+							value="#{localBean.endereco.cep}"
+							requiredMessage="#{i18n['message.required_field.phone']}">
+						</p:inputMask>						
+						<p:commandButton value="#{i18n['button.save_address']}" id="adicionar_endereco" actionListener="#{localBean.salvarEndereco}" update="t_enderecos,panel_enderecos" icon="ui-icon-disk" />
+						<p:commandButton value="#{i18n['button.cancel']}" process="@this" actionListener="#{localBean.limparEndereco}" update="panel_enderecos" icon="ui-icon-disk" />
+            		</h:panelGrid>
+            		
+					<h:panelGroup>
+						<p:dataTable id="t_enderecos" var="endereco" value="#{localBean.enderecos}" 
+							selectionMode="single" rowKey="#{endereco.id}">
+        					<p:ajax event="rowSelect" listener="#{localBean.onRowSelectEndereco}" update=":formLocal:panel_enderecos" />
+        					<p:ajax event="rowUnselect" listener="#{localBean.onRowUnselectEndereco}" update=":formLocal:panel_enderecos" />
+        					<p:column headerText="#{i18n['label.address']}:">
+        						<h:outputText value="#{endereco.logradouro}, #{endereco.numero}, #{endereco.municipio.nome}, 
+        						#{endereco.municipio.estado.nome}, #{endereco.municipio.estado.pais.nome}" />
+    						</p:column>
+    						<p:column headerText="#{i18n['label.action']}">
+        						<p:commandButton process="@this" actionListener="#{localBean.excluirEndereco(endereco)}" icon="ui-icon-trash" title="#{i18n['button.delete']}" update="t_enderecos"/>
+    						</p:column>
+    					</p:dataTable>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:commandButton value="#{i18n['button.back']}" onclick="PF('w_local').back();" styleClass="ui-wizard-nav-back"></p:commandButton>
+						<p:commandButton value="#{i18n['button.next']}" oncomplete="PF('w_local').next();" 
+							immediate="true" action="#{localBean.desabilitarGrid}" update="panel_enderecos" 
+							styleClass="ui-wizard-nav-next"></p:commandButton>
+					</h:panelGroup>
+				</p:tab>
+				<p:tab id="tab_documentos" title="#{i18n['label.local.documents']}">
+					<h:panelGrid id="panel_documentos" columns="2">
+						<p:outputLabel value="#{i18n['label.local.documents']}:"/>
+						<p:fileUpload fileUploadListener="#{localBean.salvarDocumentoAnexo}" mode="advanced" 
+            					dragDropSupport="false" sizeLimit="3000000" auto="true"
+            					allowTypes="/(\.|\/)(pdf|xls|xlsx|doc|docx|bmp|jpeg|jpg|rar)$/" label="#{i18n['button.choose']}" 
+            					update="t_documentos_anexos"/>
+					</h:panelGrid>
+					<h:panelGroup>
+						<p:dataTable id="t_documentos_anexos" var="documentoAnexo" value="#{localBean.documentosAnexosAsList}" 
+							selectionMode="single" rowKey="#{documentoAnexo.id}">
+        					<p:column headerText="#{i18n['label.local.documents']}:">
+        						<h:outputText value="#{documentoAnexo.nome}"/>
+    						</p:column>
+    						<p:column headerText="#{i18n['label.action']}">
+        						<p:commandButton process="@this" actionListener="#{localBean.excluirDocumentoAnexo(documentoAnexo)}" 
+        							icon="ui-icon-trash" title="#{i18n['button.delete']}" update="t_documentos_anexos"/>
+    						</p:column>
+    					</p:dataTable>
+					</h:panelGroup>
+					<h:panelGroup>
+						<p:commandButton value="#{i18n['button.back']}" oncomplete="PF('w_local').back();" 
+							action="#{localBean.habilitarGrid}" immediate="true" update="panel_enderecos"
+							styleClass="ui-wizard-nav-back"></p:commandButton>
+						<p:commandButton value="#{i18n['button.save']}" action="#{localBean.salvar}" icon="ui-icon-disk"/>
+					</h:panelGroup>
+				</p:tab>
+			</p:wizard>
+		</h:form>
+	</ui:define>
+</ui:composition>

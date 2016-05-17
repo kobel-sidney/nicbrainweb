@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formChecklist">
+			<p:panel id="panel" header="#{i18n['label.checklist']}" style="margin-bottom:10px;">
+				<p:growl id="msg0"/>
+				<h:panelGrid columns="2">
+					<h:outputLabel/>
+					<h:inputHidden id="idChecklist" value="#{checklistBean.model.idCheckList}"/>
+					
+					<h:outputLabel for="nomeChecklist" value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}"/>
+					<p:inputText id="nomeChecklist" size="20" value="#{checklistBean.model.nomeCheckList}"
+							required="true" label="#{i18n['label.name']}"
+							requiredMessage="#{i18n['message.required_field.name']}">
+						<f:validateLength minimum="3"/>
+					</p:inputText>
+
+					<h:outputLabel for="descricaoChecklist" value="#{i18n['label.description']}"/>
+					<p:inputText id="descricaoChecklist" size="20" value="#{checklistBean.model.descricaoCheckList}"
+							label="#{i18n['label.description']}">
+					</p:inputText>
+
+				</h:panelGrid>
+			</p:panel>
+			
+			<p:commandButton value="#{i18n['button.save']}" action="#{checklistBean.add}" 
+					id="withIcon" update="@form" icon="ui-icon-disk" ajax="false"/>
+			<p:commandButton value="#{i18n['button.cancel']}" actionListener="#{checklistBean.cancel}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this"/>           
+		</h:form>
+		
+	</ui:define>
+</ui:composition>

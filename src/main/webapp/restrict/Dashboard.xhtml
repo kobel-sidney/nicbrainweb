@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+	
+<script type="text/JavaScript">
+</script>
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formDashboard">
+			<div class="dashboard-tudo">
+				
+				<p:panel id="panelDashboard" header="Dashboard" style="margin-bottom:10px;">
+					<p:growl id="msgCabecalho" />
+				</p:panel>
+
+					<div class="dashboard">
+
+						<p:panel id="panelChecklist" header="Checklist"
+							style="margin-bottom:10px;" >
+							<p:dataList
+								value="#{dashboardBean.listaDashboardChecklistWrapper}"
+								var="grafico" type="definition">
+								<div class="box-dashboard">
+									<p:pieChart id="mineirao-ocorrencia" value="#{grafico.grafico}"
+										legendPosition="w" title="#{grafico.nomeChecklist}"
+										style="width:270px;height:200px;float:left">
+									</p:pieChart>
+								</div>
+							</p:dataList>
+						</p:panel>
+					</div>
+					<div class="dashboard">
+						<p:panel id="panelOcorrencia" header="#{i18n['label.ocurrence']}"
+							style="margin-bottom:10px;">
+							<p:growl id="msg01" />
+						</p:panel>
+						
+						<p:poll interval="15" listener="#{dashboardBean.refresh}" update=":formDashboard:meuDataList" />
+						<p:dataList
+							value="#{dashboardBean.listaDashboardOcorrenciaWrapper}"
+							var="graficoOcorrencia" type="definition" id="meuDataList">
+							<div class="box-dashboard">
+								<p:pieChart id="grafico-ocorrencia"
+									value="#{graficoOcorrencia.grafico}" legendPosition="w"
+									title="#{graficoOcorrencia.nomeChecklist}"
+									style="width:270px;height:200px;float:left" >
+									<f:param name="timemillis" value="#{ocorrenciaBean.timemillis}"/>
+								</p:pieChart>
+							</div>
+						</p:dataList>
+						
+						<div class="box-dashboard">
+						
+							<p:barChart id="basic"
+								value="#{dashboardBean.graficoBarraOcorrencias}"
+								legendPosition="ne" title="Ocorrências por Classificação"
+								min="0" max="10" style="height:300px" />
+						</div>
+					</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

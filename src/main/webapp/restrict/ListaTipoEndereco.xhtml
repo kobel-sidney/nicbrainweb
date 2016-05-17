@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formtable">
+			<div align="center" class="estiloDiv">
+				<p:panel id="panel" style="width:50%">
+					<p:growl id="msg1" showDetail="true" />
+
+					<p:contextMenu for="idTabela">
+						<p:menuitem value="#{i18n['button.delete']}"
+							update=":formtable:idTabela :formtable:msg1" icon="ui-icon-close"
+							actionListener="#{tipoEnderecoBean.delete}" />
+					</p:contextMenu>
+
+					<p:dataTable id="idTabela" var="item"
+						value="#{tipoEnderecoBean.listaTipoEnderecos}" paginator="true"
+						rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+							{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+						selection="#{tipoEnderecoBean.model}" selectionMode="single">
+
+						<p:ajax event="rowSelect"
+							listener="#{tipoEnderecoBean.onRowSelect}"
+							update=":formtable:msg1" />
+						<p:ajax event="rowUnselect"
+							listener="#{tipoEnderecoBean.onRowUnselect}"
+							update=":formtable:msg1" />
+
+						<p:column style="width:80px;text-align:center">
+							<h:outputText value="#{item.nome}" />
+						</p:column>
+
+
+
+						<f:facet name="footer">
+							<p:commandButton value="#{i18n['button.new_address_type']}"
+								process="@this" update="@form" action="#{tipoEnderecoBean.novo}"
+								style="width:100%;text-align:center">
+								<f:setPropertyActionListener target="#{tipoEnderecoBean.model}"
+									value="#{model}" />
+							</p:commandButton>
+						</f:facet>
+					</p:dataTable>
+
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

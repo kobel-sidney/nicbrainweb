@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formtable">
+			<div align="center" class="estiloDiv">
+				<p:panel id="panel" style="width:80%">
+					<p:growl id="msg1" showDetail="true" />
+
+					<p:contextMenu for="idTabela">
+						<p:menuitem value="#{i18n['button.delete']}"
+							update=":formtable:idTabela :formtable:msg1" icon="ui-icon-close"
+							actionListener="#{relacionamentoPerfilFormularioBean.delete}" />
+					</p:contextMenu>
+
+					<p:dataTable id="idTabela" var="item"
+						value="#{relacionamentoPerfilFormularioBean.listaRelacionamentos}"
+						paginator="true" rows="10"
+						emptyMessage="#{i18n['message.registry.not_found']}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+							{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+						selection="#{relacionamentoPerfilFormularioBean.model}"
+						selectionMode="single">
+
+						<p:ajax event="rowSelect"
+							listener="#{relacionamentoPerfilFormularioBean.onRowSelect}"
+							update=":formtable:msg1" />
+						<p:ajax event="rowUnselect"
+							listener="#{relacionamentoPerfilFormularioBean.onRowUnselect}"
+							update=":formtable:msg1" />
+
+						<p:column style="width:80px;text-align:center"
+							headerText="Perfil Formulário">
+							<h:outputText value="#{item.perfilFormulario.descricao}" />
+						</p:column>
+						<p:column style="width:80px;text-align:center"
+							headerText="Grupo Questão">
+							<h:outputText value="#{item.grupoQuestao.nome}" />
+						</p:column>
+						<p:column style="width:80px;text-align:center"
+							headerText="Questão">
+							<h:outputText value="#{item.questao.descricao}" />
+						</p:column>
+						<p:column style="width:80px;text-align:center"
+							headerText="Resposta">
+							<h:outputText value="#{item.resposta.descricao}" />
+						</p:column>
+
+						<f:facet name="footer">
+							<p:commandButton
+								value="#{i18n['button.new_relacionamento_perfil_formulario']}"
+								process="@this" update="@form"
+								action="#{relacionamentoPerfilFormularioBean.novo}"
+								style="width:100%;text-align:center">
+								<f:setPropertyActionListener
+									target="#{relacionamentoPerfilFormularioBean.model}"
+									value="#{model}" />
+							</p:commandButton>
+						</f:facet>
+					</p:dataTable>
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

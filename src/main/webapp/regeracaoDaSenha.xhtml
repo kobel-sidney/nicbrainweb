@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<link href="./resources/restrict/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+		<title>#{i18n['label.forgot_password']}</title>
+
+		<f:view beforePhase="#{regeracaoDaSenhaBean.beforePhase}"/>
+
+	</h:head>
+
+	<h:body styleClass="body">
+
+		<p:growl id="msg0" />
+
+		<f:facet name="last">
+			<h:outputStylesheet library="css" name="principal.css"/>
+			<h:outputStylesheet library="css" name="default.css" />
+			<h:outputStylesheet library="css" name="custom.css" />
+		</f:facet>
+
+		<img src="images/logo-login.png" />
+		<div id="login-fields" title="#{i18n['text.restricted_access']}">
+			<h:form prependId="true" id="formPassword">
+				<p:growl id="msg"/>
+
+				<div align="left">
+					<h:panelGrid columns="3" >
+
+						<h:inputHidden id="idUsuario" value="#{regeracaoDaSenhaBean.idUsuario}" />
+
+						<h:outputLabel for="senhaNova"
+								value="#{i18n['label.password_new']}:&nbsp;#{i18n['label.token.required_field']}"/>
+						<p:password id="senhaNova" size="30" maxlength="22" feedback="true"
+								redisplay="false" required="true"
+								match="senhaNovaconf2"
+								value="#{regeracaoDaSenhaBean.senhaNova}"
+								promptLabel="#{i18n['message.alert.type_password']}"
+								weakLabel="#{i18n['message.alert.weak_password']}"
+								goodLabel="#{i18n['message.alert.good_password']}"
+								strongLabel="#{i18n['message.alert.strong_password']}"
+								requiredMessage="#{i18n['message.required_field.password_new']}"
+								validatorMessage="#{i18n['message.alert.password_not_match']}">
+						</p:password>
+						<p:watermark for="senhaNova" value="#{i18n['text.enter_your_new_password']}"/>
+
+						<h:outputLabel for="senhaNovaconf2"
+								value="#{i18n['label.password_confirm_new']}:&nbsp;#{i18n['label.token.required_field']}"/>
+						<p:password id="senhaNovaconf2" size="30" maxlength="22"
+								redisplay="false" required="true"
+								value="#{regeracaoDaSenhaBean.senhaNova}"
+								promptLabel="#{i18n['message.confirm.password']}"
+								requiredMessage="#{i18n['message.required_field.confirm_new_password']}">
+						</p:password>
+						<p:watermark for="senhaNovaconf2" value="#{i18n['text.confirm_your_new_password']}"/>
+					</h:panelGrid>
+				</div>
+
+				<br />
+				<div class="spacer"/>
+				<div class="estiloDiv">
+					<p:commandButton value="#{i18n['button.save']}"
+							action="#{regeracaoDaSenhaBean.atualizaSenha}" id="withIcon" update="@form"
+							icon="ui-icon-disk" ajax="false"
+							styleClass="rfloat-btn"/>
+				</div>
+			</h:form>
+        </div>
+
+    </h:body>
+</html>

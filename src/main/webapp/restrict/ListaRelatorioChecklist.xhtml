@@ -1,0 +1,224 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formtable">
+			<div class="estiloDiv">
+				<p:panel id="mainPanel" style="margin-bottom:10px;"
+					header="#{relatorioChecklistBean.cabecalho}: #{listaRelatorioChecklistBean.cabecalho}">
+
+					<p:growl id="msg1" showDetail="true" />
+
+					<p:panel id="filtroPanel" style="margin-bottom:10px;">
+						<div align="center">
+							<h:panelGrid columns="4">
+								<h:outputLabel for="filtroSelectStatus" value="#{i18n['label.status']}:" />
+								
+								<p:selectOneMenu id="filtroSelectStatus" value="#{listaRelatorioChecklistBean.filtroIdStatus}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"	noSelectionOption="true" />
+									<f:selectItems value="#{bbStatus.allChecklistStatus}" var="item" itemLabel="#{item.nome}"	itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								
+								<h:outputLabel for="filtroSelectUsuario"
+									value="#{i18n['label.responsible']}:" />
+								<p:selectOneMenu id="filtroSelectUsuario"
+									value="#{listaRelatorioChecklistBean.filtroIdResponsavel}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+										itemValue="" />
+									<f:selectItems
+										value="#{bbUsuario.usuariosResposaveisPorChecklistsPorContexto}" var="item"
+										itemLabel="#{item.nome}"
+										itemValue="#{item.id}" />
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroDataInicio"
+									value="#{i18n['label.start_date']}:" />
+								<p:calendar id="filtroDataInicio"
+									value="#{listaRelatorioChecklistBean.filtroDataHoraInicio}"
+									label="#{i18n['label.start_date']}" mode="popup" effect="fold"
+									navigator="true" showOn="button" popupIconOnly="true"
+									pattern="dd/MM/yyyy HH:mm"
+									locale="#{bbLocale.currentLocale.language}" />
+									
+									<h:outputLabel for="filtroDataFim"
+									value="#{i18n['label.end_date']}:" />
+
+								<h:outputLabel value="" />
+								<p:commandButton value="#{i18n['button.search']}"
+									action="#{listaRelatorioChecklistBean.search}" id="withIcon"
+									update="@form" icon="ui-icon-search" ajax="false" />
+							</h:panelGrid>
+						</div>
+					</p:panel>
+
+					<p:panel id="panel" style="margin-bottom:10px;">
+
+						<p:dataTable id="idTabela" var="item"
+							value="#{listaRelatorioChecklistBean.dataModel}"
+							emptyMessage="#{i18n['message.registry.not_found']}"
+							selection="#{listaRelatorioAtividadeBean.checklistSelecionado}"
+							selectionMode="single" sortBy="status.nome"
+							sortOrder="descending">
+
+							<p:ajax event="rowSelect"
+								listener="#{listaRelatorioChecklistBean.onRowSelect}"
+								update=":formtable:msg1" />
+							<p:ajax event="rowUnselect"
+								listener="#{listaRelatorioChecklistBean.onRowUnselect}"
+								update=":formtable:msg1" />
+
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column rowspan="2" colspan="2"
+										headerText="#{i18n['label.status']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.venue']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.event']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.checklist']}" />
+									<p:column colspan="2" headerText="#{i18n['label.estimated']}" />
+									<p:column colspan="2" headerText="#{i18n['label.effective']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.responsible']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.observacao']}" />
+								</p:row>
+								<p:row>
+									<p:column headerText="#{i18n['label.start']}" />
+									<p:column headerText="#{i18n['label.end']}" />
+									<p:column headerText="#{i18n['label.start']}" />
+									<p:column headerText="#{i18n['label.end']}" />
+								</p:row>
+							</p:columnGroup>
+
+							<p:column exportable="false">
+								<p:graphicImage url="../images/iconesNovos/icone-branco.png"
+										rendered="#{item.situacao.nome == 'agendado'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-verde.png"
+										rendered="#{item.situacao.nome == 'sem_alerta'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-amarelo.png"
+										rendered="#{item.situacao.nome == 'alerta_ocorrido'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-vermelho.png"
+										rendered="#{item.situacao.nome == 'alerta_vigente'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-roxo.png"
+										rendered="#{item.situacao.nome == 'cancelado'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+							</p:column>
+
+							<p:column sortBy="status.nome">
+								<h:outputText value="#{item.status.nome}"
+									style="white-space:nowrap;" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.evento.local.nome}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.evento.nome}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.nome}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.dataInicioPrevisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.dataFimPrevisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.dataInicioRealizado}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.dataFimRealizado}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+								</h:outputText>
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.usuarioResponsavel.pessoa.nome}" />
+							</p:column>
+
+							<p:column>
+								<h:outputText value="#{item.observacao}" />
+							</p:column>
+
+							<p:summaryRow>
+								<p:column colspan="10" style="text-align:right">
+                					Total:
+            					</p:column>
+
+								<p:column colspan="3" style="text-align:left">
+									<h:outputText
+										value="#{listaRelatorioChecklistBean.getCountChecklist(item.status.nome)} &nbsp; #{i18n['label.checklist']}(s)" />
+								</p:column>
+							</p:summaryRow>
+
+
+						</p:dataTable>
+
+
+					</p:panel>
+
+					<p:separator />
+
+					<h:panelGrid columns="2" width="100%">
+						<p:panel id="pnlVoltar" style="margin-bottom:10px;">
+							<p:commandButton id="btnVoltar" value="#{i18n['button.back']}"
+								action="#{relatorioChecklistBean.voltaPagina}"
+								icon="ui-icon-arrowreturnthick-1-w"
+								title="#{i18n['button.back']}">
+							</p:commandButton>
+						</p:panel>
+
+
+						<p:panel header="#{i18n['label.export']}"
+							style="width:18%;float:right">
+							<h:commandLink>
+								<p:graphicImage value="../images/iconesNovos/excel.png" />
+								<p:dataExporter type="xls" target="idTabela"
+									fileName="checklist" />
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage value="../images/iconesNovos/pdf.png" />
+								<p:dataExporter type="pdf" target="idTabela"
+									fileName="checklist"
+									preProcessor="#{listaRelatorioChecklistBean.preProcessPDF}" />
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage value="../images/iconesNovos/csv.png" />
+								<p:dataExporter type="csv" target="idTabela"
+									fileName="checklist" />
+							</h:commandLink>
+						</p:panel>
+					</h:panelGrid>
+				</p:panel>
+			</div>
+		</h:form>
+
+
+
+	</ui:define>
+</ui:composition>

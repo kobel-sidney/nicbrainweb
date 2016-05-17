@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+	
+	<ui:define name="tarefas">
+		
+		<h:form prependId="true" id="formtable">
+			<div class="estiloDiv">
+				<p:panel id="mainPanel" style="margin-bottom:10px;" header="#{listaDeEventosDoRastreamentoDoChecklist.cabecalho}">
+					
+					<div class="div-filtro">
+						<div class="divFiltroLadoDireito">
+							&nbsp;
+						</div>
+						
+						<div class="divFiltroLadoCentro">
+							<h:panelGrid columns="4">
+								<h:outputLabel for="filtroSelectLocal" value="#{i18n['label.venue']}:"/>
+								<p:selectOneMenu id="filtroSelectLocal" value="#{listaDeEventosDoRastreamentoDoChecklist.filtroIdLocal}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+									<f:selectItems value="#{bbLocal.locaisPorContexto}" var="item"
+											itemLabel="#{item.nome}" itemValue="#{item.id}"/>
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroSelectFuncionario" value="#{i18n['label.responsible']}:"/>
+								<p:selectOneMenu id="filtroSelectFuncionario" value="#{listaDeEventosDoRastreamentoDoChecklist.filtroIdPessoaResponsavel}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+									<f:selectItems value="#{bbFuncionario.funcionarioPorEvento}" var="item"
+											itemLabel="#{item.nome}" itemValue="#{item.id}"/>
+								</p:selectOneMenu>
+								<p:commandButton value="#{i18n['button.search']}" action="#{listaDeEventosDoRastreamentoDoChecklist.search}"
+										id="withIcon" update="@form" icon="ui-icon-search" ajax="false"/>
+							</h:panelGrid>
+						</div>
+						
+						<div class="divFiltroLadoEsquerdo" align="right" style="white-space: nowrap">
+							<p:clock pattern="dd/MM/yyyy HH:mm:ss"/>
+						</div>
+					</div>
+					
+					<div class="div-block">
+					</div>
+					
+					<p:panel id="panel" style="margin-bottom:10px;">
+		<!--                 <h:panelGrid columns="1" > -->
+						<p:growl id="msg1" showDetail="true"/>
+						
+						<p:dataTable id="idTabela" var="item_model" value="#{listaDeEventosDoRastreamentoDoChecklist.dataModel}"
+								paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+									{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+								selection="#{listaDeChecklistsDoRastreamentoDeChecklist.eventoSelecionado}" selectionMode="single"
+								stickyHeader="true">
+							
+							<p:ajax event="rowSelect" listener="#{listaDeEventosDoRastreamentoDoChecklist.onRowSelect}" update=":formtable:msg1"/>
+							<p:ajax event="rowUnselect" listener="#{listaDeEventosDoRastreamentoDoChecklist.onRowUnselect}" update=":formtable:msg1"/>
+							
+							<p:column headerText="#{i18n['label.resume']}" style="width:5%">
+								<p:rowToggler id="idLinhaExp"/>
+							</p:column>
+					    	
+							<p:column headerText="#{i18n['label.event']}">
+								<h:outputText value="#{item_model.nome}"/>
+							</p:column>
+							<p:column headerText="#{i18n['label.venue']}">
+								<h:outputText value="#{item_model.local.nome}"/>
+							</p:column>
+							<p:column headerText="#{i18n['label.start_date']}">
+								<h:outputText value="#{item_model.dataInicio}" >
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{i18n['label.end_date']}">
+								<h:outputText value="#{item_model.dataFim}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{i18n['label.responsible']}">
+								<h:outputText value="#{item_model.usuarioResponsavel.pessoa.nome}"/>
+							</p:column>
+							
+							<p:rowExpansion>
+								<h:panelGrid columns="2">
+									<h:outputLabel value="#{i18n['label.venue']}"/>
+									<h:outputLabel value="#{item_model.local.nome}"/>
+									
+									<h:outputLabel value="#{i18n['label.responsible']}:&nbsp;#{item_model.responsavelEvento}"/>
+									<h:panelGrid columns="2">
+										<h:outputLink value="mailto:#{item_model.emailResponsavel}" title="#{item_model.emailResponsavel}">
+											<p:commandButton type="button" icon="ui-icon-mail-closed" />
+											<h:outputLabel value="#{item_model.emailResponsavel}"/>
+										</h:outputLink>
+										
+										<h:outputLink value="tel:#{item_model.celularResponsavel}" title="#{item_model.celularResponsavel}">
+											<p:commandButton type="button" icon="ui-icon-comment" />
+											<h:outputLabel value="#{item_model.celularResponsavel}"/>
+										</h:outputLink>
+									</h:panelGrid>
+								</h:panelGrid>
+								
+								<h:panelGrid columns="6" style="text-align: center;">
+									<f:facet name="header">
+										<b><h:outputLabel value="#{i18n['label.checklist']}"/></b>
+									</f:facet>
+									
+									<h:outputLabel value=""/>
+									<h:outputLabel value="#{i18n['label.total']}"/>
+									<h:outputLabel value="#{i18n['label.completed']}"/>
+									<h:outputLabel value="#{i18n['label.canceled']}"/>
+									<h:outputLabel value="#{i18n['label.in_progress']}"/>
+									<h:outputLabel value="#{i18n['label.scheduled']}"/>
+									
+									<h:outputLabel value="#{i18n['label.checklist_quantity']}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklists}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsFinalizados}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsCancelados}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsEmAndamento}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsAgendadas}"/>
+								</h:panelGrid>
+							</p:rowExpansion>
+							
+							<!--
+							<f:facet name="footer">
+								<p:commandButton value="#{i18n['button.new_event']}" process="@this" update="@form"
+										action="#{listaDeEventosDoRastreamentoDoChecklist.novo}"
+										style="width:100%;text-align:center">
+									<f:setPropertyActionListener target="#{listaDeEventosDoRastreamentoDoChecklist.model}" value="#{model}"/>
+								</p:commandButton>
+							</f:facet>
+							-->
+						</p:dataTable>
+						
+		<!-- 				</h:panelGrid> -->
+					</p:panel>
+					
+				</p:panel>
+
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+	
+	<ui:define name="tarefas">
+		
+		<h:form prependId="true" id="formtable">
+			<div align="center">
+			<p:panel id="panel" style="width:90%">      
+<!--                 <h:panelGrid columns="1" > -->
+					<p:growl id="msg1" showDetail="true"/>
+					
+					<p:dataTable id="idTabela" var="item_evento" value="#{eventoChecklistBean.listaEventos}"
+							paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+								{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+							selection="#{eventoChecklistBean.evento}" selectionMode="single"
+							stickyHeader="true">
+						
+						<p:ajax event="rowSelect" update=":formtable:chkDlg"
+								listener="#{eventoChecklistBean.onEventoRowSelect}"
+								oncomplete="PF('checklistDialog').show()" />  
+						
+						<p:column headerText="#{i18n['label.start_date']}">
+							<h:outputText value="#{item_evento.dtHrInicioEvento}" >
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="#{i18n['label.venue']}">
+							<h:outputText value="#{item_evento.local.nomeLocal}"/>
+						</p:column>
+						<p:column headerText="#{i18n['label.event']}">
+							<h:outputText value="#{item_evento.nomeEvento}"/>
+						</p:column>
+						<p:column headerText="#{i18n['label.end_date']}">
+							<h:outputText value="#{item_evento.dtHrFimEvento}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="#{i18n['label.status']}"></p:column>
+						<p:column headerText="#{i18n['label.progress']}"></p:column>
+						
+						<!-- 
+						<f:facet name="footer">
+							<p:commandButton value="#{i18n['button.new_event']}" process="@this" update="@form"
+									action="#{eventoChecklistBean.novoEvento}"
+									style="width:100%;text-align:center">
+								<f:setPropertyActionListener target="#{eventoChecklistBean.evento}" value="#{evento}"/>
+							</p:commandButton>
+						</f:facet>
+						 -->
+					</p:dataTable>
+					
+					
+					<p:dialog header="#{i18n['label.checklist_list']}" widgetVar="checklistDialog"
+							resizable="true" id="chkDlg" appendToBody="true"
+							showEffect="fade" hideEffect="explode" modal="true"
+							closeOnEscape="true">
+						
+						<p:dataTable id="idTabelaChecklist" var="item_checklist" value="#{eventoChecklistBean.listaChecklist}"
+								emptyMessage="#{i18n['message.registry.not_found']}"
+								paginatorPosition="bottom"
+								selection="#{eventoChecklistBean.checklist}"
+								selectionMode="single">
+							
+							<p:ajax event="rowSelect" update=":formtable:atvDlg"
+									listener="#{eventoChecklistBean.onChecklistRowSelect}"
+									oncomplete="PF('atividadeDialog').show()" />  
+							
+							<p:column headerText="#{i18n['label.name']}">
+								<h:outputText value="#{item_checklist.nomeCheckList}"/>
+							</p:column>
+							<p:column headerText="#{i18n['label.description']}">
+								<h:outputText value="#{item_checklist.descricaoCheckList}"/>
+							</p:column>
+							
+						</p:dataTable>
+					</p:dialog>
+					
+					<p:dialog header="#{i18n['label.activities_list']}" widgetVar="atividadeDialog"
+							resizable="false" id="atvDlg" appendToBody="true"
+							showEffect="fade" hideEffect="explode" modal="true"
+							closeOnEscape="true">
+					
+						<p:dataTable id="idTabelaAtividade" var="item_atividade" value="#{eventoChecklistBean.listaAtividades}"
+								emptyMessage="#{i18n['message.registry.not_found']}"
+								paginatorPosition="bottom"
+								selection="#{eventoChecklistBean.atividade}"
+								selectionMode="single">
+
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column rowspan="2" headerText="#{i18n['label.item']}" />
+									<p:column colspan="2" headerText="#{i18n['label.estimated']}" />
+									<p:column colspan="2" headerText="#{i18n['label.effective']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.status']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.name']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.responsible']}" />
+								</p:row>
+								<p:row>
+									<p:column headerText="#{i18n['label.schedule_to_start']}" />
+									<p:column headerText="#{i18n['label.schedule_to_end']}" />
+									<p:column headerText="#{i18n['label.start_date']}" />
+									<p:column headerText="#{i18n['label.end_date']}" />
+								</p:row>
+							</p:columnGroup>
+							
+							<p:column>
+								<h:outputText value="#{item_atividade.id.nrItem}"/>
+							</p:column>
+	
+							<p:column>
+								<h:outputText value="#{item_atividade.dtHrInicioPrevisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item_atividade.dtHrFimPrevisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item_atividade.dtHrInicioRealizado}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item_atividade.dtHrFimRealizado}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item_atividade.status.nomeStatus}"/>
+							</p:column>
+							<p:column>
+								<h:outputText value="#{item_atividade.procedimento.descricaoProcedimento}"/>
+							</p:column>
+							
+							<p:column>
+								<h:outputText value="#{item_atividade.funcionarioResponsavel.pessoa.nomePessoa}"/>
+							</p:column>
+							
+						</p:dataTable>
+
+                	</p:dialog>
+					
+<!-- 				</h:panelGrid> -->
+			</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

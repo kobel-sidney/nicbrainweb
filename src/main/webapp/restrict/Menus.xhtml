@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formStatus">
+			<p:panel id="panel" header="#{i18n['label.menu']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idMenu" value="#{menuBean.model.id}" />
+
+					<h:outputLabel for="descricao"
+						value="#{i18n['label.description']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="descricaoMenu" size="40"
+						value="#{menuBean.model.descricao}" required="false" label="Menu"
+						requiredMessage="#{i18n['message.required_field.description']}">
+					</p:inputText>
+
+					<h:outputLabel for="ativo"
+						value="#{i18n['label.active']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="radioAtivo" value="#{menuBean.model.ativo}"
+						required="true" label="#{i18n['label.active']}"
+						requiredMessage="#{i18n['message.required_field.active']}">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.menu_name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="30" value="#{menuBean.model.nome}"
+						required="false" label="Menu"
+						requiredMessage="#{i18n['message.required_field.name']}">
+					</p:inputText>
+
+					<h:outputLabel for="menuSuperior"
+						value="#{i18n['label.top_menu']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="segmento"
+						value="#{menuBean.model.id}" required="false">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{menuBean.menuSuperior}" var="item"
+							itemLabel="#{item.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{menuBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{menuBean.cancel}" icon="ui-icon ui-icon-close"
+					update="@form" process="@this" />
+			</div>
+
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

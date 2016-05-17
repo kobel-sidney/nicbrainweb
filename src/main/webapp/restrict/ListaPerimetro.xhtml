@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core" 
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="layout.xhtml">
+	  
+	<ui:define name="tarefas">
+	
+	<h:form prependId="true" id="formtable"  >
+			<div align="center">
+			<p:panel id="panel" style="width:50%">      
+<!--                 <h:panelGrid columns="1" > -->
+                
+                	<p:growl id="msg1" showDetail="true" />
+                	
+                	<p:contextMenu for="idTabela">  
+				        <p:menuitem value="#{i18n['button.delete']}" update=":formtable:idTabela :formtable:msg1" icon="ui-icon-close" 
+				                    actionListener="#{PerimetroBean.deletePerimetro}"/>  
+				    </p:contextMenu>  
+				    
+				    <p:dataTable id="idTabela" var="item_perimetro" value="#{PerimetroBean.listaPerimetros}"
+							paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+							{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+							selection="#{PerimetroBean.perimetro}" selectionMode="single">
+							
+							<p:ajax event="rowSelect" listener="#{PerimetroBean.onRowSelect}"   
+	                    		update=":formtable:msg1"  />  
+	        				<p:ajax event="rowUnselect" listener="#{PerimetroBean.onRowUnselect}" update=":formtable:msg1"/> 
+	        				
+	        				 <p:column style="width:80px;text-align:center">  							
+								<h:outputText value="#{item_perimetro.nomePerimetro}"/>
+							</p:column>	
+							
+							<f:facet name="footer">  
+					        	<p:commandButton value="#{i18n['button.new_perimeter']}" process="@this" update="@form"
+					        					 action="#{PerimetroBean.novoPerimetro}"
+					        					 style="width:100%;text-align:center">
+						        	<f:setPropertyActionListener target="#{PerimetroBean.perimetro}"
+						                      				     value="#{perimetro}"/>
+						        </p:commandButton>
+				       		</f:facet> 
+					</p:dataTable>
+					        
+<!--                 </h:panelGrid> -->
+            </p:panel>
+            </div>
+        </h:form>
+    </ui:define>
+ </ui:composition>
+							

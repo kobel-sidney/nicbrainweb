@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formTrocaVeiculo">
+		
+			<p:panel id="panel" header="#{i18n['label.vehicle']}" style="margin-bottom:10px;">
+			
+				<p:growl id="msg0" />
+
+					<h:panelGrid columns="2">
+					
+						<h:outputLabel />
+						<h:inputHidden id="id" value="#{trocaVeiculoBean.model.id}" />
+						
+						<h:outputLabel for="somVeiculo" value="#{i18n['label.vehicle']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:selectOneMenu id="somVeiculo" value="#{trocaVeiculoBean.model.veiculo}" required="true" converter="#{converterVeiculo}"
+								requiredMessage="#{i18n['message.required_field.choice_a_vehicle']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"	noSelectionOption="true" itemValue="#{null}"/>
+							<f:selectItems value="#{trocaVeiculoBean.veiculos}" var="item" itemValue="#{item}" itemLabel="#{item.nome}" />
+						</p:selectOneMenu>
+						
+						<h:outputLabel for="sorTipoTroca" value="#{i18n['label.type_exchange']}:" />
+						<p:selectOneRadio id="sorTipoTroca" value="#{trocaVeiculoBean.model.tipoTroca}" label="#{i18n['label.type_exchange']}" >
+							<f:selectItem itemLabel="#{i18n['label.delivery']}" itemValue="E"  />
+							<f:selectItem itemLabel="#{i18n['label.quit']}" itemValue="S" />
+						</p:selectOneRadio>
+						
+						<h:outputLabel for="sorTipoTroca" value="#{i18n['label.date_register']}:" rendered="#{trocaVeiculoBean.model.id!=null}"/>
+						<h:inputText value="#{trocaVeiculoBean.model.dataCadastro}" readonly="true"  rendered="#{trocaVeiculoBean.model.id!=null}">
+							    <f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+						</h:inputText>
+					
+					</h:panelGrid>
+					
+				</p:panel>
+				
+				<p:panel id="addPersonPanel" header="#{i18n['label.vehicle_occupants']}" >
+					
+					<h:panelGrid columns="3">
+				
+						<h:outputLabel for="somPessoa" value="#{i18n['label.person2']}:" />
+						<p:selectOneMenu id="somPessoa" value="#{trocaVeiculoBean.pessoaSelecionada.id}" required="false" >
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"	noSelectionOption="true" itemValue="#{null}"/>
+							<f:selectItems value="#{trocaVeiculoBean.pessoas}" var="item" itemValue="#{item.id}" itemLabel="#{item.nome}" />
+						</p:selectOneMenu>
+						
+						<p:commandButton value="#{i18n['button.add']}&nbsp;#{i18n['label.person2']}"  id="cmdAddPerson" update="tabelaPessoa"  
+							icon="fa-plus" 	actionListener="#{trocaVeiculoBean.adicionarPessoa}" process="addPersonPanel" />
+						
+					 </h:panelGrid>
+				
+					<p:dataTable id="tabelaPessoa" var="item" value="#{trocaVeiculoBean.model.pessoas.toArray()}" 
+							paginator="false" rows="5"	emptyMessage="#{i18n['message.registry.not_found']}">
+	
+						<p:column style="width:80px;text-align:center" headerText="#{i18n['label.name']}">
+							<h:outputText value="#{item.nome}" />
+						</p:column>
+						
+						<p:column style="width:10px;text-align:center" headerText="#{i18n['label.action']}">
+							<p:commandButton value="&nbsp;" icon="ui-icon-trash" oncomplete="PF('dlgExclusaoPessoa').show();">
+									<f:setPropertyActionListener target="#{trocaVeiculoBean.pessoaSelecionada}" value="#{item}" />
+							</p:commandButton>
+						</p:column>
+	
+					</p:dataTable>
+				
+				</p:panel>
+			
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"	action="#{trocaVeiculoBean.add}" id="withIcon" update="@form" icon="ui-icon-disk" ajax="false" />
+				<p:commandButton value="#{i18n['button.cancel']}" actionListener="#{trocaVeiculoBean.cancel}" icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+		
+		<p:dialog header="#{i18n['label.vehicle_occupants']}"
+				widgetVar="dlgExclusaoPessoa"
+				resizable="false" id="iddlgExclusaoPessoa" modal="true"
+				appendToBody="true" closeOnEscape="true">
+			
+    	    <h:form id="formExclusaoOcupante">
+				
+				<h:panelGrid id="pnlExclusaoOcupante" columns="1">
+					<h:outputLabel  value="Deseja excluir esse Ocupante?" />
+				</h:panelGrid>
+				
+				<br/>
+				
+				<p:commandButton id="btnEclusaoPessoa" value="#{i18n['label.yes']}"
+						update=":formTrocaVeiculo:msg0 :formTrocaVeiculo:addPersonPanel"
+						action="#{trocaVeiculoBean.removerPessoa}"
+						onsuccess="PF('dlgExclusaoPessoa').hide();"
+						icon="ui-icon-disk" title="#{i18n['button.confirm_fault']}">
+				</p:commandButton>
+				
+				<p:commandButton id="btnCancelNoOk2" value="#{i18n['label.no']}" type="button"
+					icon="ui-icon ui-icon-close" onclick="PF('dlgExclusaoPessoa').hide();"/>           
+			
+				<br/>
+				
+	        </h:form>
+		</p:dialog>
+		
+	</ui:define>
+</ui:composition>

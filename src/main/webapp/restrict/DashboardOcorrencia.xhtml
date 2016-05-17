@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+	
+<script type="text/JavaScript">
+</script>
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formGrafico">
+			<div class="dashboard-tudo">
+				
+				<p:panel id="panelDashboard" header="Dashboard" style="margin-bottom:10px;">
+					<p:growl id="msgCabecalho" />
+				</p:panel>
+				
+				<p:panelGrid columns="2">
+				
+					<h3>De:</h3>  
+    				<p:calendar value="#{dashboardBean.dateFrom}" id="popupCalFrom" /> 
+    			
+	    			<h3>Até:</h3>  
+	    			<p:calendar value="#{dashboardBean.dateTo}" id="popupCalTo" /> 
+					
+					<p:commandButton value="Filtrar" id="ajax" update="panelChecklist"
+	                actionListener="#{dashboardBean.filtrar}" ajax="false" styleClass="ui-priority-primary"/>
+					
+				
+				</p:panelGrid>
+
+					<div class="dashboard">
+						<p:panel id="panelOcorrencia" header="#{i18n['label.ocurrence']}"
+							style="margin-bottom:10px;">
+							<p:growl id="msg01" />
+						</p:panel>
+						
+						<p:poll interval="15" listener="#{dashboardBean.refresh}" update=":formGrafico:dataListGrafico" />
+						<p:dataList
+							value="#{dashboardBean.listaDashboardOcorrenciaWrapper}"
+							var="graficoOcorrencia" 
+							type="definition" 
+							id="dataListGrafico">
+							<div class="box-dashboard">
+								<p:pieChart id="grafico-ocorrencia"
+									value="#{graficoOcorrencia.grafico}" legendPosition="w"
+									title="#{graficoOcorrencia.nomeChecklist}"
+									style="width:270px;height:200px;float:left" >
+									<f:param name="timemillis" value="#{ocorrenciaBean.timemillis}"/>
+								</p:pieChart>
+							</div>
+						</p:dataList>
+						
+						<div class="box-dashboard">
+						
+							<p:barChart id="basic"
+								value="#{dashboardBean.graficoBarraOcorrencias}"
+								legendPosition="ne" title="Ocorrências por Classificação"
+								min="0" max="25" style="height:300px" />
+						</div>
+					</div>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

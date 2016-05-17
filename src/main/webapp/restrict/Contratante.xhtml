@@ -1,0 +1,383 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+    <h:head></h:head>
+    <ui:define name="tarefas">
+        <h:form id="formtable" enctype="multipart/form-data">
+            <p:growl id="messages" showDetail="true" autoUpdate="true" />
+            <p:wizard id="tabView" widgetVar="w_contratante" showNavBar="false"
+                      flowListener="#{contratanteBean.mudarTab}">
+                <p:tab id="tab_contratante" title="#{i18n['button.contractor']}">
+                    <h:panelGrid id="gridPerson" columns="2" cellpadding="2">
+                        <h:panelGroup>								
+                            <p:graphicImage id="glogo" value="#{contratanteBean.carregarImagem}" height="155" width="140">
+                                <f:param name="id" value="#{contratanteBean.id}" />
+                            </p:graphicImage>
+
+                            <p:fileUpload fileUploadListener="#{contratanteBean.fileUpload}" 
+                                          style="width: 140px;" 
+                                          mode="advanced"
+                                          update="formtable:glogo" 
+                                          auto="true" 
+                                          sizeLimit="100000" 
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                          label="Carregar Logomarca" />
+
+                        </h:panelGroup>
+
+                        <h:panelGroup>
+                            <h:panelGrid columns="2" cellpadding="2">
+
+                                <p:outputLabel for="ativo" value="#{i18n['label.active']}:" />
+                                <p:selectOneRadio id="ativo"
+                                                  value="#{contratanteBean.model.ativo}" required="true"
+                                                  requiredMessage="#{i18n['message.required_field.active']}">
+                                    <f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+                                    <f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+                                </p:selectOneRadio>
+
+                                <p:outputLabel for="nomeSegmento"
+                                               value="#{i18n['label.segment']}:" />
+                                <p:selectOneMenu id="nomeSegmento"
+                                                 value="#{contratanteBean.model.segmento.id}" required="true"
+                                                 label="#{i18n['label.segment']}"
+                                                 requiredMessage="#{i18n['message.required_field.segment']}">
+                                    <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                                  itemValue="" />
+                                    <f:selectItems value="#{bbSegmento.segmentos}"
+                                                   var="item_segmento" itemLabel="#{item_segmento.nome}"
+                                                   itemValue="#{item_segmento.id}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="razaoSocial"
+                                               value="#{i18n['label.razaosocial']}:" />
+                                <p:inputText id="razaoSocial" size="30"
+                                             value="#{contratanteBean.model.razaoSocial}" required="true"
+                                             label="Contratante"
+                                             requiredMessage="#{i18n['message.required_field.razaosocial']}">
+                                    <f:validateLength minimum="3" />
+                                </p:inputText>
+
+                                <p:outputLabel for="nomeContratante"
+                                               value="#{i18n['label.trading_name']}:" />
+                                <p:inputText id="nomeContratante" size="30"
+                                             value="#{contratanteBean.model.nomeFantasia}" required="true"
+                                             label="Contratante"
+                                             requiredMessage="#{i18n['message.required_field.name']}">
+                                    <f:validateLength minimum="3" />
+                                </p:inputText>
+
+                                <p:outputLabel for="CNPJContratante"
+                                               value="#{i18n['label.cnpj']}:" />
+                                <p:inputMask id="CNPJContratante" size="25" required="true"
+                                             label="CNPJ" value="#{contratanteBean.model.cnpj}"
+                                             requiredMessage="#{i18n['message.required_field.cnpj']}"
+                                             mask="99.999.999/9999-99">
+                                    <f:validator validatorId="cnpjValidator" />
+                                </p:inputMask>
+
+                                <p:outputLabel for="IEContratante"
+                                               value="#{i18n['label.inscrEstadual']}:" />
+                                <p:inputText id="IEContratante" size="20"
+                                             value="#{contratanteBean.model.ie}" required="false"
+                                             label="Inscri��o Estadual" maxlength="14">
+                                </p:inputText>
+
+                                <p:outputLabel for="Observacao"
+                                               value="#{i18n['label.observacao']}:" />
+                                <p:inputTextarea id="Observacao"
+                                                 value="#{contratanteBean.model.observacao}" rows="3" cols="30"
+                                                 maxlength="150" />
+
+                                <p:outputLabel for="site" value="#{i18n['label.site']}:" />
+                                <p:inputText id="site" size="30"
+                                             value="#{contratanteBean.model.site}" required="true"
+                                             label="Contratante"
+                                             requiredMessage="#{i18n['message.required_field.site']}">
+                                    <f:validateLength minimum="3" />
+                                </p:inputText>
+                            </h:panelGrid>
+                        </h:panelGroup>
+                    </h:panelGrid>
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.next']}"
+                                         onclick="PF('w_contratante').next();"
+                                         styleClass="ui-wizard-nav-next"></p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+
+                <p:tab id="tab_responsavel" title="#{i18n['label.responsible']}">
+                    <h:panelGrid columns="2" cellpadding="2">
+                        <p:outputLabel for="responsavelContratante"
+                                       value="#{i18n['label.responsible']}:" />
+                        <p:inputText id="responsavelContratante" size="30"
+                                     value="#{contratanteBean.model.nomeContato}" required="true"
+                                     label="Contratante"
+                                     requiredMessage="#{i18n['message.required_field.responsible']}">
+                            <f:validateLength minimum="3" />
+                        </p:inputText>
+
+                        <p:outputLabel for="telefoneContratante"
+                                       value="#{i18n['label.telephone.responsavel']}:" />
+                        <p:inputMask id="telefoneContratante" size="15" required="true"
+                                     label="TelefoneContato" mask="(99) 9999-9999"
+                                     value="#{contratanteBean.model.telefoneContato}"
+                                     requiredMessage="#{i18n['message.required_field.phone']}">
+                        </p:inputMask>
+
+                        <p:outputLabel for="celularResponsavel"
+                                       value="#{i18n['label.cel_responsible']}:" />
+                        <p:inputMask id="celularResponsavel" size="15" required="true"
+                                     label="CelularResponsavel" mask="(99) 99999-9999"
+                                     value="#{contratanteBean.model.celularContato}"
+                                     requiredMessage="#{i18n['message.required_field.phone']}">
+                        </p:inputMask>
+
+                        <p:outputLabel for="emailResponsavel"
+                                       value="#{i18n['label.email_responsavel']}:" />
+                        <p:inputText id="emailResponsavel" size="30"
+                                     value="#{contratanteBean.model.emailContato}" required="true"
+                                     label="Contratante"
+                                     requiredMessage="#{i18n['message.required_field.email']}"
+                                     validatorMessage="#{i18n['message.alert.invalid_email']}">
+                            <f:validateRegex
+                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        </p:inputText>
+                    </h:panelGrid>
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.back']}"
+                                         onclick="PF('w_contratante').back();"
+                                         styleClass="ui-wizard-nav-back"></p:commandButton>
+                        <p:commandButton value="#{i18n['button.next']}"
+                                         oncomplete="PF('w_contratante').next();"
+                                         action="#{contratanteBean.atualizarContratante}"
+                                         update="panel_enderecos" styleClass="ui-wizard-nav-next"></p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+
+                <p:tab id="tab_endereco" title="#{i18n['label.address']}">
+                    <h:panelGrid id="panel_enderecos" columns="2" cellpadding="5"
+                                 rendered="#{contratanteBean.gridHabilitada}">
+                        <p:outputLabel for="pais" value="#{i18n['label.countries']}:" />
+                        <p:selectOneMenu id="pais" value="#{contratanteBean.idPais}"
+                                         label="#{i18n['label.countries']}" required="true"
+                                         requiredMessage="#{i18n['message.required_field.country']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{bbPais.paises}" var="item"
+                                           itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                            <p:ajax update="c_estado"
+                                    listener="#{contratanteBean.carregaEstadosPorPais}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="c_estado" value="#{i18n['button.state']}:" />
+                        <p:selectOneMenu id="c_estado" value="#{contratanteBean.idEstado}"
+                                         label="#{i18n['button.state']}" required="true"
+                                         requiredMessage="#{i18n['message.required_field.state_name']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{contratanteBean.estados}" var="item"
+                                           itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                            <p:ajax update="c_municipio"
+                                    listener="#{contratanteBean.carregaMunicipiosPorEstado}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="c_municipio" value="#{i18n['label.city']}:" />
+                        <p:selectOneMenu id="c_municipio"
+                                         value="#{contratanteBean.idMunicipio}"
+                                         label="#{i18n['label.city']}" required="true"
+                                         requiredMessage="#{i18n['message.required_field.choice_a_persontype']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{contratanteBean.municipios}" var="item"
+                                           itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="tipoLogradouro"
+                                       value="#{i18n['button.logradouro']}:" />
+                        <p:selectOneMenu id="tipoLogradouro"
+                                         value="#{contratanteBean.endereco.tipoEndereco.id}"
+                                         label="#{i18n['label.person']}" required="true"
+                                         requiredMessage="#{i18n['message.required_field.address']}"
+                                         effect="fold">
+                            <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+                                          itemValue="" />
+                            <f:selectItems value="#{bbTipoEndereco.tiposEnderecos}"
+                                           var="item" itemLabel="#{item.nome}" itemValue="#{item.id}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="nome" value="#{i18n['label.logradouro']}:" />
+                        <p:inputText id="nome" size="40"
+                                     value="#{contratanteBean.endereco.logradouro}" label="Nome"
+                                     required="true"
+                                     requiredMessage="#{i18n['message.required_field.name']}">
+                            <f:validateLength minimum="0" />
+                        </p:inputText>
+
+                        <p:outputLabel for="numero" value="#{i18n['label.number2']}" />
+                        <p:inputText id="numero" size="5"
+                                     value="#{contratanteBean.endereco.numero}" label="Numero">
+                        </p:inputText>
+
+                        <p:outputLabel for="complemento"
+                                       value="#{i18n['label.complement']}:" />
+                        <p:inputText id="complemento" size="20"
+                                     value="#{contratanteBean.endereco.complemento}"
+                                     label="Complemento">
+                        </p:inputText>
+
+                        <p:outputLabel for="bairro" value="#{i18n['label.bairro']}:" />
+                        <p:inputText id="bairro" size="20"
+                                     value="#{contratanteBean.endereco.bairro}" label="bairro"
+                                     required="true"
+                                     requiredMessage="#{i18n['message.required_field.bairro']}">
+                        </p:inputText>
+
+                        <p:outputLabel for="cep" value="#{i18n['label.cep']}:" />
+                        <p:inputMask id="cep" size="9" label="cep" mask="99999-999"
+                                     required="true" value="#{contratanteBean.endereco.cep}"
+                                     requiredMessage="#{i18n['message.required_field.cep']}">
+                        </p:inputMask>
+                        <p:commandButton value="#{i18n['button.save_address']}"
+                                         id="adicionar_endereco"
+                                         actionListener="#{contratanteBean.salvarEndereco}"
+                                         update="t_enderecos,panel_enderecos" icon="ui-icon-disk" />
+                        <p:commandButton value="#{i18n['button.cancel']}" process="@this"
+                                         actionListener="#{contratanteBean.cancelarEndereco}"
+                                         update="panel_enderecos" icon="ui-icon ui-icon-close" />
+                    </h:panelGrid>
+                    <h:panelGroup>
+                        <p:dataTable id="t_enderecos" var="endereco"
+                                     value="#{contratanteBean.listaEnderecos}" selectionMode="single"
+                                     rowKey="#{endereco.id}" style="width:100%;">
+                            <p:ajax event="rowSelect"
+                                    listener="#{contratanteBean.onRowSelectEndereco}"
+                                    update=":formtable:panel_enderecos" />
+                            <p:ajax event="rowUnselect"
+                                    listener="#{contratanteBean.onRowUnselectEndereco}"
+                                    update=":formtable:panel_enderecos" />
+                            <p:column headerText="#{i18n['label.address']}:">
+                                <h:outputText
+                                    value="#{endereco.logradouro}, #{endereco.numero}, #{endereco.municipio.nome}, 
+                                    #{endereco.municipio.estado.nome}, #{endereco.municipio.estado.pais.nome}" />
+                            </p:column>
+                            <p:column headerText="#{i18n['label.action']}">
+                                <p:commandButton process="@this"
+                                                 actionListener="#{contratanteBean.excluirEndereco(endereco)}"
+                                                 icon="ui-icon-trash" title="#{i18n['button.delete']}"
+                                                 update="t_enderecos" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.back']}"
+                                         onclick="PF('w_contratante').back();"
+                                         styleClass="ui-wizard-nav-back"></p:commandButton>
+                        <p:commandButton value="#{i18n['button.next']}"
+                                         oncomplete="PF('w_contratante').next();" immediate="true"
+                                         action="#{contratanteBean.desabilitaGrid}"
+                                         update="panel_enderecos" styleClass="ui-wizard-nav-next"></p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+
+                <p:tab id="tab_config_email" title="#{i18n['label.config_email']}">
+                    <h:panelGrid columns="2" cellpadding="2">
+                        <p:outputLabel for="hostName" value="#{i18n['label.hostname']}" />
+                        <p:inputText id="hostName" size="30"
+                                     value="#{contratanteBean.model.configuracaoEmail.hostName}"
+                                     label="HostName">
+                        </p:inputText>
+
+                        <p:outputLabel for="smtpport" value="#{i18n['label.smtpport']}:" />
+                        <p:inputMask id="smtpport" size="5" required="true"
+                                     label="SmtpPort"
+                                     value="#{contratanteBean.model.configuracaoEmail.smtpPort}"
+                                     requiredMessage="#{i18n['message.required_field.smtp_port']}">
+                        </p:inputMask>
+
+                        <p:outputLabel for="userId" value="#{i18n['label.user_id']}:" />
+                        <p:inputMask id="userId" size="30" label="UserId"
+                                     value="#{contratanteBean.model.configuracaoEmail.userId}">
+                        </p:inputMask>
+
+                        <p:outputLabel for="password" value="#{i18n['label.password']}:" />
+                        <p:password id="password" size="30" redisplay="true"
+                                    value="#{contratanteBean.model.configuracaoEmail.password}"
+                                    label="Password">
+                        </p:password>
+
+                        <p:outputLabel for="fromSender" value="#{i18n['label.from']}:" />
+                        <p:inputText id="fromSender" size="30"
+                                     value="#{contratanteBean.model.configuracaoEmail.fromSender}"
+                                     label="FromSender"
+                                     validatorMessage="#{i18n['message.alert.invalid_email']}">
+                            <f:validateRegex pattern="(.+@.+\.[a-zA-Z]+)?" />
+                        </p:inputText>
+
+                        <p:outputLabel for="fromName" value="#{i18n['label.from_name']}:" />
+                        <p:inputText id="fromName" size="30"
+                                     value="#{contratanteBean.model.configuracaoEmail.fromName}"
+                                     label="FromName" />
+
+                        <p:outputLabel for="sslOnConnect" value="#{i18n['label.ssl']}:" />
+                        <p:selectOneMenu id="sslOnConnect" required="true"
+                                         value="#{contratanteBean.model.configuracaoEmail.sslOnConnect}"
+                                         requiredMessage="#{i18n['message.required_field.sslOnConnect']}">
+                            <f:selectItem itemValue="#{true}"
+                                          itemLabel="#{i18n['label.yes']}" />
+                            <f:selectItem itemValue="#{false}"
+                                          itemLabel="#{i18n['label.no']}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="startTlsEnable"
+                                       value="#{i18n['label.start_tls_enable']}:" />
+                        <p:selectOneMenu id="startTlsEnable" required="true"
+                                         value="#{contratanteBean.model.configuracaoEmail.startTlsEnable}"
+                                         requiredMessage="#{i18n['message.required_field.start.tls.enable']}">
+                            <f:selectItem itemValue="#{true}"
+                                          itemLabel="#{i18n['label.yes']}" />
+                            <f:selectItem itemValue="#{false}"
+                                          itemLabel="#{i18n['label.no']}" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.back']}"
+                                         oncomplete="PF('w_contratante').back();"
+                                         action="#{contratanteBean.habilitaGrid}" immediate="true"
+                                         update="panel_enderecos" styleClass="ui-wizard-nav-back"></p:commandButton>
+                        <p:commandButton value="#{i18n['button.next']}"
+                                         oncomplete="PF('w_contratante').next();"
+                                         styleClass="ui-wizard-nav-next"></p:commandButton>
+                    </h:panelGroup>
+                </p:tab>
+                <p:tab id="tab_modulos" title="#{i18n['label.module']}">
+                    <h:panelGrid id="panel_modulo" columns="1" cellpadding="2">
+                        <p:pickList id="pickListModulos" value="#{contratanteBean.menus}"
+                                    var="menu" itemLabel="#{menu.descricao}" itemValue="#{menu}"
+                                    converter="menuPickListConverter">
+                            <f:facet name="sourceCaption">#{i18n['label.availables']}</f:facet>
+                            <f:facet name="targetCaption">#{i18n['label.selecteds']}</f:facet>
+                        </p:pickList>
+                    </h:panelGrid>
+
+                    <h:panelGroup>
+                        <p:commandButton value="#{i18n['button.back']}"
+                                         oncomplete="PF('w_contratante').back();" immediate="true"
+                                         styleClass="ui-wizard-nav-back"></p:commandButton>
+                        <p:commandButton value="#{i18n['button.save']}"
+                                         action="#{contratanteBean.salvarModulo}" id="withIcon"
+                                         icon="ui-icon-disk" />
+                    </h:panelGroup>
+                </p:tab>
+            </p:wizard>
+        </h:form>
+    </ui:define>
+</ui:composition>

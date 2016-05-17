@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="atividadeChecklistTemplate_subreportComentariosTemplate" pageWidth="500" pageHeight="555" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3f2fdd27-1708-4230-86d6-ebfe9ede266f">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="comentario" class="java.lang.String"/>
+	<field name="nomeResponsavel" class="java.lang.String"/>
+	<field name="dataComentario" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="84" splitType="Stretch">
+			<textField>
+				<reportElement x="9" y="24" width="478" height="55" isRemoveLineWhenBlank="true" uuid="17ef1b2a-08ae-4c6d-96d8-12adf7a99891"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comentario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="9" y="1" width="133" height="20" isRemoveLineWhenBlank="true" uuid="947e9ee0-9ca4-425d-98ba-1226dfc36307"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomeResponsavel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="152" y="1" width="152" height="20" isRemoveLineWhenBlank="true" uuid="15bbd250-caa7-4b4c-9b4b-3c94a669f374"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dataComentario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formStatus">
+			<p:panel id="panel" header="#{i18n['label.topic']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idTopico" value="#{topicoBean.topico.id.idTopico}" />
+
+					<h:outputLabel for="formulario"
+						value="#{i18n['label.form']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="formulario"
+						value="#{topicoBean.topico.id.idFormulario}" required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_form']}"
+						disabled="#{topicoBean.desabilitarCombo}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select.form']}" itemValue="" />
+						<f:selectItems value="#{bbFormulario.formularios}"
+							var="formulario" itemValue="#{formulario.idFormulario}"
+							itemLabel="#{formulario.nomeFormulario}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="tituloTopico"
+						value="#{i18n['label.title']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="tituloTopico" size="40"
+						value="#{topicoBean.topico.tituloTopico}"
+						required="true" label="Topico"
+						requiredMessage="#{i18n['message.required_field.title']}">
+						<f:validateLength minimum="3" />
+					</p:inputText>
+					
+					<h:outputLabel for="sequenciaTopico"
+						value="#{i18n['label.topic_sequence']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="sequenciaTopico" size="40"
+						value="#{topicoBean.topico.sequenciaTopico}"
+						required="false" label="Formulario"
+						requiredMessage="#{i18n['message.required_field.function']}">
+					</p:inputText>
+
+
+
+
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{topicoBean.addTopico}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{topicoBean.cancelTopico}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

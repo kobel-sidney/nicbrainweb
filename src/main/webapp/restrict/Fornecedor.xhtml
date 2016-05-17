@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formFornecedor">
+			<p:panel id="panel" header="#{i18n['label.provider']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idFornecedor" value="#{fornecedorBean.model.id}" />
+
+					<h:outputLabel for="segmento"
+						value="#{i18n['label.segment']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="segmento"
+						value="#{fornecedorBean.model.segmento.id}" required="true"
+						requiredMessage="#{i18n['message.required_field.choise_a_segment']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{fornecedorBean.segmentos}" var="item"
+							itemLabel="#{item.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="razaoSocial"
+						value="#{i18n['label.razaosocial']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="razaoSocial" size="50"
+						value="#{fornecedorBean.model.razaoSocial}" required="true"
+						label="razaoSocial"
+						requiredMessage="#{i18n['message.required_field.razaosocial']}">
+					</p:inputText>
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="50"
+						value="#{fornecedorBean.model.nomeFantasia}" required="false"
+						label="nome"
+						requiredMessage="#{i18n['message.required_field.name']}">
+					</p:inputText>
+
+					<h:outputLabel for="cnpj"
+						value="#{i18n['label.cnpj']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputMask id="cnpj" size="25" required="true" label="CNPJ"
+						value="#{fornecedorBean.model.cnpj}"
+						requiredMessage="#{i18n['message.required_field.cnpj']}"
+						mask="99.999.999/9999-99">
+						<f:validator validatorId="cnpjValidator" />
+					</p:inputMask>
+
+					<h:outputLabel for="site"
+						value="#{i18n['label.site']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="site" size="30"
+						value="#{fornecedorBean.model.site}" required="false" label="nome">
+					</p:inputText>
+
+					<h:outputLabel for="ativo"
+						value="#{i18n['label.active']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="radioAtivo"
+						value="#{fornecedorBean.model.ativo}" required="true"
+						label="#{i18n['label.active']}"
+						requiredMessage="#{i18n['message.required_field.active']}">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel id="painel2" header="#{i18n['label.contact']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg2" />
+				<h:panelGrid columns="2">
+
+					<h:outputLabel for="nomeContato"
+						value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nomeContato" size="40"
+						value="#{fornecedorBean.model.nomeContato}" required="true"
+						label="nomeContato"
+						requiredMessage="#{i18n['message.required_field.name']}">
+						<f:validateLength minimum="2" />
+					</p:inputText>
+
+					<h:outputLabel for="telefoneContato"
+						value="#{i18n['label.telephone.contact1']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputMask id="telefoneContato" size="13" required="true"
+						label="telefoneContato"
+						value="#{fornecedorBean.model.telefoneContato}"
+						requiredMessage="#{i18n['message.required_field.contact_phone']}"
+						mask="(99) 9999-9999">
+					</p:inputMask>
+
+					<h:outputLabel for="celularContato"
+						value="#{i18n['label.contact_cel']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputMask id="celularContato" size="14" required="false"
+						label="celularContato"
+						value="#{fornecedorBean.model.celularContato}"
+						mask="(99) 99999-9999">
+					</p:inputMask>
+
+					<h:outputLabel for="email"
+						value="#{i18n['label.email']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="email" size="30"
+						value="#{fornecedorBean.model.emailContato}" required="false"
+						label="email">
+					</p:inputText>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{fornecedorBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{fornecedorBean.cancel}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

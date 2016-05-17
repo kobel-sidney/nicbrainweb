@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div class="menu-direito">
+		<h:panelGrid columns="1" width="100%" style="text-align:center">
+			<h:graphicImage value="/images/iconesNovos/tel-uteis.png"
+				id="telefone" styleClass="botaoMenu" />
+			<p:tooltip for="telefone" value="Telefones Uteis"
+				showEvent="mouseover" hideEvent="mouseout" showEffect="fade"
+				hideEffect="fade" style="color:black !important" />
+			<h:graphicImage value="/images/iconesNovos/alertas.png" id="alerta"
+				styleClass="botaoMenu" />
+			<p:tooltip for="alerta" value="Meus Alertas" showEvent="mouseover"
+				hideEvent="mouseout" showEffect="fade" hideEffect="fade"
+				style="color:black !important" />
+			<h:graphicImage value="/images/iconesNovos/mensagens.png"
+				id="mensagem" styleClass="botaoMenu" />
+			<p:tooltip for="mensagem" value="Envio de Mensagem"
+				showEvent="mouseover" hideEvent="mouseout" showEffect="fade"
+				hideEffect="fade" style="color:black !important" />
+			<h:graphicImage value="/images/iconesNovos/cameras.png" id="camera"
+				styleClass="botaoMenu" />
+			<p:tooltip for="camera" value="Câmeras" showEvent="mouseover"
+				hideEvent="mouseout" showEffect="fade" hideEffect="fade"
+				style="color:black !important" />
+			<h:graphicImage value="/images/iconesNovos/documents.png"
+				id="documento" styleClass="botaoMenu" />
+			<p:tooltip for="documento" value="Documentos" showEvent="mouseover"
+				hideEvent="mouseout" showEffect="fade" hideEffect="fade"
+				style="color:black !important" />
+		</h:panelGrid>
+
+		<!-- Menu Telefone -->
+		<p:tieredMenu style="width:200px" backLabel="#{i18n['button.back']}"
+			overlay="true" trigger="telefone" my="left top" at="right center">
+			<p:menuitem value="Telefones Uteis" url="TelefonesUteis.nicbrain"
+				ajax="true" />
+		</p:tieredMenu>
+
+		<!-- Menu Alerta-->
+		<p:tieredMenu style="width:200px" backLabel="#{i18n['button.back']}"
+			overlay="true" trigger="alerta" my="left top" at="right center">
+			<p:menuitem value="Alertas" url="/restrict/layout.nicbrain"
+				ajax="true" />
+		</p:tieredMenu>
+
+		<!-- Menu Mensagem -->
+		<p:tieredMenu style="width:200px" backLabel="#{i18n['button.back']}"
+			overlay="true" trigger="mensagem" my="left top" at="right center">
+			<p:menuitem value="Mensagens" url="/restrict/layout.nicbrain"
+				ajax="true" />
+		</p:tieredMenu>
+
+		<!-- Menu Camera -->
+		<p:tieredMenu style="width:200px" overlay="true" trigger="camera"
+			my="left botton" at="right center">
+			<p:menuitem value="Cameras" url="/restrict/layout.nicbrain"
+				ajax="true" />
+		</p:tieredMenu>
+
+		<!-- Menu Documento -->
+		<p:tieredMenu style="width:200px" backLabel="#{i18n['button.back']}"
+			overlay="true" trigger="documento" my="left top" at="right center">
+			<p:menuitem value="Documentos" url="/restrict/layout.nicbrain"
+				ajax="true" />
+		</p:tieredMenu>
+
+
+	</div>
+
+</ui:composition>

@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+    <ui:define name="tarefas">
+
+        <h:form id="formtable">
+            <div align="center" class="estiloDiv">
+                <p:panel id="panel" style="width:50%">
+                    <p:growl id="msg1" showDetail="true" />
+
+                    <p:dataTable id="pessoaTable" var="pessoa"
+                                 value="#{bbPessoa.pessoas}" paginator="true" rows="10"
+                                 emptyMessage="#{i18n['message.empty_table']}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                                 {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                                 selectionMode="single" rowKey="#{pessoa.id}">
+
+                        <p:ajax event="rowSelect" listener="#{pessoaBean.rowPessoaSelect}" />
+
+                        <p:column filterBy="#{pessoa.cliente.nomeFantasia}" headerText="Cliente">
+                            <h:outputText value="#{pessoa.cliente.nomeFantasia}" />
+                        </p:column>
+
+                        <p:column headerText="#{i18n['label.name']}">
+                            <h:outputText value="#{pessoa.nome}" />
+                        </p:column>
+
+                        <p:column headerText="Apelido">
+                            <h:outputText value="#{pessoa.apelido}" />
+                        </p:column>
+
+                        <p:column headerText="#{i18n['label.action']}"
+                                  style="width: 30px;">
+                            <p:commandButton title="#{i18n['button.delete']}"
+                                             icon="ui-icon-trash"
+                                             action="#{pessoaBean.excluirPessoa}"
+                                             update=":formtable:pessoaTable">
+                                <f:setPropertyActionListener value="#{pessoa}"
+                                                             target="#{pessoaBean.pessoa}" />
+                                <p:confirm header="Confirma��o de exclus�o"
+                                           message="Deseja excluir essa pessoa permanentemente? Se deseja somente desativ�-la use o campo ativo do formul�rio."
+                                           icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="#{i18n['button.new_pessoa']}"
+                                             action="#{pessoaBean.irParaCadastro}"
+                                             style="width:100%;text-align:center" />
+                        </f:facet>
+
+                    </p:dataTable>
+                </p:panel>
+            </div>
+
+            <p:confirmDialog global="true">
+                <p:commandButton value="#{i18n['label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="#{i18n['label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

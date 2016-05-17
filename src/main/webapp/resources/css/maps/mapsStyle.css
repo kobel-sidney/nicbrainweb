@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+
+.col-menu, .col-mapa, .mapa {
+	float: left;
+}
+
+body, html, .content {
+	height: 100%;
+}
+
+.col-menu {
+	width: 16.66666667%;
+	height: 100%;
+	min-height: 100%;
+}
+
+.col-mapa {
+	width: 83.33333333%;
+}
+
+.mapa {
+	width: 83.33333333%;
+	height: 91.66666667%;
+	position: absolute;
+}
+
+.dialog-mapa .ui-dialog-content {
+	padding: 0 !important;
+}

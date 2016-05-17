@@ -1,0 +1,523 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="layout.xhtml">
+
+    <ui:define name="tarefas">
+
+        <h:form prependId="true" id="formtable">
+            <div class="estiloDiv">
+                <p:panel id="mainPanel" style="margin-bottom:10px;"  header="#{atividadeBean.cabecalho}">
+
+                    <p:growl id="msg1" showDetail="true"/>
+
+                    <div class="div-principal">
+                        <div class="divFiltroLadoDireito">
+                            <div class="ui-clock ui-widget ui-widget-header ui-corner-all"  style="width: 101%; font-size: 14px !important; white-space: nowrap">
+                                <h:outputLabel value="#{i18n['label.venue']}:"/>&nbsp;
+                                <h:outputLabel value="#{atividadeBean.checklistSelecionado.evento.local.nome}"/>
+                                <br/>
+                                <h:outputLabel value="#{i18n['label.event']}:"/>&nbsp;
+                                <h:outputLabel value="#{atividadeBean.checklistSelecionado.evento.nome}"/>
+                                <br/>
+                                <h:outputLabel value="#{i18n['label.event_time']}:"/>&nbsp;
+                                <h:outputLabel value="#{atividadeBean.checklistSelecionado.evento.dataInicio}">
+                                    <f:convertDateTime pattern="HH:mm zZ" />
+                                </h:outputLabel>
+                            </div>
+                        </div>
+
+                        <div class="divFiltroLadoCentro">
+                            <h:panelGrid columns="4">
+                                <h:outputLabel for="filtroSelectStatus" value="#{i18n['label.status']}:"/>
+                                <p:selectOneMenu id="filtroSelectStatus" value="#{atividadeBean.filtroIdStatus}">
+                                    <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+                                    <f:selectItems value="#{bbStatus.statusAlteraveis}" var="item"
+                                                   itemLabel="#{item.nome}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+                                <h:outputLabel for="filtroDataInicio" value="#{i18n['label.start_date']}:"/>
+                                <p:calendar id="filtroDataInicio" value="#{atividadeBean.filtroDataHoraInicio}"
+                                            label="#{i18n['label.start_date']}"
+                                            mode="popup" effect="fold" navigator="true" 
+                                            showOn="button" popupIconOnly="true" 
+                                            pattern="dd/MM/yyyy HH:mm" locale="#{bbLocale.currentLocale.language}"/>
+                                <h:outputLabel for="filtroSelectFuncionario" value="#{i18n['label.responsible']}:"/>
+                                <p:selectOneMenu id="filtroSelectFuncionario" value="#{atividadeBean.filtroIdResponsavel}">
+                                    <f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+                                    <f:selectItems value="#{bbUsuario.usuariosResposaveisPorAtividadesPorContexto}" var="item"
+                                                   itemLabel="#{item.pessoa.nome}" itemValue="#{item.id}"/>
+                                </p:selectOneMenu>
+
+                                <p:commandButton value="#{i18n['button.search']}" action="#{atividadeBean.search}"
+                                                 id="withIcon" update="@form" icon="ui-icon-search" ajax="false"/>
+                            </h:panelGrid>
+                        </div>
+
+                        <div class="divFiltroLadoEsquerdo" align="right" style="white-space: nowrap">
+                            <p:clock pattern="dd/MM/yyyy HH:mm:ss"/>
+                        </div>
+                    </div>
+
+                    <div class="div-block">
+                    </div>
+
+                    <p:panel id="panel" style="margin-bottom:10px;">
+                        <!--                 <h:panelGrid columns="1" > -->
+
+                        <p:contextMenu for="idTabela">
+                            <p:menuitem value="#{i18n['button.delete']}"
+                                        update=":formtable:idTabela :formtable:msg1"
+                                        icon="ui-icon-close"
+                                        actionListener="#{atividadeBean.delete}"/>
+                        </p:contextMenu>
+
+                        <p:poll widgetVar="tabelaPoll" interval="1"
+                                update=":formtable:idTabela" autoStart="false" oncomplete="PF('tabelaPoll').stop();" />
+
+                        <p:dataTable id="idTabela" var="item" value="#{atividadeBean.dataModel}"
+                                     paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                                     selection="#{atividadeBean.model}" selectionMode="single">
+
+                            <p:ajax event="rowSelect" listener="#{atividadeBean.onRowSelect}" update=":formtable:msg1"/>
+                            <p:ajax event="rowUnselect" listener="#{atividadeBean.onRowUnselect}" update=":formtable:msg1"/>
+                            <p:ajax event="rowToggle" listener="#{atividadeBean.onRowToggle}" /> 
+
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column rowspan="2" headerText="#{i18n['label.resume']}"/>
+                                    <p:column rowspan="2" headerText="#{i18n['label.status']}"/>
+                                    <p:column rowspan="2" headerText="#{i18n['label.item']}"/>
+                                    <p:column rowspan="2" headerText="#{i18n['label.activity']}"/>
+                                    <p:column rowspan="2" headerText="#{i18n['label.estimated_time']}"/>
+                                    <p:column rowspan="2" headerText="#{i18n['label.elapsed_time']}"/>
+                                    <p:column colspan="2" headerText="#{i18n['label.start_date']}" />
+                                    <p:column rowspan="2" headerText="#{i18n['label.responsible']}"/>
+                                    <p:column rowspan="2" headerText="#{i18n['label.alerts']}"/>
+                                    <p:column rowspan="2" headerText="#{i18n['label.comments']}"/>
+
+                                    <!-- Comentado para futuras versoes
+                                    <p:column rowspan="2" headerText="#{i18n['label.form']}"/>
+                                    -->
+
+                                    <p:column rowspan="2" headerText="#{i18n['label.action']}"/>
+                                </p:row>
+                                <p:row>
+                                    <p:column headerText="#{i18n['label.estimated']}" />
+                                    <p:column headerText="#{i18n['label.effective']}" />
+                                </p:row>
+                            </p:columnGroup>
+
+                            <p:column style="width:5%">
+                                <p:rowToggler id="idLinhaExp" />
+                            </p:column>
+                            <p:column>
+                                <p:graphicImage url="../images/iconesNovos/icone-branco.png"
+                                                rendered="#{item.situacao.nome == 'agendado'}"
+                                                width="20px" height="20px"
+                                                style="border: 0px; margin-right: 1em;"/>
+                                <p:graphicImage url="../images/iconesNovos/icone-verde.png"
+                                                rendered="#{item.situacao.nome == 'sem_alerta'}"
+                                                width="20px" height="20px"
+                                                style="border: 0px; margin-right: 1em;"/>
+                                <p:graphicImage url="../images/iconesNovos/icone-amarelo.png"
+                                                rendered="#{item.situacao.nome == 'alerta_ocorrido'}"
+                                                width="20px" height="20px"
+                                                style="border: 0px; margin-right: 1em;"/>
+                                <p:graphicImage url="../images/iconesNovos/icone-vermelho.png"
+                                                rendered="#{item.situacao.nome == 'alerta_vigente'}"
+                                                width="20px" height="20px"
+                                                style="border: 0px; margin-right: 1em;"/>
+                                <p:graphicImage url="../images/iconesNovos/icone-roxo.png"
+                                                rendered="#{item.situacao.nome == 'cancelado'}"
+                                                width="20px" height="20px"
+                                                style="border: 0px; margin-right: 1em;"/>
+                                <h:outputText value="#{item.status.nome}" style="white-space:nowrap;"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.numeroItem}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.nome}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.tempoExecucaoEstimado} (#{i18n['label.symbol.minute']})"/>
+                            </p:column>
+                            <p:column style="white-space:nowrap;">
+                                <p:progressBar value="#{item.porcentagemTempoExecucao}"
+                                               labelTemplate="#{item.porcentagemTempoExecucaoDecorrido} %"
+                                               style="width:50px"
+                                               displayOnly="true"/>
+                                <h:outputText value="(#{item.tempoExecucaoDecorrido} / #{item.tempoExecucaoEstimado} #{i18n['label.symbol.minute']})" style="white-space:nowrap;"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.dataInicioPrevisto}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.dataInicioRealizado}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{item.usuarioResponsavel.pessoa.nome}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton id="alertaButton"
+                                                 rendered="#{item.ativo}"
+                                                 oncomplete="PF('alertaDialog').show();"
+                                                 update=":formDialogAlerta:idTabelaAlerta"
+                                                 icon="ui-icon-alert"
+                                                 title="#{i18n['label.alerts']}">
+                                    <f:setPropertyActionListener value="#{item}" target="#{atividadeBean.model}"/>
+                                </p:commandButton>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton id="comentarioButton"
+                                                 rendered="#{item.ativo}"
+                                                 oncomplete="PF('comentarioDialog').show();"
+                                                 update=":formDialogComentario:idTabelaComentario"
+                                                 icon="ui-icon-comment"
+                                                 title="#{i18n['label.comments']}">
+                                    <f:setPropertyActionListener value="#{item}" target="#{atividadeBean.model}"/>
+                                </p:commandButton>
+                                &nbsp;
+                                <p:commandButton id="novoComentarioButton"
+                                                 rendered="#{item.ativo}"
+                                                 oncomplete="PF('novoComentarioDialog').show();"
+                                                 update=":novoComentarioDlg"
+                                                 icon="ui-icon-pencil"
+                                                 title="#{i18n['button.new_comment']}">
+                                    <f:setPropertyActionListener value="" target="#{atividadeBean.comentario}" />
+                                    <f:setPropertyActionListener value="#{item}" target="#{atividadeBean.model}" />
+                                </p:commandButton>
+
+                            </p:column>
+
+                            <!-- Comentado para futuras versoes
+                            <p:column>
+                                    <p:commandButton id="formularioButton"
+                                                    oncomplete="javascript:alert('Exibe tela modal para preenchimento de formul�rio');" icon="ui-icon-alert" title="#{i18n['label.form']}">
+                                    </p:commandButton>
+                            </p:column>
+                            -->
+
+                            <p:column style="white-space: nowrap;">
+                                <h:outputText value="#{i18n['label.checklist_canceled']}" rendered="#{item_model.status.id == 5}"/>
+                                <h:outputText value="#{i18n['label.checklist_completed']}"  rendered="#{item_model.status.id == 6}"/>
+
+                                <p:commandButton id="iniciarButton"
+                                                 action="#{atividadeBean.iniciarAtividade}"
+                                                 update=":formtable:msg1 :formtable:idTabela"
+                                                 oncomplete="PF('tabelaPoll').start();"
+                                                 rendered="#{item.ativo and item.status.id == 1 and item.situacao.nome != 'alerta_vigente'}"
+                                                 icon="ui-icon-play" title="#{i18n['button.start']}">
+                                    <f:setPropertyActionListener value="#{item}" target="#{atividadeBean.model}"/>
+                                    <p:confirm header="#{i18n['label.start_activity']}" 
+                                               message="#{i18n['message.text.want_start_this_activity']}"
+                                               icon="ui-icon-alert"/>
+                                </p:commandButton>
+                                <p:commandButton id="iniciarAtrasadoButton"
+                                                 rendered="#{item.ativo and item.status.id == 1 and item.situacao.nome == 'alerta_vigente'}"
+                                                 update=":obsDlgJustificativa"
+                                                 oncomplete="PF('obsDialogJustificativa').show();"
+                                                 icon="ui-icon-play" title="#{i18n['button.start']}">
+                                    <f:setPropertyActionListener value="" target="#{atividadeBean.justificativa}" />
+                                    <f:setPropertyActionListener value="#{item}" target="#{atividadeBean.model}" />
+                                </p:commandButton>
+
+                                <!-- 
+                                <p:commandButton id="pausarButton"
+                                                rendered="#{item.ativo and item.status.id == 2}"
+                                                oncomplete="javascript:alert('Exibie a tela modal com o pause da Atividade');"
+                                                icon="ui-icon-pause" title="#{i18n['button.pause']}">
+                                </p:commandButton>
+                                <p:commandButton id="reiniciarButton"
+                                                rendered="#{item.ativo and item.status.id == 4}"
+                                                oncomplete="javascript:alert('Reinicia a Atividade');"
+                                                icon="ui-icon-play" title="#{i18n['button.restart']}">
+                                </p:commandButton>
+                                -->
+
+                                <p:commandButton id="concluirButton"
+                                                 update=":obsDlgConcluir"
+                                                 rendered="#{item.ativo and item.status.id == 2}"
+                                                 oncomplete="PF('obsDialogConcluir').show();"
+                                                 icon="ui-icon-circle-check" title="#{i18n['button.complete']}">
+                                    <f:setPropertyActionListener value="" target="#{atividadeBean.observacao}" />
+                                    <f:setPropertyActionListener value="#{item}" target="#{atividadeBean.model}"/>
+                                </p:commandButton>
+                                &nbsp;
+                                <p:commandButton id="cancelarButton" rendered="#{item.ativo}"
+                                                 update=":obsDlg"
+                                                 oncomplete="PF('obsDialog').show();"
+                                                 icon="ui-icon-cancel" title="#{i18n['button.cancel']}">
+                                    <f:setPropertyActionListener value="" target="#{atividadeBean.observacao}" />
+                                    <f:setPropertyActionListener value="#{item}" target="#{atividadeBean.model}" />
+                                </p:commandButton>
+                            </p:column>
+
+                            <p:rowExpansion>
+                                <h:panelGrid columns="2">
+                                    <h:outputLabel value="#{i18n['label.description']}"/>
+                                    <h:outputLabel value="#{item.descricao}"/>
+
+                                    <h:outputLabel value="#{i18n['label.responsible']}:&nbsp;#{item.usuarioResponsavel.pessoa.nome}"/>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLink value="mailto:#{item.usuarioResponsavel.email}" title="#{item.usuarioResponsavel.email}">
+                                            <p:commandButton type="button" icon="ui-icon-mail-closed" />
+                                            <h:outputLabel value="#{item.usuarioResponsavel.email}"/>
+                                        </h:outputLink>
+                                        <h:outputLink value="tel:#{item.usuarioResponsavel.pessoa.celularContato}" title="#{item.usuarioResponsavel.pessoa.celularContato}">
+                                            <p:commandButton type="button" icon="ui-icon-comment" />
+                                            <h:outputLabel value="#{item.usuarioResponsavel.pessoa.celularContato}"/>
+                                        </h:outputLink>
+                                    </h:panelGrid>				    			
+                                </h:panelGrid>
+                                <!-- ocultando o botao 'transferir atividade': 
+                                        <h:panelGrid columns="2">
+                                                <h:outputLabel value="#{item.usuarioResponsavel.pessoa.nome}"/>
+                                                <p:commandButton id="transferirButton"
+                                                                value="#{i18n['label.shift_responsible']}"
+                                                                rendered="#{item.ativo}"
+                                                                oncomplete="javascript:alert('Evento para TRANSFERIR esta Atividade para outro Respons�vel');"
+                                                                icon="ui-icon-transferthick-e-w" title="#{i18n['label.shift_responsible']}">
+                                                </p:commandButton>
+                                        </h:panelGrid>
+                                -->
+
+                            </p:rowExpansion>
+
+                            <!-- comentando a possibilidade de se criar um novo checklist - deve ficar na tela de 'dados mestres' 
+                            <f:facet name="footer">
+                                    <p:commandButton value="#{i18n['button.new_checklist']}" process="@this" update="@form"
+                                                    action="#{atividadeBean.novo}"
+                                                    style="width:100%;text-align:center">
+                                            
+                                                    <f:setPropertyActionListener target="#{atividadeBean.model}" value="#{model}"/>
+                                            </p:commandButton>
+                                    </f:facet>
+                            -->
+                        </p:dataTable>
+                        <!--                 </h:panelGrid> -->
+                    </p:panel>
+
+                    <p:separator/>
+                    <p:panel id="pnlVoltar" style="margin-bottom:10px;">
+                        <p:commandButton id="btnVoltar" value="#{i18n['button.back']}"
+                                         action="#{atividadeBean.voltaPagina}"
+                                         icon="ui-icon-arrowreturnthick-1-w" title="#{i18n['button.back']}">
+                        </p:commandButton>
+                    </p:panel>
+                </p:panel>
+            </div>
+
+            <p:confirmDialog global="true">
+                <p:commandButton value="#{i18n['label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton value="#{i18n['label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+            </p:confirmDialog>
+
+        </h:form>
+
+        <p:dialog header="#{i18n['label.justification']}"
+                  widgetVar="obsDialogJustificativa"
+                  resizable="false" id="obsDlgJustificativa"
+                  showEffect="fade" hideEffect="explode" modal="true"
+                  appendToBody="true" closeOnEscape="true">
+
+            <p:messages id="messagesJustificativa" />
+            <h:form id="formDialogObsJustificativa">
+                <h:panelGrid columns="1">
+                    <p:inputTextarea id="txtJustificativa"
+                                     rows="10" cols="50" counter="counter" maxlength="200"
+                                     value="#{atividadeBean.justificativa}"
+                                     counterTemplate="{0} #{i18n['label.characters_remaining']}"
+                                     autoResize="false"
+                                     required="true" requiredMessage="#{i18n['message.required_field.remark']}">
+                        <f:validateLength minimum="1" maximum="200" />
+                    </p:inputTextarea>
+                    <h:outputText id="counter"/>
+                </h:panelGrid>
+
+                <p:commandButton id="btnConfirmarJustificar" value="#{i18n['button.confirm_justification']}"
+                                 update=":formtable:msg1 :formtable:idTabela"
+                                 action="#{atividadeBean.iniciarAtividade}"
+                                 onsuccess="PF('obsDialogJustificativa').hide();"
+                                 icon="ui-icon-disk" title="#{i18n['button.confirm_justification']}">
+                </p:commandButton>
+
+                <p:commandButton id="btnCancelJustificativa" value="#{i18n['button.cancel']}"
+                                 type="button" icon="ui-icon ui-icon-close"
+                                 title="#{i18n['button.cancel']}" onclick="PF('obsDialog').hide();" />
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="#{i18n['label.activity_canceled']}"
+                  widgetVar="obsDialog"
+                  resizable="false" id="obsDlg"
+                  showEffect="fade" hideEffect="explode" modal="true"
+                  appendToBody="true" closeOnEscape="true">
+
+            <p:messages id="messages" />
+            <h:form id="formDialogObs">
+                <h:panelGrid columns="1">
+                    <p:inputTextarea id="txtObservacaoFalha"
+                                     rows="10" cols="50" counter="counter" maxlength="200"
+                                     value="#{atividadeBean.observacao}"
+                                     counterTemplate="{0} #{i18n['label.characters_remaining']}"
+                                     autoResize="false"
+                                     required="true" requiredMessage="#{i18n['message.required_field.remark']}">
+                        <f:validateLength minimum="1" maximum="200" />
+                    </p:inputTextarea>
+                    <h:outputText id="counter"/>
+                </h:panelGrid>
+
+                <p:commandButton id="btnConfirmarFalha" value="#{i18n['button.confirm_fault']}"
+                                 update=":formtable:msg1 :formtable:idTabela"
+                                 action="#{atividadeBean.cancelarAtividade}"
+                                 onsuccess="PF('obsDialog').hide();"
+                                 icon="ui-icon-disk" title="#{i18n['button.confirm_fault']}">
+                </p:commandButton>
+
+                <p:commandButton id="btnCancelFalha" value="#{i18n['button.cancel']}"
+                                 type="button" icon="ui-icon ui-icon-close"
+                                 title="#{i18n['button.cancel']}" onclick="PF('obsDialog').hide();" />
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="#{i18n['label.complete_activity']}"
+                  widgetVar="obsDialogConcluir"
+                  resizable="false" id="obsDlgConcluir"
+                  showEffect="fade" hideEffect="explode" modal="true"
+                  appendToBody="true" closeOnEscape="true">
+
+            <h:form id="formDialogObsConcluir">
+                <h:panelGrid columns="1">
+                    <p:inputTextarea id="txtObservacaoConcluir"
+                                     rows="10" cols="50" counter="counterConcluir" maxlength="200"
+                                     value="#{atividadeBean.observacao}"
+                                     counterTemplate="{0} #{i18n['label.characters_remaining']}"
+                                     autoResize="false"
+                                     required="#{atividadeBean.model.quantidadeMensagemAlerta > 0}" requiredMessage="#{i18n['message.required_field.remark']}">
+                    </p:inputTextarea>
+                    <h:outputText id="counterConcluir"/>
+                </h:panelGrid>
+
+                <p:commandButton id="btnConfirmarConcluir" value="#{i18n['button.complete']}"
+                                 update=":formtable:msg1 :formtable:idTabela"
+                                 action="#{atividadeBean.concluirAtividade}"
+                                 onsuccess="PF('obsDialogConcluir').hide();"
+                                 icon="ui-icon-disk" title="#{i18n['button.complete']}">
+                </p:commandButton>
+
+                <p:commandButton id="btnCancelConcluir" value="#{i18n['button.cancel']}"
+                                 type="button" icon="ui-icon ui-icon-close"
+                                 title="#{i18n['button.cancel']}" onclick="PF('obsDialogConcluir').hide();"/>           
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="#{i18n['label.alerts']}" 
+                  id="alertaDlg"
+                  widgetVar="alertaDialog"
+                  resizable="false"
+                  showEffect="fade" hideEffect="explode" modal="true"
+                  appendToBody="true" closeOnEscape="true">
+
+            <h:form id="formDialogAlerta">
+                <h:panelGrid columns="1">
+                    <p:dataTable id="idTabelaAlerta" var="item" value="#{atividadeBean.atividadeMensagemDataModel}"
+                                 paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                 {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                                 selectionMode="single" rowIndexVar="indice">
+
+                        <p:column headerText="#{i18n['label.date_time']}">
+                            <h:outputText value="#{item.dataEnvio}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{i18n['label.description']}">
+                            <h:outputText value="#{item.mensagem.descricao}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="#{i18n['label.comment']}"
+                  widgetVar="novoComentarioDialog"
+                  resizable="false" id="novoComentarioDlg"
+                  showEffect="fade" hideEffect="explode" modal="true"
+                  appendToBody="true" closeOnEscape="true">
+
+            <p:messages id="comentarioMessages"/>
+            <h:form id="formDialogNovoComentario">
+                <h:panelGrid columns="1">
+                    <p:inputTextarea id="txtNovoComentario"
+                                     rows="10" cols="50" counter="counterComentario" maxlength="1000"
+                                     value="#{atividadeBean.comentario}"
+                                     counterTemplate="{0} #{i18n['label.characters_remaining']}"
+                                     autoResize="false"
+                                     required="true" requiredMessage="#{i18n['message.required_field.comment']}">
+                        <f:validateLength minimum="1" maximum="1000" />
+                    </p:inputTextarea>
+                    <h:outputText id="counterComentario"/>
+                </h:panelGrid>
+
+                <p:commandButton id="btnConfirmarNovoComentario" value="#{i18n['button.confirm_new_comment']}"
+                                 update=":formtable:msg1 :formtable:idTabela"
+                                 action="#{atividadeBean.novoComentario}"
+                                 onsuccess="PF('novoComentarioDialog').hide();"
+                                 icon="ui-icon-disk" title="#{i18n['button.confirm_new_comment']}">
+                </p:commandButton>
+
+                <p:commandButton id="btnCancelNovoComentario" value="#{i18n['button.cancel']}"
+                                 type="button" icon="ui-icon ui-icon-close"
+                                 title="#{i18n['button.cancel']}" onclick="PF('novoComentarioDialog').hide();" />
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="#{i18n['label.comments']}" 
+                  id="comentarioDlg"
+                  widgetVar="comentarioDialog"
+                  resizable="false"
+                  position="center"
+                  showEffect="fade" hideEffect="explode" modal="true"
+                  appendToBody="true" closeOnEscape="true">
+
+            <h:form id="formDialogComentario">
+                <h:panelGrid columns="1">
+                    <p:dataTable id="idTabelaComentario" var="item" value="#{atividadeBean.atividadeComentarioDataModel}"
+                                 paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+                                 {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+                                 selectionMode="single" rowIndexVar="indice">
+
+                        <p:column headerText="#{i18n['label.date_time']}">
+                            <h:outputText value="#{item.dataComentario}">
+                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="#{i18n['label.responsible']}">
+                            <h:outputText value="#{item.usuario.pessoa.nome}"/>
+                        </p:column>
+                        <p:column headerText="#{i18n['label.comment']}">
+                            <h:outputText value="#{item.comentario}"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+</ui:composition>

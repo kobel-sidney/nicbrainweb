@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formFuncionario">
+			<p:panel id="panel" header="#{i18n['label.functionary']}" style="margin-bottom:10px;">
+				<p:growl id="msg0"/>
+				<h:panelGrid columns="2">
+					<h:outputLabel/>
+					<h:inputHidden id="idPessoa" value="#{funcionarioBean.model.id.idPessoa}"/>
+					
+					<h:outputLabel for="selectContratante" value="#{i18n['label.contractor']}:&nbsp;#{i18n['label.token.required_field']}"/>
+					<p:selectOneMenu id="selectContratante"
+							value="#{funcionarioBean.idContratante}"
+							disabled="#{funcionarioBean.modoEdicao}" effect="fold">
+							
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="-1" />
+						<f:selectItems value="#{bbContratante.contratantesPorContexto}" var="item"
+								itemValue="#{item.idContratante}" itemLabel="#{item.nomeFantasia}" />
+						
+						<p:ajax event="change" update=":formFuncionario:selectPessoa :formFuncionario:selectSuperior" listener="#{funcionarioBean.resetPessoa}" />
+					</p:selectOneMenu>
+					
+					<h:outputLabel for="selectPessoa" value="#{i18n['label.person2']}:&nbsp;#{i18n['label.token.required_field']}"/>
+					<p:selectOneMenu id="selectPessoa"
+							value="#{funcionarioBean.idPessoa}"
+							disabled="#{funcionarioBean.modoEdicao}" effect="fold">
+							
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="-1" />
+						<f:selectItems value="#{funcionarioBean.pessoasDisponiveisParaFuncionario}" var="item"
+								itemValue="#{item.idPessoa}" itemLabel="#{item.nomePessoa}" />
+						
+						<p:ajax event="change" update=":formFuncionario:selectSuperior :formFuncionario:pickListGrupos"
+								listener="#{funcionarioBean.resetFuncionarioSuperior}" />
+					</p:selectOneMenu>
+					
+					<h:outputLabel for="selectCargo" value="#{i18n['label.post']}:&nbsp;#{i18n['label.token.required_field']}"/>
+					<p:selectOneMenu id="selectCargo"
+							value="#{funcionarioBean.idCargo}"
+							effect="fold">
+							
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="-1" />
+						<f:selectItems var="item"
+								itemValue="#{item.idCargo}" itemLabel="#{item.nomeCargo}">
+						</f:selectItems>
+					</p:selectOneMenu>
+					
+					<h:outputLabel for="selectSuperior" value="#{i18n['label.functionary_superior']}:"/>
+					<p:selectOneMenu id="selectSuperior"
+							value="#{funcionarioBean.idPessoaSuperior}"
+							effect="fold">
+						
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="-1" />
+						<f:selectItems value="#{funcionarioBean.funcionariosSuperioresDisponiveis}" var="item"
+								itemValue="#{item.id.idPessoa}" itemLabel="#{item.pessoa.nomePessoa}">
+						</f:selectItems>
+					</p:selectOneMenu>
+					
+					<h:outputLabel for="numeroMatricula" value="#{i18n['label.registration_number']}:&nbsp;#{i18n['label.token.required_field']}"/>
+					<p:inputText id="numeroMatricula" value="#{funcionarioBean.nrMatricula}"
+							validatorMessage="#{i18n['message.alert.accept_only_numbers']}">
+						<f:validateRegex pattern="^[0-9]{1,}$"/>
+					</p:inputText>
+
+					<h:outputLabel for="funcionarioAtivo" value="#{i18n['label.active']}:"/>
+					<p:selectBooleanCheckbox id="funcionarioAtivo"
+							value="#{funcionarioBean.ativo}"/>
+					
+				
+					
+				</h:panelGrid>
+			</p:panel>
+			
+			<p:commandButton value="#{i18n['button.save']}" action="#{funcionarioBean.add}" 
+					id="withIcon" update="@form" icon="ui-icon-disk" ajax="false"/>
+			<p:commandButton value="#{i18n['button.cancel']}" actionListener="#{funcionarioBean.cancel}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this"/>			
+		</h:form>
+		
+	</ui:define>
+</ui:composition>

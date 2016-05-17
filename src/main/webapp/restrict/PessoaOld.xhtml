@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<script language="javascript"
+			src="../script/primefaces-calendar-l10n.js" />
+
+		<h:form>
+
+			<p:tabView id="tabView">
+				<p:tab id="tab1" title="#{i18n['label.person2']}">
+
+					<p:growl id="msg0" />
+					<h:panelGrid columns="2" cellpadding="2">
+
+						<h:outputLabel />
+						<h:inputHidden id="idPessoa" value="#{pessoaBean.pessoa.idPessoa}" />
+
+						<h:outputLabel for="imgFoto1" value="Foto :" />
+						<p:graphicImage id="imgFoto1" value="#{pessoaBean.image}"
+							rendered="#{not empty pessoaBean.pessoa.foto}">
+							<f:param name="timemillis" value="#{bbUtil.timemillis}" />
+						</p:graphicImage>
+
+						<h:outputText value="#{i18n['label.no_image']}"
+							rendered="#{empty pessoaBean.pessoa.foto}" />
+
+						<h:outputLabel for="tipoPessoa"
+							value="#{i18n['label.person']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:selectOneMenu id="tipoPessoa"
+							value="#{pessoaBean.pessoa.tipoPessoa.idTipoPessoa}"
+							required="true"
+							requiredMessage="#{i18n['message.required_field.choice_a_persontype']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+								itemValue="" />
+							<f:selectItems value="#{bbTipoPessoa.tipoPessoas}" var="item"
+								itemLabel="#{item.nomeTipoPessoa}"
+								itemValue="#{item.idTipoPessoa}" />
+						</p:selectOneMenu>
+
+
+						<h:outputLabel for="nome"
+							value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:inputText id="nome" size="40"
+							value="#{pessoaBean.pessoa.nomePessoa}" required="true"
+							label="Nome"
+							requiredMessage="#{i18n['message.required_field.name']}">
+							<f:validateLength minimum="2" />
+						</p:inputText>
+
+						<h:outputLabel for="cpf"
+							value="#{i18n['label.cpf']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:inputMask id="cpf" size="13" required="true" label="Cpf"
+							value="#{pessoaBean.pessoa.cpfPessoa}"
+							requiredMessage="#{i18n['message.required_field.cpf']}"
+							mask="999.999.999-99">
+							<f:validator validatorId="cpfValidator" />
+						</p:inputMask>
+
+						<h:outputLabel for="rg" value="#{i18n['label.rg']}:" />
+						<p:inputMask id="rg" size="10" label="rg"
+							value="#{pessoaBean.pessoa.rgPessoa}" mask="99.999.999-9">
+						</p:inputMask>
+
+						<h:outputLabel for="dataNascimento"
+							value="#{i18n['label.birthdate']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:calendar id="dataNascimento" navigator="true" effect="fold"
+							size="9" pattern="dd/MM/yyyy" mindate="01/01/1900"
+							value="#{pessoaBean.pessoa.dtNascimentoPessoa}" required="true"
+							requiredMessage="#{i18n['message.required_field.birthdate']}"
+							locale="#{bbLocale.currentLocale.language}" />
+
+						<h:outputLabel for="radioAtivo" value="#{i18n['label.active']}:" />
+						<p:selectOneRadio id="radioAtivo"
+							value="#{pessoaBean.pessoa.ativo}"
+							label="#{i18n['label.active']}">
+							<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+							<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+						</p:selectOneRadio>
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab id="tab2" title="#{i18n['label.address']}">
+					<h:panelGrid columns="2" cellpadding="2">
+
+						<h:outputLabel />
+						<h:inputHidden id="idEndereco"
+							value="#{pessoaBean.pessoa.endereco.idEndereco}" />
+
+						<h:outputLabel for="tipoEndereco"
+							value="#{i18n['menu.tipoEndereco']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<h:selectOneMenu id="tipoEndereco"
+							value="#{pessoaBean.pessoa.endereco.tipoEndereco.idTipoEndereco}"
+							required="true" label="#{i18n['menu.tipoEndereco']}"
+							requiredMessage="#{i18n['message.required_field.logradouro_type']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+								itemValue="" />
+							<f:selectItems value="#{bbTipoEndereco.tipoEnderecoss}"
+								var="item" itemLabel="#{item.nomeTipoEndereco}"
+								itemValue="#{item.idTipoEndereco}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel for="tipoLogradouro"
+							value="#{i18n['button.logradouro']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<h:selectOneMenu id="tipoLogradouro"
+							value="#{pessoaBean.pessoa.endereco.tipoLogradouro.idTipoLogradouro}"
+							required="true" label="#{i18n['label.person']}"
+							requiredMessage="#{i18n['message.required_field.logradouro_type']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+								itemValue="" />
+							<f:selectItems value="#{bbTipoLogradouro.tipoLogradouros}"
+								var="item" itemLabel="#{item.nomeTipoLogradouro}"
+								itemValue="#{item.idTipoLogradouro}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel for="nomeEnd"
+							value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:inputText id="nomeEnd" size="40"
+							value="#{pessoaBean.pessoa.endereco.nome}" required="true"
+							label="Nome"
+							requiredMessage="#{i18n['message.required_field.name']}">
+							<f:validateLength minimum="0" />
+						</p:inputText>
+
+						<h:outputLabel for="numero"
+							value="#{i18n['label.number2']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:inputText id="numero" size="5"
+							value="#{pessoaBean.pessoa.endereco.numero}" required="true"
+							label="Numero">
+							<f:validateLength minimum="0" />
+						</p:inputText>
+
+						<h:outputLabel for="complemento"
+							value="#{i18n['label.complement']}:" />
+						<p:inputText id="complemento" size="20"
+							value="#{pessoaBean.pessoa.endereco.complemento}"
+							required="false" label="Complemento"
+							requiredMessage="#{i18n['message.required_field.name']}">
+						</p:inputText>
+
+						<h:outputLabel for="bairro"
+							value="#{i18n['label.bairro']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:inputText id="bairro" size="20"
+							value="#{pessoaBean.pessoa.endereco.bairro}" required="true"
+							label="bairro"
+							requiredMessage="#{i18n['message.required_field.bairro']}">
+						</p:inputText>
+
+						<h:outputLabel for="cep"
+							value="#{i18n['label.cep']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<p:inputMask id="cep" size="9" required="true" label="cep"
+							mask="99999-999" value="#{pessoaBean.pessoa.endereco.cep}"
+							requiredMessage="#{i18n['message.required_field.cep']}">
+						</p:inputMask>
+
+						<h:outputLabel for="Pais"
+							value="#{i18n['label.countries']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<h:selectOneMenu id="Pais"
+							value="#{pessoaBean.pessoa.endereco.municipio.estado.pais.idPais}"
+							required="true" label="#{i18n['label.countries']}"
+							requiredMessage="#{i18n['message.required_field.country']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+								itemValue="" />
+							<f:selectItems value="#{bbPais.paises}" var="item"
+								itemLabel="#{item.nomePais}" itemValue="#{item.idPais}" />
+
+
+						</h:selectOneMenu>
+
+						<h:outputLabel for="Estado"
+							value="#{i18n['button.state']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<h:selectOneMenu id="Estado"
+							value="#{pessoaBean.pessoa.endereco.municipio.estado.id.idEstado}"
+							required="true" label="#{i18n['button.state']}"
+							requiredMessage="#{i18n['message.required_field.choice_a_persontype']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+								itemValue="" />
+							<f:selectItems value="#{bbEstado.estados}" var="item"
+								itemLabel="#{item.nomeEstado}" itemValue="#{item.idEstado}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel for="Municipio"
+							value="#{i18n['label.city']}:&nbsp;#{i18n['label.token.required_field']}" />
+						<h:selectOneMenu id="Municipio"
+							value="#{pessoaBean.pessoa.endereco.municipio.id.idMunicipio}"
+							required="true" label="#{i18n['label.city']}"
+							requiredMessage="#{i18n['message.required_field.choice_a_persontype']}">
+							<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+								itemValue="" />
+							<f:selectItems value="#{bbMunicipio.municipios}" var="item"
+								itemLabel="#{item.nomeMunicipio}"
+								itemValue="#{item.idMunicipio}" />
+						</h:selectOneMenu>
+
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab id="tab3" title="Telefone Pessoa">
+					<h:panelGrid columns="2" cellpadding="2">
+					
+					
+					
+					</h:panelGrid>
+				</p:tab>
+
+				<p:tab id="tab5" title="Upload">
+					<h:panelGrid columns="1" cellpadding="2">
+
+						<h:outputLabel for="imgFoto2" value="Foto :" />
+						<p:graphicImage id="imgFoto2" value="#{pessoaBean.image}"
+							rendered="#{not empty pessoaBean.pessoa.foto}">
+							<f:param name="timemillis" value="#{bbUtil.timemillis}" />
+						</p:graphicImage>
+
+						<h:outputLabel for="campoUpload" value="Upload:" />
+						<p:fileUpload fileLimit="1"
+							fileUploadListener="#{pessoaBean.handleFileUpload}"
+							mode="advanced" update="msg0"
+							allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+
+
+					</h:panelGrid>
+				</p:tab>
+
+
+			</p:tabView>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{pessoaBean.addPessoa}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{pessoaBean.cancelPessoa}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

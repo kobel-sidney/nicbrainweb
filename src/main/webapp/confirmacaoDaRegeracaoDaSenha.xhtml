@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<link href="./resources/restrict/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+		<title>#{i18n['label.forgot_password']}</title>
+
+	</h:head>
+
+	<h:body styleClass="body">
+
+		<p:growl id="msg0" />
+
+		<f:facet name="last">
+			<h:outputStylesheet library="css" name="principal.css"/>
+			<h:outputStylesheet library="css" name="default.css" />
+			<h:outputStylesheet library="css" name="custom.css" />
+		</f:facet>
+
+		<img src="images/logo-login.png" />
+
+		<div id="login-fields" title="#{i18n['text.restricted_access']}">
+
+			<br />
+
+			<h:form prependId="false">
+
+				<p:focus  />
+
+				<h:outputText value="Confirme para qual Usuário a senha será Regerada:" />
+				<br /><br />
+				<p:inputText 	id="emailDeConfirmacao"
+								size="40" maxlength="40"
+								required="true"
+								requiredMessage="#{i18n['message.required_field.user']}"
+								validatorMessage="#{i18n['message.alert.invalid_email']}"
+								label="Email"  styleClass="j_usernameStilo"
+								value="#{bbLogin.emailDeConfirmacaoDaRegeracaoDeSenhaDoUsuario}" >
+					<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+				</p:inputText>
+				<p:watermark for="emailDeConfirmacao" value="#{i18n['text.enter_your_id']}" />
+				<p:focus for="emailDeConfirmacao" />
+
+				<br />
+
+				<h:commandButton 	value="#{i18n['button.regenerate_password']}"
+									styleClass="btn-default cfloat-btn"
+									action="#{bbLogin.confirmacaoDaRegeracaoDaSenha}"			/>
+
+			</h:form>
+
+        </div>
+
+    </h:body>
+</html>

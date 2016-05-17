@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formGrupoChecklist">
+			<p:panel id="panel" header="#{i18n['label.checklist_group']}" style="margin-bottom:10px;">
+				<p:growl id="msg0"/>
+				<h:panelGrid columns="2">
+					<h:outputLabel/>
+					<h:inputHidden id="idGrupoChecklist" value="#{grupoChecklistBean.model.idGrupoCheckList}"/>
+					
+					<h:outputLabel for="nomeSegmento" value="#{i18n['label.segment']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<h:selectOneMenu id="nomeSegmento" value="#{grupoChecklistBean.model.segmento.idSegmento}" required="true"
+							label="#{i18n['label.segment']}"
+							requiredMessage="#{i18n['message.required_field.segment']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+						<f:selectItems value="#{bbSegmento.segmentos}" var="item_segmento"
+								itemLabel="#{item_segmento.nomeSegmento}" itemValue="#{item_segmento.idSegmento}"/>
+					</h:selectOneMenu>
+					
+					<h:outputLabel for="nomeTipo" value="#{i18n['label.checklist_group_type']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<h:selectOneMenu id="nomeTipo" value="#{grupoChecklistBean.model.tipoGrupoChecklist.idTipoGrupoChecklist}" required="true"
+							label="#{i18n['label.checklist_group_type']}"
+							requiredMessage="#{i18n['message.required_field.checklist_group_type']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+						<f:selectItems value="#{bbTipoGrupoChecklist.tipoGrupoChecklists}" var="item_tipo"
+								itemLabel="#{item_tipo.nome}" itemValue="#{item_tipo.idTipoGrupoChecklist}"/>
+					</h:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+			
+			<p:commandButton value="#{i18n['button.save']}" action="#{grupoChecklistBean.add}" 
+					id="withIcon" update="@form" icon="ui-icon-disk" ajax="false"/>
+			<p:commandButton value="#{i18n['button.cancel']}" actionListener="#{grupoChecklistBean.cancel}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this"/>           
+		</h:form>
+		
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<script language="javascript"
+			src="../script/primefaces-calendar-l10n.js" />
+
+		<h:form prependId="true" id="formUsuario">
+			<p:panel id="panel" header="#{i18n['label.user']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idUsuario"
+						value="#{usuarioBean.usuario.id.idPessoa}" />
+
+					<h:outputLabel for="contratante"
+						value="#{i18n['label.company']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="contratante"
+						value="#{usuarioBean.usuario.id.idContratante}" required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_contractor']}"
+						disabled="#{usuarioBean.modoEdicao}" effect="fold">
+						<f:selectItem itemLabel="#{i18n['text.select.contractor']}"
+							itemValue="" />
+						<f:selectItems value="#{bbContratante.contratantes}"
+							var="contratante" itemValue="#{contratante.idContratante}"
+							itemLabel="#{contratante.nomeFantasia}" />
+					</p:selectOneMenu>
+
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="40"
+						value="#{usuarioBean.usuario.nomeUsuario}" required="true"
+						label="Nome"
+						requiredMessage="#{i18n['message.required_field.name']}">
+						<f:validateLength minimum="2" />
+					</p:inputText>
+
+					<h:outputLabel for="senha"
+						value="#{i18n['label.password']}:&nbsp;#{i18n['label.token.required_field']}"
+						rendered="#{!usuarioBean.modoEdicao}"/>
+					<p:password id="senha" size="30" maxlength="22" feedback="true"
+						redisplay="true" required="#{!usuarioBean.modoEdicao}" rendered="#{!usuarioBean.modoEdicao}"
+						match="senhaconf2"
+						value="#{usuarioBean.usuario.senhaUsuario}"
+						promptLabel="#{i18n['message.alert.type_password']}"
+						weakLabel="#{i18n['message.alert.weak_password']}"
+						goodLabel="#{i18n['message.alert.good_password']}"
+						strongLabel="#{i18n['message.alert.strong_password']}"
+						requiredMessage="#{i18n['message.required_field.password']}"
+						validatorMessage="#{i18n['message.alert.password_not_match']}">
+					</p:password>
+
+					<h:outputLabel for="senhaconf2"
+						value="#{i18n['label.confirm_password']}:&nbsp;#{i18n['label.token.required_field']}"
+						rendered="#{!usuarioBean.modoEdicao}"/>
+					<p:password id="senhaconf2" size="30" maxlength="22"
+						redisplay="true" required="#{!usuarioBean.modoEdicao}" rendered="#{!usuarioBean.modoEdicao}"
+						value="#{usuarioBean.usuario.senhaUsuario}"
+						promptLabel="#{i18n['message.confirm.password']}"
+						requiredMessage="#{i18n['message.required_field.confirm_password']}">
+					</p:password>
+					
+					<h:outputLabel for="senhaAtual"
+						value="#{i18n['label.password_current']}:"
+						rendered="#{usuarioBean.modoEdicao}"/>
+					<p:password id="senhaAtual" size="30" maxlength="22"
+							value="#{usuarioBean.usuario.senhaUsuarioCorrente}"
+							redisplay="false" rendered="#{usuarioBean.modoEdicao}"
+							promptLabel="#{i18n['message.confirm.password']}">
+					</p:password>
+					
+					<h:outputLabel for="senhaNova"
+						value="#{i18n['label.password_new']}:"
+						rendered="#{usuarioBean.modoEdicao}"/>
+					<p:password id="senhaNova" size="30" maxlength="22" feedback="true"
+						redisplay="false" rendered="#{usuarioBean.modoEdicao}"
+						match="senhaNovaconf2"
+						value="#{usuarioBean.usuario.senhaUsuarioNova}"
+						promptLabel="#{i18n['message.alert.type_password']}"
+						weakLabel="#{i18n['message.alert.weak_password']}"
+						goodLabel="#{i18n['message.alert.good_password']}"
+						strongLabel="#{i18n['message.alert.strong_password']}"
+						requiredMessage="#{i18n['message.required_field.password']}"
+						validatorMessage="#{i18n['message.alert.password_not_match']}">
+					</p:password>
+
+					<h:outputLabel for="senhaNovaconf2"
+						value="#{i18n['label.password_confirm_new']}:"
+						rendered="#{usuarioBean.modoEdicao}"/>
+					<p:password id="senhaNovaconf2" size="30" maxlength="22"
+						redisplay="false" rendered="#{usuarioBean.modoEdicao}"
+						value="#{usuarioBean.usuario.senhaUsuarioNova}"
+						promptLabel="#{i18n['message.confirm.password']}"
+						requiredMessage="#{i18n['message.required_field.confirm_password']}">
+					</p:password>
+
+					<h:outputLabel for="email"
+						value="#{i18n['label.email']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="email" size="40" maxlength="40" required="true"
+						label="Email" value="#{usuarioBean.usuario.emailUsuario}"
+						requiredMessage="#{i18n['message.required_field.email']}">
+						<f:validator validatorId="emailValidator" />
+					</p:inputText>
+
+					<h:outputLabel for="radioAtivo"
+						value="#{i18n['label.active']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="radioAtivo"
+						value="#{usuarioBean.usuario.ativo}" required="true"
+						label="#{i18n['label.active']}"
+						requiredMessage="#{i18n['message.required_field.active']}">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{usuarioBean.addUsuario}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{usuarioBean.cancelUsuario}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

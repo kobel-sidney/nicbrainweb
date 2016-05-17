@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core" 
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="true" id="formPerfil">
+	   		<p:panel id="panel" header="#{i18n['label.profile']}" style="margin-bottom:10px;">                
+                <p:growl id="msg0"/>
+                
+                <h:panelGrid columns="2" width="80%">
+					<h:outputLabel/>
+					<h:inputHidden id="idperfil" value="#{perfilAcessoUsuarioBean.perfil.idPerfilAcessoUsuario}"/>                      
+                    
+                    <h:outputLabel for="nome" value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+                    <p:inputText id="nome" size="40"
+                        value="#{perfilAcessoUsuarioBean.perfil.nomePerfilAcessoUsuario}" required="true" label="Nome"
+                         requiredMessage="#{i18n['message.required_field.name']}">
+                    	<f:validateLength minimum="2" />
+                    </p:inputText>	                    
+
+					<h:outputLabel for="descricao" value="#{i18n['label.description']}:&nbsp;#{i18n['label.token.required_field']}" />
+                    <p:inputText id="descricao" size="80"
+                        value="#{perfilAcessoUsuarioBean.perfil.descricaoPerfilAcessoUsuario}" required="true" label="Descricao"
+                        requiredMessage="#{i18n['message.required_field.description']}">
+                    </p:inputText>	                    
+                </h:panelGrid>
+            </p:panel>            
+	
+            <p:commandButton value="#{i18n['button.save']}" action="#{perfilAcessoUsuarioBean.addPerfil}" id="withIcon" 
+                    update="@form" icon="ui-icon-disk" ajax="false"   /> 
+                    
+            <p:commandButton value="#{i18n['button.cancel']}" actionListener="#{perfilAcessoUsuarioBean.cancelPerfil}" 
+                       icon="ui-icon ui-icon-close" update="@form" process="@this" />           
+	   </h:form>         
+	        	
+	</ui:define>
+		
+</ui:composition>

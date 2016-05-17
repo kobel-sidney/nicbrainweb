@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<script language="javascript"
+			src="../script/primefaces-calendar-l10n.js" />
+			
+		<h:form prependId="true" id="formCadastroDePessoaParaRastreamento">
+		
+				
+			<p:panel id="panelCadastroDePessoaParaRastreamento" header="#{i18n['label.set_tracking']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+
+				<br/><br/>
+				
+				
+				
+				<p:commandButton value="#{i18n['button.include_track']}"
+					id="botaoNovoRastreamento" 
+					update=":dialogoDeAlteracaoDeRastreamento"
+					action="#{cadastroDeAgendamentoDeRastreamentoBean.novoRastreamento}"
+					oncomplete="PF('widgetDoDialogoDeAlteracaoDeRastreamento').show();"
+					icon="ui-icon-disk" >
+									
+				</p:commandButton>
+					
+				<br/><br/>
+				
+				<h:panelGrid id="panelDogridDeRastreamentos" columns="2">
+					<h:outputLabel />
+						
+						<p:dataTable 	id="gridDeRastreamentos" 	
+										var="item" 
+										value="#{cadastroDeAgendamentoDeRastreamentoBean.rastreamentoDataModel}"
+					    				paginator="true" rows="10" 
+					    				emptyMessage="#{i18n['message.registry.not_found']}"
+					    				paginatorTemplate="	{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+					    									{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					    				rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+					    				selectionMode="single">
+					    	
+					    	<p:columnGroup type="header">
+					    		<p:row>
+									<p:column rowspan="2" headerText="#{i18n['label.start_of_track']}" />
+						    		<p:column rowspan="2" headerText="#{i18n['label.end_of_track']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['label.track_time']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['label.active']}"/>
+						    		
+									<p:column rowspan="2" headerText="#{i18n['button.change']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['button.delete']}"/>
+									
+					    		</p:row>
+					    	</p:columnGroup>
+							
+							<p:column>
+								<h:outputText value="#{item.dataInicioRastreamento}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<h:outputText value="#{item.dataFimRastreamento}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<h:outputText value="#{item.intervaloRastreamento}" />
+							</p:column>
+							
+							<p:column>
+								<h:outputText value ="Sim" rendered="#{item.ativo == true}" />
+								<h:outputText value ="Não" rendered="#{item.ativo == false}" />
+							</p:column>
+							
+							
+							<p:column style="text-align:center">
+								<p:commandButton id="alterarRastreamento"
+										icon="ui-icon-pencil"
+										update=":dialogoDeAlteracaoDeRastreamento"
+										oncomplete="PF('widgetDoDialogoDeAlteracaoDeRastreamento').show();"
+										title="#{i18n['button.change']}">
+										
+										<f:setPropertyActionListener value="#{item}" target="#{cadastroDeAgendamentoDeRastreamentoBean.agendamentoRastreamentoUsuario}"/>
+										<f:setPropertyActionListener value="true" target="#{cadastroDeAgendamentoDeRastreamentoBean.modoDeEdicao}"/>
+										
+								</p:commandButton>
+							</p:column>
+
+							<p:column style="text-align:center">
+								<p:commandButton id="excluirRastreamento"
+										icon="ui-icon-trash"
+										update=":dialogoDeExclusaoDeRastreamento"
+										oncomplete="PF('widgetDoDialogoDeExclusaoDeRastreamento').show();" 
+										title="#{i18n['button.delete']}">
+										
+										<f:setPropertyActionListener value="#{item}" target="#{cadastroDeAgendamentoDeRastreamentoBean.agendamentoRastreamentoUsuario}"/>
+										
+								</p:commandButton>
+							</p:column>
+					    	 
+					    </p:dataTable>
+					
+				</h:panelGrid>
+				
+				<br/>
+				
+				<p:commandButton 	id="botaoVoltarParaLista"
+									value="#{i18n['button.back']}"
+									immediate="true"
+									actionListener="#{cadastroDeAgendamentoDeRastreamentoBean.voltarParaLista}"
+									icon="ui-icon ui-icon-close"  />
+					
+			</p:panel>
+ 
+		</h:form>
+		
+		<p:dialog header="#{i18n['label.observacao']}"
+				widgetVar="widgetDoDialogoDeAlteracaoDeRastreamento"
+				resizable="false" id="dialogoDeAlteracaoDeRastreamento"
+				showEffect="fade" hideEffect="explode" modal="true"
+				appendToBody="true" closeOnEscape="true">
+			
+    	    <h:form id="formDoDialogoDeAlteracaoDeRastreamento">
+				
+				<h:panelGrid id="panelGridDoformDoDialogoDeAlteracaoDeRastreamento" columns="1">
+				
+					<h:outputLabel for="rastreamentoAtivo"
+						value="#{i18n['label.active']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneRadio id="rastreamentoAtivo"
+						value="#{cadastroDeAgendamentoDeRastreamentoBean.agendamentoRastreamentoUsuario.ativo}" required="true"
+						label="#{i18n['label.active']}"
+						requiredMessage="#{i18n['message.required_field.active']}">
+						<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+					</p:selectOneRadio>
+									
+					<h:outputLabel for="intervaloDoRastreamento"
+						value="#{i18n['label.track_time']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputMask id="intervaloDoRastreamento"
+						value="#{cadastroDeAgendamentoDeRastreamentoBean.agendamentoRastreamentoUsuario.intervaloRastreamento}" 
+						required="true"
+						mask="9?99"
+						maxlength="3"
+						label="#{i18n['label.track_time']}"
+						requiredMessage="#{i18n['message.required_field.track_date']}"
+						locale="#{bbLocale.currentLocale.language}" />									
+				
+					<h:outputLabel for="dataDoInicioDoRastreamento"
+						value="#{i18n['label.start_date']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:calendar id="dataDoInicioDoRastreamento"
+						value="#{cadastroDeAgendamentoDeRastreamentoBean.agendamentoRastreamentoUsuario.dataInicioRastreamento}" required="true"
+						label="#{i18n['label.start_date']}"
+						readonlyInput="true"
+						requiredMessage="#{i18n['message.required_field.start_date']}"
+						mode="popup" effect="fold" navigator="true" showOn="button"
+						popupIconOnly="true" pattern="dd/MM/yyyy HH:mm"
+						locale="#{bbLocale.currentLocale.language}" />
+
+					<h:outputLabel for="dataDoFimDoRastreamento"
+						value="#{i18n['label.end_date']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:calendar id="dataDoFimDoRastreamento"
+						value="#{cadastroDeAgendamentoDeRastreamentoBean.agendamentoRastreamentoUsuario.dataFimRastreamento}" required="true"
+						label="#{i18n['label.end_date']}"
+						readonlyInput="true"
+						requiredMessage="#{i18n['message.required_field.end_date']}"
+						mode="popup" effect="fold" navigator="true" showOn="button"
+						popupIconOnly="true" pattern="dd/MM/yyyy HH:mm"
+						locale="#{bbLocale.currentLocale.language}" />
+					
+				</h:panelGrid>
+				
+				<br/>
+				
+				<p:commandButton id="btnInclusaoRastreamento" value="#{i18n['button.save']}"
+						update=":formCadastroDePessoaParaRastreamento:msg0 :formCadastroDePessoaParaRastreamento:gridDeRastreamentos"
+						action="#{cadastroDeAgendamentoDeRastreamentoBean.salvarRastreamento}"
+						onsuccess="PF('widgetDoDialogoDeAlteracaoDeRastreamento').hide();"
+						rendered="#{!cadastroDeAgendamentoDeRastreamentoBean.modoDeEdicao}"
+						icon="ui-icon-disk" title="#{i18n['button.confirm_fault']}">
+				</p:commandButton>
+				
+				<p:commandButton id="btnAlteracaoRastreamento" value="#{i18n['button.change']}"
+						update=":formCadastroDePessoaParaRastreamento:msg0 :formCadastroDePessoaParaRastreamento:gridDeRastreamentos"
+						action="#{cadastroDeAgendamentoDeRastreamentoBean.alterarRastreamento}"
+						rendered="#{cadastroDeAgendamentoDeRastreamentoBean.modoDeEdicao}"
+						onsuccess="PF('widgetDoDialogoDeAlteracaoDeRastreamento').hide();"
+						icon="ui-icon-disk" title="#{i18n['button.confirm_fault']}">
+				</p:commandButton>
+				
+				<p:commandButton id="btnCancelNoOk" value="#{i18n['button.cancel']}" type="button"
+					icon="ui-icon ui-icon-close" onclick="PF('widgetDoDialogoDeAlteracaoDeRastreamento').hide();"/>           
+			
+				<br/>
+				
+	        </h:form>
+		</p:dialog>
+		
+		
+		<p:dialog header="#{i18n['label.track']}"
+				widgetVar="widgetDoDialogoDeExclusaoDeRastreamento"
+				resizable="false" id="dialogoDeExclusaoDeRastreamento"
+				showEffect="fade" hideEffect="explode" modal="true"
+				appendToBody="true" closeOnEscape="true">
+			
+    	    <h:form id="formDoDialogoDeExclusaoDeRastreamento">
+				
+				<h:panelGrid id="panelGridDoformDoDialogoDeExclusaoDeRastreamento" columns="1">
+				
+					<h:outputLabel  value="Deseja excluir esse Rastreamento?" />
+					
+				</h:panelGrid>
+				
+				<br/>
+				
+				<p:commandButton id="btnExclusaoRastreamento" value="#{i18n['label.yes']}"
+						update=":formCadastroDePessoaParaRastreamento:msg0 :formCadastroDePessoaParaRastreamento:gridDeRastreamentos"
+						action="#{cadastroDeAgendamentoDeRastreamentoBean.excluirRastreamento}"
+						onsuccess="PF('widgetDoDialogoDeExclusaoDeRastreamento').hide();"
+						icon="ui-icon-disk" title="#{i18n['button.confirm_fault']}">
+				</p:commandButton>
+				
+				<p:commandButton id="btnCancelNoOk2" value="#{i18n['label.no']}" type="button"
+					icon="ui-icon ui-icon-close" onclick="PF('widgetDoDialogoDeExclusaoDeRastreamento').hide();"/>           
+			
+				<br/>
+				
+	        </h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

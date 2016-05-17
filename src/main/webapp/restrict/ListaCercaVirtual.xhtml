@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:u="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:up="http://xmlns.jcp.org/jsf/html"
+	xmlns:nic="http://java.sun.com/jsf/composite/taglibs"
+	template="layout.xhtml">
+
+	<ui:define name="tarefas">
+				<style type="text/css">
+					.linha {
+						color: #000000;
+						background-color: #ffffff !important;
+					}
+				</style>
+		<h:form>
+		<div align="center" class="estiloDiv">
+			<p:dataTable var="local" value="#{listaCercaVirtual.locais}" style="width:50%"
+				rowStyleClass="linha">
+				<f:facet name="header">
+            		Cadastro de cerca virtual
+        		</f:facet>
+				<p:column style="width:16px">
+					<p:rowToggler />
+				</p:column>
+				
+				<p:column headerText="ID" style="width: 16px;">
+					<h:outputText value="#{local.id}" />
+				</p:column>
+				
+				<p:column headerText="Nome">
+					<h:outputText value="#{local.nome}" />
+				</p:column>
+				
+				<p:column headerText="Responsavel">
+					<h:outputText value="#{local.responsavel}" />
+				</p:column>
+
+				<p:column style="width: 118px;">
+					<p:commandButton value="Cadastrar cerca" actionListener="#{listaCercaVirtual.limparCerca}" action="#{listaCercaVirtual.irParaCadastro}" >
+						<f:setPropertyActionListener value="#{local.id}"
+									target="#{listaCercaVirtual.idLocal}" />
+					</p:commandButton>
+				</p:column>
+
+				<p:rowExpansion>
+
+					<p:dataTable var="cerca" value="#{local.cercaVirtual}"
+						selectionMode="single" rowKey="#{cerca.id}">
+						<p:ajax event="rowSelect"
+							listener="#{listaCercaVirtual.onRowSelect}" />
+						<p:column headerText="ID" style="width: 16px;">
+							<h:outputText value="#{cerca.id}" />
+						</p:column>
+
+						<p:column headerText="Cor">
+							<h:outputText value="#{cerca.cor}" style="background-color: #{cerca.cor};" />
+						</p:column>
+						
+						<p:column headerText="Descrição">
+							<h:outputText value="#{cerca.descricao}" />
+						</p:column>
+					</p:dataTable>
+				</p:rowExpansion>
+			</p:dataTable>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

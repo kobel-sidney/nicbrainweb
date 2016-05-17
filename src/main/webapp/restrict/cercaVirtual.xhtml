@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:outputStylesheet library="css" name="maps/rondaGcm.css" />
+		<script
+			src="https://maps.googleapis.com/maps/api/js?v=3.9&amp;libraries=places"></script>
+		<h:outputScript library="js" name="maps/cercaVirtual.js" />
+		<h:outputScript library="js" name="properties_js.js" />
+
+		<p:growl autoUpdate="true" showDetail="true" />
+
+		<div id="map-canvas"
+			style="position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223); height: 100%;"></div>
+
+		<div id="alert" style="z-index: 0; position: absolute; margin: 8px; top: 8px; right: 8px; max-width: 500px; font-size: 14px;"></div>
+		
+		<div id="btnVoltar" class="comandos-top-right">
+			<p:button value="Voltar para lista" outcome="ListaCercaVirtual"
+				icon="ui-icon-arrowreturnthick-1-w" />
+		</div>
+
+		<h:form prependId="false" style="margin: 0px; padding: 0px;">
+			<div id="formCadastro" class="comandos-top-left">
+				<h:inputHidden id="idLocal" value="#{listaCercaVirtual.idLocal}" />
+				<h:inputHidden id="idCercaVirtual" value="#{listaCercaVirtual.idCercaVirtual}" />
+	
+				<p:panel id="telaCadastro" header="Cadastro da cerca virtual"
+					toggleable="false" widgetVar="panel"
+					style="z-index: 0; position: absolute; margin: 8px; top: 8px;">
+	
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Descrção: " for="descricao" />
+						<p:inputText id="descricao" />
+	
+						<h:outputLabel for="cor" value="Cor: " />
+						<input type='color' id="cor" value='#ff0000' />
+					</h:panelGrid>
+	
+					<hr />
+	
+					<p:commandButton value="Remover" onclick="CercaVirtual.remover();" />
+					<p:commandButton value="Salvar" onclick="CercaVirtual.salvar();" />
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,75 @@
+@CHARSET "UTF-8";
+
+html, body, #map-canvas {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+.ui-widget {
+	font-size: 13px !important;
+}
+
+#map-detalhe {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+.informacoes-botton-right {
+	font-family: Arial, sans-serif;
+	background: #fff;
+	padding: 10px;
+	margin: 10px;
+	border: 1px solid #000;
+}
+
+.informacoes-botton-right h3 {
+	margin-top: 0;
+}
+
+.informacoes-botton-right img {
+	vertical-align: middle;
+}
+
+.comandos-top-left {
+	margin-top: 10px;
+	padding-left: 10px;
+}
+
+.comandos-top-right {
+	margin-top: 10px;
+	padding-right: 10px;
+}
+
+.alert_info, .alert_success, .alert_warning, .alert_error, .alert_validation {
+	border: 1px solid;
+	margin: 10px 0px;
+	padding: 15px 10px 15px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+
+.alert_info {
+	color: #00529B;
+	background-color: #BDE5F8;
+	background-image: url('#{resource['images/info.png']}');
+}
+
+.alert_success {
+	color: #4F8A10;
+	background-color: #DFF2BF;
+	background-image: url('#{resource['images/success.png']}');
+}
+
+.alert_warning {
+	color: #9F6000;
+	background-color: #FEEFB3;
+	background-image: url('#{resource['images/warning.png']}');
+}
+
+.alert_error {
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url('#{resource['images/error.png']}');
+}

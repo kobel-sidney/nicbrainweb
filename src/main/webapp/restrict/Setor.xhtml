@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:u="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui" 
+                xmlns:up="http://xmlns.jcp.org/jsf/html"
+                xmlns:nic="http://java.sun.com/jsf/composite/taglibs"
+                template="layout.xhtml">
+
+    <ui:define name="tarefas">
+
+        <h:form id="formSetor">
+            <p:panel header="Cadastro de Setor">
+
+                <p:growl id="messages" showDetail="true" />
+
+                <h:panelGrid id="gridPerson" columns="2" cellpadding="2">
+                    <h:outputLabel for="nome" value="Nome: *" />
+                    <p:inputText
+                        id="nome" 
+                        size="40"
+                        value="#{setorBean.setor.nome}" 
+                        required="true"
+                        label="#{i18n['label.user']}"
+                        requiredMessage="#{i18n['message.required_field.name']}" />
+                    
+                    <h:outputLabel for="telefoneSetor" value="Telefone: " />
+                    <p:inputMask
+                        id="telefoneSetor" 
+                        mask="(99) 9999-9999"
+                        value="#{setorBean.setor.telefoneSetor}" />
+
+					<h:outputLabel for="nomeResponsavel" value="Responsável no Setor: " />
+                    <p:inputText
+                        id="nomeResponsavel" 
+                        size="40"
+                        value="#{setorBean.setor.responsavel}" />
+                        
+                    <h:outputLabel for="telefoneResponsavel" value="Telefone Responsável:" />
+                    <p:inputMask
+                        id="telefoneResponsavel" 
+                        mask="(99) 9999-9999"
+                        value="#{setorBean.setor.telefoneResponsavel}" />
+                        
+                    <h:outputLabel for="celularResponsavel" value="Celular Responsável:" />
+                    <p:inputMask
+                        id="celularResponsavel" 
+                        mask="(99) 9999-9999"
+                        value="#{setorBean.setor.celularResponsavel}" />
+					
+					<h:outputLabel for="emailResponsavel" value="Email Responsável:" />
+                    <p:inputText
+                        id="emailResponsavel" 
+                        size="40"
+                        value="#{setorBean.setor.emailResponsavel}" validator="emailValidator" />
+                        
+                    <h:outputLabel for="usuarioResponsavel"
+						value="Responsável pela Segurança: " />
+					<p:selectOneMenu id="usuarioResponsavel"
+						value="#{setorBean.setor.usuarioResponsavel.id}" required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_responsible']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbUsuario.usuariosPorContratante}" var="item"
+							itemLabel="#{item.nome} - #{item.pessoa.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+					
+					<h:outputLabel for="local"
+						value="#{i18n['label.venue']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="local" value="#{setorBean.setor.local.id}"
+						required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_venue']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbLocal.locaisPorContratante}" var="item"
+							itemLabel="#{item.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+                </h:panelGrid>
+                                
+                    <nic:latLng valorLatitude="#{setorBean.setor.latitude}" valorLongitude="#{setorBean.setor.longitude}" limitarRaio="true" valorLimite="#{setorBean.setor.distanciaLimite}" />
+                    <h:inputHidden />
+                <hr />
+                <p:commandButton value="#{i18n['button.save']}"
+                                 action="#{setorBean.salvar}" update="messages" />
+                <p:commandButton value="#{i18n['button.cancel']}" immediate="true"
+                                 action="#{setorBean.cancelar}" update="messages" />
+
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

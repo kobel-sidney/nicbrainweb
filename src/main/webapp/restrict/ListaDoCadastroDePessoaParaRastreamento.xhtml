@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core" 
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="layout.xhtml">
+	  
+	<ui:define name="tarefas">
+	
+		<h:form prependId="true" id="formtable"  >
+			<div align="center" class="estiloDiv">
+			<p:panel id="panel" style="width:50%">
+		
+       				<p:growl id="msg1" showDetail="true"/>
+       				
+       				<p:inputText 	id="buscaUsuario" 
+       								value="#{cadastroDeAgendamentoDeRastreamentoBean.nomeDoUsuarioParaBusca}" 
+       								valueChangeListener="#{cadastroDeAgendamentoDeRastreamentoBean.buscaUsuarioPorNome}">
+       					<p:ajax event="keyup" update="listaDeUsuarios"  />
+				        
+				    </p:inputText>
+				    
+				    <br/><br/>
+				    
+				    <p:dataTable 	id="listaDeUsuarios" 
+				    				widgetVar="widgetDaListaDeUsuarios"
+				    				var="usuario" 
+				    				value="#{cadastroDeAgendamentoDeRastreamentoBean.listaUsuarios}"
+	                				paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+	                    			paginatorTemplate="	{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+	                    								{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+	                    			rowsPerPageTemplate="5,10,15"  paginatorPosition="bottom"                   
+	                    			
+	                    			selection="#{cadastroDeAgendamentoDeRastreamentoBean.usuario}" selectionMode="single">
+	                    		                    
+	                    <p:ajax event="rowSelect" 
+	                    		listener="#{cadastroDeAgendamentoDeRastreamentoBean.onRowSelect}"   
+	                    		update=":formtable:msg1"
+	                    		process="@all"  />  
+	        			         
+	                    
+	                    <p:column style="width:80px;text-align:center">                        
+	                        <h:outputText value="#{usuario.nome}"/>
+	                    </p:column>
+	                    
+	                    <!--  
+	                    <f:facet name="footer">  
+				        	<p:commandButton value="#{i18n['button.set_tracking']}" 
+				        					process="@this" update="@form"
+				        					 action="#{cadastroDeAgendamentoDeRastreamentoBean.avancaParaDefinicaoDoRastreamento}"
+				        					 style="width:100%;text-align:center">
+					        	<f:setPropertyActionListener target="#{cadastroDeAgendamentoDeRastreamentoBean.usuario}"
+					                      				     value="#{usuario}"/>
+					        </p:commandButton>
+				        </f:facet> 
+				    	-->
+ 					</p:dataTable>    
+
+             </p:panel>      
+             </div>        
+         </h:form>          
+            	
+	</ui:define>
+
+</ui:composition>	  				    

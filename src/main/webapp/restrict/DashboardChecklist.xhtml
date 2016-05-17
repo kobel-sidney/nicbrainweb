@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+	
+	<script type="text/JavaScript" />
+<ui:define name="tarefas">
+
+	<h:form prependId="false" id="formGrafico">
+		<div class="dashboard-tudo">
+			<p:panel id="panelDashboard" header="Dashboard" style="margin-bottom:10px;">
+				<p:growl id="msgCabecalho" />
+			</p:panel>
+			<p:panelGrid columns="2">
+				<h3>#{i18n['label.start_from']}:</h3>
+				<p:calendar value="#{dashboardBean.dateFrom}" id="popupCalFrom" />
+				<h3>#{i18n['label.end_to']}:</h3>
+				<p:calendar value="#{dashboardBean.dateTo}" id="popupCalTo" />
+				<p:commandButton value="Filtrar" id="ajax" update="panelChecklist"
+						actionListener="#{dashboardBean.filtrar}" ajax="false" styleClass="ui-priority-primary"/>
+			</p:panelGrid>
+			
+			<div class="dashboard">
+				<p:poll interval="15" listener="#{dashboardBean.refresh}" update="pieCharQtdChksPorLocais dataListGrafico" />
+				<div class="box-dashboard">
+					<p:panel id="panelQuantidadeChecklistsPorLocais" header="#{i18n['label.amount_checklists_for_venue']}"
+							style="margin-bottom:10px;" >
+							<p:pieChart id="pieCharQtdChksPorLocais"
+									value="#{dashboardBean.pieChartQuantidadeChecklistsPorLocais}"
+									legendPosition="w"
+									style="width:50%;float:left" />
+					</p:panel>
+				</div>
+				<div class="box-dashboard">
+					<p:panel id="panelLocais" header="#{i18n['label.amount_checklist_status_for_venue']}"
+							style="margin-bottom:10px;" >
+						<p:dataList value="#{dashboardBean.pieChartsQuantidadeStatusChecklistsPorLocais}"
+								var="grafico" 
+								type="definition"
+								id="dataListGrafico">
+								<p:pieChart value="#{grafico.chart}"
+										title="#{grafico.titulo}"
+										fill="false"
+										showDataLabels="true"
+										shadow="true"
+										legendPosition="w"
+										style="width:270px;height:200px;float:left;">
+								</p:pieChart>
+						</p:dataList>
+					</p:panel>
+				</div>
+			</div>
+		</div>
+	</h:form>
+</ui:define>
+
+</ui:composition>

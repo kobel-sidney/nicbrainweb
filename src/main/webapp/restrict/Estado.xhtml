@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formEstado">
+			<p:panel id="panel" header="#{i18n['button.state']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="id" value="#{estadoBean.model.id}" />
+
+					<h:outputLabel for="pais"
+						value="#{i18n['label.countries']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="pais" value="#{estadoBean.model.pais.id}"
+						required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_country']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{estadoBean.paises}" var="item"
+							itemLabel="#{item.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="20" value="#{estadoBean.model.nome}"
+						required="true" label="nome"
+						requiredMessage="#{i18n['message.required_field.name']}">
+					</p:inputText>
+
+					<h:outputLabel for="sigla"
+						value="#{i18n['label.abbreviation']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="sigla" size="2" value="#{estadoBean.model.sigla}"
+						required="true" label="sigla"
+						requiredMessage="#{i18n['message.required_field.state_abbreviation']}">
+					</p:inputText>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{estadoBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{estadoBean.cancel}" icon="ui-icon ui-icon-close"
+					update="@form" process="@this" />
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

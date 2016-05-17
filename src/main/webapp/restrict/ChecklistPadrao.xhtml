@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formChecklistPadrao">
+			<p:panel id="panel" header="#{i18n['label.default_checklist']}"
+					style="margin-bottom:10px;">
+				<p:growl id="msg0" autoUpdate="true" />
+				
+				<p:wizard flowListener="#{checklistPadraoBean.onFlowProcess}"
+						backLabel="#{i18n['button.back']}"
+						nextLabel="#{i18n['button.next']}">
+					<p:tab id="tab_descricao" title="#{i18n['label.description']}">
+						<p:panel header="#{i18n['label.description']}">
+
+							<h:panelGrid columns="2">
+								<h:outputLabel />
+								<h:inputHidden id="idCheckListPadrao"
+										value="#{checklistPadraoBean.model.id}" />
+			
+								<h:outputLabel for="nomeCheckList"
+										value="#{i18n['label.default_checklist']}:&nbsp;#{i18n['label.token.required_field']}" />
+								<p:inputText id="nomeCheckList" size="40"
+										value="#{checklistPadraoBean.model.nome}"
+										required="true" label="#{i18n['label.name']}"
+										requiredMessage="#{i18n['message.required_field.checklist_default']}">
+									<f:validateLength minimum="3" />
+								</p:inputText>
+			
+								<h:outputLabel for="descricaoCheckList"
+										value="#{i18n['label.description']}:&nbsp;#{i18n['label.token.required_field']}" />
+								<p:inputText id="descricaoCheckList" size="40"
+										value="#{checklistPadraoBean.model.descricao}"
+										required="true" label="#{i18n['label.description']}"
+										requiredMessage="#{i18n['message.required_field.description']}">
+								</p:inputText>
+			
+								<h:outputText value="#{i18n['label.recurrent']}" />
+								<p:selectBooleanCheckbox
+										value="#{checklistPadraoBean.model.recorrente}">
+								</p:selectBooleanCheckbox>
+			
+								<h:outputLabel for="TempoExecEstimado"
+										value="#{i18n['label.estimated_execution_time']}&nbsp;(#{i18n['label.symbol.minute']}):&nbsp;#{i18n['label.token.required_field']}" />
+								<p:inputText id="TempoExecEstimado" size="4"
+										value="#{checklistPadraoBean.model.tempoExecucaoEstimado}"
+										required="true" label="#{i18n['label.estimated_execution_time']}" mask="9999"
+										requiredMessage="#{i18n['message.required_field.estimated_execution_time']}">
+								</p:inputText>
+								
+								<h:outputLabel for="TempoTolerInicio"
+										value="#{i18n['label.tolerance_time_to_start']}&nbsp;(#{i18n['label.symbol.minute']}):&nbsp;#{i18n['label.token.required_field']}" />
+								<p:inputText id="TempoTolerInicio" size="4"
+										value="#{checklistPadraoBean.model.tempoToleranciaInicio}"
+										required="true" label="#{i18n['label.tolerance_time_to_start']}" mask="9999"
+										requiredMessage="#{i18n['message.required_field.tolerance_time_to_start']}">
+								</p:inputText>
+			
+								<h:outputLabel for="TempoTolerFim"
+										value="#{i18n['label.tolerance_time_to_end']}&nbsp;(#{i18n['label.symbol.minute']}):&nbsp;#{i18n['label.token.required_field']}" />
+								<p:inputText id="TempoTolerFim" size="4"
+										value="#{checklistPadraoBean.model.tempoToleranciaFim}"
+										required="true" label="CheckListPadrao" mask="9999"
+										requiredMessage="#{i18n['message.required_field.tolerance_time_to_end']}">
+								</p:inputText>
+							</h:panelGrid>
+
+						</p:panel>
+					</p:tab>
+					<p:tab id="tab_procedimento" title="#{i18n['label.procedures']}">
+						<p:panel header="#{i18n['label.procedures']}">
+							
+							<p:pickList id="procedimentos_picklist"
+									value="#{checklistPadraoBean.procedimentosPickList}"
+									var="item" itemValue="#{item}" itemLabel="#{item.descricao}"
+									showSourceControls="true" showTargetControls="true" showCheckbox="true"
+									showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
+									converter="simplePickListConverter">
+								
+								<f:facet name="sourceCaption">#{i18n['label.availables']}</f:facet>
+								<f:facet name="targetCaption">#{i18n['label.selecteds']}</f:facet>
+								
+								<p:column>
+									<h:outputText value="#{item.descricao}"/>
+								</p:column>
+							</p:pickList>
+							
+						</p:panel>
+					</p:tab>
+					<p:tab id="tab_mensagem" title="#{i18n['label.messages']}">
+						<p:panel header="#{i18n['label.messages']}">
+							
+							<p:pickList id="mensagens_picklist"
+									value="#{checklistPadraoBean.mensagensPickList}"
+									var="item" itemValue="#{item}" itemLabel="#{item.descricao}"
+									showSourceControls="true" showTargetControls="true" showCheckbox="true"
+									showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains"
+									converter="simplePickListConverter">
+								
+								<f:facet name="sourceCaption">#{i18n['label.availables']}</f:facet>
+								<f:facet name="targetCaption">#{i18n['label.selecteds']}</f:facet>
+								
+								<p:column>
+									<h:outputText value="#{item.descricao}"/>
+								</p:column>
+							</p:pickList>
+							
+						</p:panel>
+					</p:tab>
+					
+					<p:tab id="tab_tempo_escala" title="#{i18n['label.time_standard_scale']}">
+						<p:panel header="#{i18n['label.time_standard_scale']}">
+							
+							<p:dataTable id="idTabelaTempoEscala" var="item" value="#{checklistPadraoBean.tempoEscalaDataModel}"
+						    		emptyMessage="#{i18n['message.registry.not_found']}">
+						    	
+						    	<p:column headerText="#{i18n['label.description']}"
+						    			width="35%">
+						    		<h:outputText value="#{item.mensagem.descricao}"/>
+						    	</p:column>
+						    	<p:column headerText="#{i18n['label.time_standard_scale']}&nbsp;#{i18n['label.token.required_field']}"
+						    			width="15%">
+						    		
+						    		<p:inputMask id="txt_tempo_escala_#{item.id}"
+						    				value="#{item.tempoEscala}"
+						    				required="true"
+						    				mask="9?99"
+						    				maxlength="3"
+						    				label="#{i18n['label.track_time']}"
+						    				requiredMessage="#{i18n['message.required_field.time_standard_scale']}"
+						    				locale="#{bbLocale.currentLocale.language}" />
+						    	</p:column>
+						    	<p:column width="50%"/>
+						    </p:dataTable>
+						</p:panel>
+					</p:tab>
+					
+					<p:tab id="tab_segmento" title="#{i18n['label.segments']}">
+						<p:panel header="#{i18n['label.segments']}">
+							<div class="estiloDiv">
+								<p:selectManyCheckbox value="#{checklistPadraoBean.segmentosSelecionados}"
+										layout="grid" columns="3"
+										converter="simpleSelectManyCheckboxConverter">
+										
+									<f:selectItems value="#{checklistPadraoBean.segmentosDisponiveis}" var="sgm"
+											itemLabel="#{sgm.nome}" itemValue="#{sgm}" />
+								</p:selectManyCheckbox>
+							</div>
+							<div align="right">
+								<p:commandButton value="#{i18n['button.save']}"
+										action="#{checklistPadraoBean.add}" id="withIcon"
+										update="@form" icon="ui-icon-disk" ajax="false" />
+							</div>
+							
+						</p:panel>
+					</p:tab>
+					
+				</p:wizard>
+			</p:panel>
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.cancel']}"
+						actionListener="#{checklistPadraoBean.cancel}"
+						icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

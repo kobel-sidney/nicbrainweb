@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+         xmlns:b="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+         xmlns:task="http://www.springframework.org/schema/task" xmlns:p="http://www.springframework.org/schema/p"
+         xmlns:util="http://www.springframework.org/schema/util"
+         xsi:schemaLocation="
+				http://www.springframework.org/schema/beans
+				http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/tx
+				http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+				http://www.springframework.org/schema/context
+				http://www.springframework.org/schema/context/spring-context-3.0.xsd
+				http://www.springframework.org/schema/task
+				http://www.springframework.org/schema/task/spring-task-3.0.xsd
+				http://www.springframework.org/schema/util 
+			    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <b:bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <b:property name="jndiName" value="java:jboss/datasources/nicBrain" />
+    </b:bean>
+
+    <!-- Session Factory -->
+    <b:bean id="sessionFactory"  class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <b:property name="dataSource" ref="dataSource" />
+        <b:property name="packagesToScan" value="br.com.kolss.model.entities" />
+        <b:property name="hibernateProperties">
+            <b:props>
+                <b:prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect
+                </b:prop>
+<!--                 <b:prop key="hibernate.show_sql">true</b:prop> -->
+<!--                 <b:prop key="hibernate.format_sql">true</b:prop> -->
+
+                <b:prop key="hibernate.generate_statistics">false</b:prop>
+                <b:prop key="hibernate.use_sql_comments">true</b:prop>
+                 
+<!--			 <b:prop key="hibernate.hbm2ddl.auto">update</b:prop>-->
+<!--	          <b:prop key="hibernate.hbm2ddl.auto">validate</b:prop>-->
+                
+                
+            </b:props>
+        </b:property>
+    </b:bean>
+
+    <b:bean class="org.springframework.beans.factory.config.CustomScopeConfigurer"> 
+        <b:property name="scopes"> 
+            <b:map> 
+                <b:entry key="view"> 
+                    <b:bean class="br.com.kolss.scopes.ViewScope"/> 
+                </b:entry> 
+            </b:map> 
+        </b:property> 
+    </b:bean> 
+
+    <!-- TransactionManager -->
+    <tx:annotation-driven transaction-manager="txManager" />
+    <b:bean id="txManager"
+                class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <b:property name="sessionFactory" ref="sessionFactory" />
+    </b:bean>
+
+
+    <b:bean id="HibernateUtil" class="br.com.kolss.util.HibernateUtil">
+        <b:property name="sessionFactory" ref="sessionFactory" />
+    </b:bean>
+
+    <!-- Habilita a configuração de beans via anotações -->
+    <context:annotation-config />
+
+    <!-- Identifica os beans anotados com @Service, @Repository, @Controller -->
+    <context:component-scan base-package="br.com.kolss" />
+
+    <!-- Configurar o schedule -->
+    <task:annotation-driven executor="executor"
+                                scheduler="scheduler" />
+    <task:executor id="executor" pool-size="100" />
+    <task:scheduler id="scheduler" pool-size="100" />
+
+
+
+    <!-- <b:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+    <b:property name="url" value="${jdbc.url}" /> <b:property name="driverClassName" 
+    value="${jdbc.driverClassName}" /> <b:property name="username" value="${jdbc.username}" 
+    /> <b:property name="password" value="${jdbc.password}" /> </b:bean> -->
+
+    <!-- MAS EXISTEM OUTRAS 2 FORMAS DE SE FAZER ISSO -->
+    <!-- VOCÊ PODE CUSTOMIZAR A AUTENTICATION PROVIDER -->
+    <!-- <b:bean id="customAuthenticationProvider" class="br.com.semeru.security.CustomAuthenticationProvider"></b:bean> 
+    <authentication-manager> <authentication-provider ref="customAuthenticationProvider"/> 
+    </authentication-manager> -->
+
+    <!-- OU VOCÊ PODE AINDA CUSTOMIZAR A USER DETAILS -->
+    <!-- <b:bean id="encoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder"/> 
+    <authentication-manager> <authentication-provider user-service-ref="semeruUserService" 
+    > <password-encoder hash="sha"/> </authentication-provider> </authentication-manager> 
+    <b:bean id="semeruUserService" class="br.com.semeru.security.UserServiceImpl"/> -->
+
+</b:beans>    

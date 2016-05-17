@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+	
+	<ui:define name="tarefas">
+		
+		<h:form prependId="true" id="formtable">
+			<div class="estiloDiv">
+				<p:panel id="mainPanel" style="margin-bottom:10px;" header="#{eventoPorChecklistBean.cabecalho}">
+					
+					<div class="div-filtro">
+						<div class="divFiltroLadoDireito">
+							&nbsp;
+						</div>
+						
+						<div class="divFiltroLadoCentro">
+							<h:panelGrid columns="4">
+								<h:outputLabel for="filtroSelectLocal" value="#{i18n['label.venue']}:"/>
+								<p:selectOneMenu id="filtroSelectLocal" value="#{eventoPorChecklistBean.filtroIdLocal}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+									<f:selectItems value="#{bbLocal.locaisPorContexto}" var="item"
+											itemLabel="#{item.nome}" itemValue="#{item.id}"/>
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroSelectUsuario" value="#{i18n['label.responsible']}:"/>
+								<p:selectOneMenu id="filtroSelectUsuario" value="#{eventoPorChecklistBean.filtroIdPessoaResponsavel}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+									<f:selectItems value="#{bbUsuario.usuariosResposaveisPorEventosPorContexto}" var="item"
+											itemLabel="#{item.pessoa.nome}" itemValue="#{item.id}"/>
+								</p:selectOneMenu>
+								
+								<h:outputLabel for="filtroSelectCliente" value="#{i18n['label.client']}:"/>
+								<p:selectOneMenu id="filtroSelectCliente" value="#{eventoPorChecklistBean.filtroIdCliente}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+									<f:selectItems value="#{bbCliente.clientesPorContexto}" var="item"
+											itemLabel="#{item.nomeFantasia}" itemValue="#{item.id}"/>
+								</p:selectOneMenu>
+								<h:outputLabel value=""/>
+								<h:outputLabel value=""/>
+								
+								<p:commandButton value="#{i18n['button.search']}" action="#{eventoPorChecklistBean.search}"
+										id="withIcon" update="@form" icon="ui-icon-search" ajax="false"/>
+							</h:panelGrid>
+						</div>
+						
+						<div class="divFiltroLadoEsquerdo" align="right" style="white-space: nowrap">
+							<p:clock pattern="dd/MM/yyyy HH:mm:ss"/>
+						</div>
+					</div>
+					
+					<div class="div-block">
+					</div>
+					
+					<p:panel id="panel" style="margin-bottom:10px;">
+		<!--                 <h:panelGrid columns="1" > -->
+						<p:growl id="msg1" showDetail="true"/>
+						
+						<p:dataTable id="idTabela" var="item_model" value="#{eventoPorChecklistBean.dataModel}"
+								paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+									{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+								selection="#{checklistBean.eventoSelecionado}" selectionMode="single">
+							
+							<p:ajax event="rowSelect" listener="#{eventoPorChecklistBean.onRowSelect}" update=":formtable:msg1"/>
+							<p:ajax event="rowUnselect" listener="#{eventoPorChecklistBean.onRowUnselect}" update=":formtable:msg1"/>
+							
+							<p:column headerText="#{i18n['label.resume']}" style="width:5%">
+								<p:rowToggler id="idLinhaExp"/>
+							</p:column>
+					    	
+							<p:column headerText="#{i18n['label.event']}">
+								<p:graphicImage url="../images/iconesNovos/icone-branco.png"
+										rendered="#{item_model.situacao.nome == 'agendado'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-verde.png"
+										rendered="#{item_model.situacao.nome == 'sem_alerta'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-amarelo.png"
+										rendered="#{item_model.situacao.nome == 'alerta_ocorrido'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-vermelho.png"
+										rendered="#{item_model.situacao.nome == 'alerta_vigente'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-roxo.png"
+										rendered="#{item_model.situacao.nome == 'cancelado'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<h:outputText value="#{item_model.nome}"/>
+							</p:column>
+							<p:column headerText="#{i18n['label.venue']}">
+								<h:outputText value="#{item_model.local.nome}"/>
+							</p:column>
+							<p:column headerText="#{i18n['label.start_date']}">
+								<h:outputText value="#{item_model.dataInicio}" >
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{i18n['label.end_date']}">
+								<h:outputText value="#{item_model.dataFim}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm zZ" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{i18n['label.responsible']}">
+								<h:outputText value="#{item_model.usuarioResponsavel.pessoa.nome}"/>
+							</p:column>
+							
+							<p:rowExpansion>
+								<h:panelGrid columns="2">
+									<h:outputLabel value="#{i18n['label.venue']}"/>
+									<h:outputLabel value="#{item_model.local.nome}"/>
+									
+									<h:outputLabel value="#{i18n['label.responsible']}:&nbsp;#{item_model.usuarioResponsavel.pessoa.nome}"/>
+									<h:panelGrid columns="2">
+										<h:outputLink value="mailto:#{item_model.usuarioResponsavel.pessoa.emailAtual}" title="#{item_model.usuarioResponsavel.pessoa.emailAtual}">
+											<p:commandButton type="button" icon="ui-icon-mail-closed" />
+											<h:outputLabel value="#{item_model.usuarioResponsavel.pessoa.emailAtual}"/>
+										</h:outputLink>
+										
+										<h:outputLink value="tel:#{item_model.usuarioResponsavel.pessoa.celularContato}" title="#{item_model.usuarioResponsavel.pessoa.celularContato}">
+											<p:commandButton type="button" icon="ui-icon-comment" />
+											<h:outputLabel value="#{item_model.usuarioResponsavel.pessoa.celularContato}"/>
+										</h:outputLink>
+									</h:panelGrid>
+								</h:panelGrid>
+								
+								<h:panelGrid columns="6" style="text-align: center;">
+									<f:facet name="header">
+										<b><h:outputLabel value="#{i18n['label.checklist']}"/></b>
+									</f:facet>
+									
+									<h:outputLabel value=""/>
+									<h:outputLabel value="#{i18n['label.total']}"/>
+									<h:outputLabel value="#{i18n['label.completed']}"/>
+									<h:outputLabel value="#{i18n['label.canceled']}"/>
+									<h:outputLabel value="#{i18n['label.in_progress']}"/>
+									<h:outputLabel value="#{i18n['label.scheduled']}"/>
+									
+									<h:outputLabel value="#{i18n['label.checklist_quantity']}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklists}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsFinalizados}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsCancelados}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsEmAndamento}"/>
+									<h:outputLabel value="#{item_model.quantidadeChecklistsAgendadas}"/>
+								</h:panelGrid>
+							</p:rowExpansion>
+						</p:dataTable>
+					</p:panel>
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formFunc">
+			<div align="center" class="estiloDiv">
+				<p:panel id="panel" style="width:50%">
+					<p:growl id="msg1" showDetail="true" />
+
+					<p:dataTable id="funcTable" var="func" emptyMessage="#{i18n['message.empty_table']}" paginator="true"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+							{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="10,20,30" paginatorPosition="bottom" rows="10" paginatorAlwaysVisible="false"
+						value="#{bbFuncionario.funcionariosPorContratante}" selectionMode="single" rowKey="#{func.id}}"
+						style="margin-top: 10px; margin-bottom: 10px">
+
+						<p:ajax event="rowSelect" listener="#{funcionarioBean.rowSelect}" />
+						
+						<p:column filterBy="#{func.usuario.cliente.nomeFantasia}" headerText="Cliente">
+                            <h:outputText value="#{func.usuario.cliente.nomeFantasia}" />
+                        </p:column>
+                        
+                        <p:column headerText="Funcionario">
+							<h:outputText value="#{func.usuario.pessoa.nome}" />
+						</p:column>
+						
+						<p:column headerText="#{i18n['label.post']}">
+							<h:outputText value="#{func.cargo.nome}" />
+						</p:column>
+						
+						<!-- Coluna marcada como 'rendered=false' pois ainda não está definido se um funcionario pode ser excluído-->
+						<p:column headerText="#{i18n['label.action']}" style="width: 30px;">
+							<p:commandButton id="btnConfirm"
+									title="#{i18n['button.delete']}" icon="ui-icon-trash" action="#{funcionarioBean.excluir}"
+									update=":formFunc:funcTable">
+								<f:setPropertyActionListener value="#{func}" target="#{funcionarioBean.funcionario}" />
+								<p:confirm header="Confirmação de exclusão"
+										message="Deseja excluir esse funcionario permanentemente? Se deseja somente desativá-lo use o campo ativo do formulário."
+										icon="ui-icon-alert" />
+							</p:commandButton>
+						</p:column>
+
+						<f:facet name="footer">
+							<p:commandButton value="#{i18n['button.new_functionary']}" action="#{funcionarioBean.criarNovo}"
+								style="width:100%;text-align:center" />
+						</f:facet>
+					</p:dataTable>
+					
+				</p:panel>
+			</div>
+
+			<p:confirmDialog global="true">
+				<p:commandButton value="#{i18n['label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="#{i18n['label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>

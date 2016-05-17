@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+		
+	<ui:define name="tarefas">
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"/>
+		
+		<!-- Carregar os locais para serem exibidos no mapa pela primeira vez -->
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{localPorOcorrenciaBean.popularMapa}"/>
+		</f:metadata>
+		
+		<h:form prependId="true" id="formtable">
+			<p:growl id="msg1" showDetail="true"/>
+			
+			<p:poll update="mapOcorrencia" listener="#{localPorOcorrenciaBean.popularMapa}" interval="30" />
+			<p:gmap id="mapOcorrencia"
+					center="-15,-55"
+					zoom="4"
+					type="HYBRID"
+					rendered="true"
+					style="width:100%;height:100%;position:absolute;"
+					model="#{localPorOcorrenciaBean.mapModel}">
+					
+				<p:ajax event="overlaySelect" listener="#{mapaLocalDetalheBean.onMarkerSelect}"  update="msg1" />
+			</p:gmap>
+		</h:form>
+	</ui:define>
+</ui:composition>

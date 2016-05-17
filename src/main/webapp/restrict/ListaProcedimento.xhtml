@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+		
+	<ui:define name="tarefas">
+		<h:form prependId="true" id="formtable">
+			<div align="center">
+				<p:panel id="panel" style="width:90%">
+
+<!--                 <h:panelGrid columns="1" > -->
+					<p:growl id="msg1" showDetail="true"/>
+					
+					<p:dataTable id="idTabela" var="item" value="#{procedimentoBean.dataModel}"
+							paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+							{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+							selection="#{procedimentoBean.model}" selectionMode="single">
+							
+						<p:ajax event="rowSelect" listener="#{procedimentoBean.onRowSelect}" update=":formtable:msg1"/>
+						<p:ajax event="rowUnselect" listener="#{procedimentoBean.onRowUnselect}" update=":formtable:msg1"/>
+						
+						<p:column headerText="#{i18n['label.name']}">
+							<h:outputText value="#{item.nome}"/>
+						</p:column>
+						
+						<p:column headerText="#{i18n['label.description']}">
+							<h:outputText value="#{item.descricao}"/>
+						</p:column>
+						
+						<p:column headerText="#{i18n['label.mandatory']}">
+							<h:outputText value="#{i18n['label.yes']}" rendered="#{item.mandatorio}"/>
+							<h:outputText value="#{i18n['label.no']}"  rendered="#{not item.mandatorio}"/>
+						</p:column>
+						
+						<p:column headerText="#{i18n['label.patrol']}">
+							<h:outputText value="#{i18n['label.yes']}" rendered="#{item.campoCheck}"/>
+							<h:outputText value="#{i18n['label.no']}"  rendered="#{not item.campoCheck}"/>
+						</p:column>
+						
+						<f:facet name="footer">
+							<p:commandButton value="#{i18n['button.new_procedure']}" process="@this" update="@form"
+									action="#{procedimentoBean.novo}"
+									style="width:100%;text-align:center">
+								<f:setPropertyActionListener target="#{procedimentoBean.model}" value="#{model}"/>
+							</p:commandButton>
+						</f:facet>
+					</p:dataTable>
+					        
+<!--                 </h:panelGrid> -->
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

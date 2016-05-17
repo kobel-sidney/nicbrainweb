@@ -1,0 +1,268 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"			
+		template="layout.xhtml">
+	
+	<ui:define name="tarefas">
+		
+		<h:form prependId="true" id="formtable">
+			<p:poll interval="60" update="idTabela"/>
+			<div class="estiloDiv">
+				<p:panel id="mainPanel" style="margin-bottom:10px;" header="#{relatorioEventoBean.cabecalho}: #{relatorioChecklistEventoBean.cabecalho}">				
+					
+					<p:growl id="msg1" showDetail="true"/>				
+					
+					<div class="div-principal">
+						<div class="divFiltroLadoDireito">
+							<div class="ui-clock ui-widget ui-widget-header ui-corner-all" style="width: 101%; font-size: 14px !important; white-space: nowrap">
+								<h:outputLabel value="#{i18n['label.venue']}:"/>&nbsp;
+								<h:outputLabel value="#{relatorioChecklistEventoBean.eventoSelecionado.local.nome}"/>
+								<br/>
+								<h:outputLabel value="#{i18n['label.event']}:"/>&nbsp;
+								<h:outputLabel value="#{relatorioChecklistEventoBean.eventoSelecionado.nome}"/>
+								<br/>
+								<h:outputLabel value="#{i18n['label.event_time']}:"/>&nbsp;
+								<h:outputLabel value="#{relatorioChecklistEventoBean.eventoSelecionado.dataInicio}">
+									<f:convertDateTime pattern="HH:mm zZ" />
+								</h:outputLabel>
+							</div>
+						</div>
+					
+						<div class="divFiltroLadoCentro">					
+							<h:panelGrid columns="4">
+								<h:outputLabel for="filtroSelectStatus" value="#{i18n['label.status']}:"/>
+								<p:selectOneMenu id="filtroSelectStatus" value="#{relatorioChecklistEventoBean.filtroIdStatus}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+									<f:selectItems value="#{bbStatus.allChecklistStatus}" var="item"
+												itemLabel="#{item.nome}" itemValue="#{item.id}"/>
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroSelectFuncionario" value="#{i18n['label.responsible']}:"/>
+								<p:selectOneMenu id="filtroSelectFuncionario" value="#{relatorioChecklistEventoBean.filtroIdResponsavel}">
+									<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue=""/>
+									<f:selectItems value="#{bbUsuario.usuariosResposaveisPorChecklistsPorContexto}" var="item"
+			                    			itemLabel="#{item.pessoa.nome}" itemValue="#{item.id}"/>
+								</p:selectOneMenu>
+								<h:outputLabel for="filtroDataInicio" value="#{i18n['label.start_date']}:"/>
+								<p:calendar id="filtroDataInicio" value="#{relatorioChecklistEventoBean.filtroDataHoraInicio}"
+										label="#{i18n['label.start_date']}"
+										mode="popup" effect="fold" navigator="true" 
+										showOn="button" popupIconOnly="true" 
+										pattern="dd/MM/yyyy HH:mm" locale="#{bbLocale.currentLocale.language}"/>
+								
+								<h:outputLabel value=""/>
+								<p:commandButton value="#{i18n['button.search']}" action="#{relatorioChecklistEventoBean.search}"
+										id="withIcon" update="@form" icon="ui-icon-search" ajax="false"/>
+							</h:panelGrid>
+						</div>
+						
+						<div class="divFiltroLadoEsquerdo" align="right" style="white-space: nowrap">
+							<p:clock pattern="dd/MM/yyyy HH:mm:ss"/>
+						</div>
+					</div>
+					
+					<div class="div-block">
+					</div>
+						
+						
+					<p:panel id="panel" style="margin-bottom:10px;">						
+						
+					    <p:dataTable id="idTabela" var="item" value="#{relatorioChecklistEventoBean.dataModel}"					    	
+					    		emptyMessage="#{i18n['message.registry.not_found']}" rowKey="#{item.id}"
+					    		 selectionMode="single" selection="#{relatorioAtividadeBean.checklistSelecionado}"
+					    		sortBy="status.nome" sortOrder="descending" >			    		
+					    	
+					    	<p:ajax event="rowSelect" listener="#{relatorioChecklistEventoBean.onRowSelect}" update=":formtable:msg1"/>
+					    	<p:ajax event="rowUnselect" listener="#{relatorioChecklistEventoBean.onRowUnselect}" update=":formtable:msg1"/>
+					    				    	
+					    	<p:columnGroup type="header">
+					    		<p:row>
+					    			<p:column rowspan="2" colspan="2" headerText="#{i18n['label.status']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['label.venue']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['label.event']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['label.checklist']}"/>
+									<p:column colspan="2" headerText="#{i18n['label.estimated']}" />
+									<p:column colspan="2" headerText="#{i18n['label.effective']}" />
+									<p:column rowspan="2" headerText="#{i18n['label.elapsed_time']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['label.responsible']}"/>						    		
+						    		<p:column rowspan="2" headerText="#{i18n['label.cel_phone']}"/>
+						    		<p:column rowspan="2" headerText="#{i18n['label.comment']}"/>
+					    		</p:row>
+					    		<p:row>
+						    		<p:column headerText="#{i18n['label.start']}"/>
+						    		<p:column headerText="#{i18n['label.end']}"/>
+						    		<p:column headerText="#{i18n['label.start']}"/>
+						    		<p:column headerText="#{i18n['label.end']}"/>
+					    		</p:row>
+					    	</p:columnGroup>
+
+							<p:column exportable="false">
+								<p:graphicImage url="../images/iconesNovos/icone-branco.png"
+										rendered="#{item.situacao.nome == 'agendado'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-verde.png"
+										rendered="#{item.situacao.nome == 'sem_alerta'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-amarelo.png"
+										rendered="#{item.situacao.nome == 'alerta_ocorrido'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-vermelho.png"
+										rendered="#{item.situacao.nome == 'alerta_vigente'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+								<p:graphicImage url="../images/iconesNovos/icone-roxo.png"
+										rendered="#{item.situacao.nome == 'cancelado'}"
+										width="20px" height="20px"
+										style="border: 0px; margin-right: 1em;"/>
+							</p:column>
+
+							<p:column sortBy="status.nomeStatus">
+								<h:outputText value="#{item.status.nome}" style="white-space:nowrap;"/>
+							</p:column>					    						    						    	
+					    	
+					    	<p:column>
+					    		<h:outputText value="#{item.evento.local.nome}"/>
+					    	</p:column>
+					    	
+					    	<p:column>
+					    		<h:outputText value="#{item.evento.nome}"/>
+					    	</p:column>
+					    						    	
+					    	<p:column>
+					    		<h:outputText value="#{item.nome}"/>
+					    	</p:column>
+					    	
+							<p:column>
+								<h:outputText value="#{item.dataInicioPrevisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<h:outputText value="#{item.dataFimPrevisto}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<h:outputText value="#{item.dataInicioRealizado}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column>
+								<h:outputText value="#{item.dataFimRealizado}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column style="white-space:nowrap;">
+								<p:progressBar value="#{item.porcentagemTempoExecucao}"
+										labelTemplate="#{item.porcentagemTempoExecucaoDecorrido} %"
+										style="width:50px"
+										displayOnly="true"/>
+								<h:outputText value="(#{item.tempoExecucaoDecorrido} / #{item.tempoExecucaoEstimado} #{i18n['label.symbol.minute']})" 
+									style="white-space:nowrap;"/>
+							</p:column>		    								
+														
+							<p:column>
+								<h:outputText value="#{item.usuarioResponsavel.pessoa.nome}"/>							
+							</p:column>
+							
+							<p:column>
+								<h:outputText value="#{item.usuarioResponsavel.pessoa.celularContato}"/>							
+							</p:column>		
+					    	
+							<p:column>
+								<p:commandButton id="comentarioButton"										
+										oncomplete="PF('comentarioDialog').show();"
+										update=":formDialogComentario:idTabelaComentario"
+										icon="ui-icon-comment"
+										title="#{i18n['label.comment']}">
+									<f:setPropertyActionListener value="#{item}" target="#{relatorioChecklistEventoBean.model}"/>
+								</p:commandButton>
+							</p:column>
+
+							<p:summaryRow> 
+								<p:column colspan="10" style="text-align:right">
+                					Total:
+            					</p:column>
+
+								<p:column colspan="3" style="text-align:left">
+                					 <h:outputText value="#{relatorioChecklistEventoBean.obterTotalChecklist(item.status.nome)} &nbsp; #{i18n['label.checklist']}(s)" />               					 
+            					</p:column>
+							</p:summaryRow>
+
+						</p:dataTable>
+						        
+	            	</p:panel>
+	            	
+	            	<p:separator/>
+	            	
+	            	<h:panelGrid columns="2" width="100%">
+			            <p:panel id="pnlVoltar" style="margin-bottom:10px;">
+							<p:commandButton id="btnVoltar" value="#{i18n['button.back']}"
+									action="#{relatorioChecklistEventoBean.voltaPagina}"
+										icon="ui-icon-arrowreturnthick-1-w" title="#{i18n['button.back']}">
+							</p:commandButton>
+			            </p:panel>
+	
+						<p:panel header="#{i18n['label.export']}" style="width:18%;float:right">
+							<h:commandLink action="#{relatorioChecklistEventoBean.exportarRelatorioPdf}">
+								<p:graphicImage value="../images/iconesNovos/pdf.png" />
+							</h:commandLink>
+	
+							<h:commandLink>
+								<p:graphicImage value="../images/iconesNovos/csv.png" />
+								<p:dataExporter type="csv" target="idTabela" fileName="checklist"  />
+							</h:commandLink>							
+						</p:panel>
+					</h:panelGrid>
+					
+				</p:panel>
+            </div>
+        </h:form>
+        
+        <p:dialog header="#{i18n['label.comments']}" 
+				id="comentarioDlg"
+				widgetVar="comentarioDialog"
+				position="center"
+				resizable="false"
+				showEffect="fade" hideEffect="explode" modal="true"
+				appendTo="@(body)" closeOnEscape="true">
+			
+			<h:form id="formDialogComentario">
+				<h:panelGrid columns="1">
+					<p:dataTable id="idTabelaComentario" var="item" value="#{relatorioChecklistEventoBean.checklistComentarioDataModel}"
+				    		paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+				    		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink}
+				    				{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				    		rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+				    		selectionMode="single" rowIndexVar="indice">
+				    		
+				    	<p:column headerText="#{i18n['label.date_time']}">
+				    		<h:outputText value="#{item.dataComentario}">
+				    			<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+				    		</h:outputText>
+				    	</p:column>
+				    	
+				    	<p:column headerText="#{i18n['label.responsible']}">
+				    		<h:outputText value="#{item.usuario.pessoa.nome}"/>
+				    	</p:column>
+				    					    	
+				    	<p:column headerText="#{i18n['label.comment']}">
+				    		<h:outputText value="#{item.comentario}"/>
+				    	</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+        
+    </ui:define>
+ </ui:composition>

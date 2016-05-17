@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Ronda Geral | NicBrain</title>
+
+	<h:outputStylesheet library="css" name="maps/rondaGcm.css" />
+	<script
+		src="https://maps.googleapis.com/maps/api/js?v=3.22&amp;libraries=places"></script>
+	<h:outputScript library="js" name="properties_js.js" />
+
+</h:head>
+<h:body onload="PF('dlgFiltro').show();">
+
+	<div id="map-detalhe"
+		style="position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"></div>
+
+	<h:form prependId="false">
+		<p:panel id="informacoesRota" header="Informações da rota"
+			toggleable="true" toggleSpeed="500" widgetVar="panel"
+			style="z-index: 0; position: absolute; bottom: 11px; right: 0px; margin: 10px;">
+			<h:panelGrid columns="2" width="210">
+				<h:outputLabel value="Viatura: " style="font-weight: bold;" />
+				<h:outputText id="descricaoViatura" />
+
+				<h:outputLabel value="Distância: " style="font-weight: bold;" />
+				<h:outputText id="distancia" />
+
+				<h:outputLabel value="Duração: " style="font-weight: bold;" />
+				<h:outputText id="duracao" />
+
+				<h:outputLabel value="Hora início: " style="font-weight: bold;" />
+				<h:outputText id="inicio_info" />
+
+				<h:outputLabel value="Hora fim: " style="font-weight: bold;" />
+				<h:outputText id="fim_info" />
+			</h:panelGrid>
+		</p:panel>
+	</h:form>
+
+	<h:form id="botoesVoltarEFiltrar" class="comandos-top-left"
+		prependId="false">
+		<p:button value="Voltar para mapa geral" outcome="rondaGeral"
+			icon="ui-icon-arrowreturnthick-1-w" />
+		<p:commandButton value="Filtrar" onclick="PF('dlgStatus').hide();" oncomplete="PF('dlgFiltro').show();"
+			icon="ui-icon-search" />
+	</h:form>
+
+	<h:form id="formFiltro" prependId="false">
+		<p:remoteCommand name="notificarRotaVazia"
+			action="#{mensagensRonda.notificarRotaVazia}" />
+		<p:remoteCommand name="notificarDatasObrigatorias"
+			action="#{mensagensRonda.notificarDatasObrigatorias}" />
+		<p:remoteCommand name="notificarDataInconforme"
+			action="#{mensagensRonda.notificarDataInconforme}" />
+
+		<p:dialog widgetVar="dlgFiltro" header="Filtro de rota"
+			resizable="false" draggable="false" modal="true">
+			<p:messages autoUpdate="true" />
+
+			<h:panelGrid id="grid" columns="2" style="padding-bottom: 5px;">
+				<h:outputLabel value="Local:" for="inspetoria" />
+				<p:selectOneMenu id="inspetoria" required="true">
+					<f:selectItems value="#{bbLocal.locaisRonda}" var="local" itemLabel="#{local.nome}" itemValue="#{local.id}" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Veículo:" for="viatura" />
+				<p:selectOneMenu id="viatura" required="true">
+					<f:selectItems value="#{bbVeiculo.veiculosPorContratante}" var="veiculo" itemLabel="#{veiculo.nome}" itemValue="#{veiculo.id}" />
+				</p:selectOneMenu>
+				
+				<h:outputLabel value="Usuário:" for="usuario" />
+				<p:selectOneMenu id="usuario" required="true">
+					<f:selectItems value="#{bbUsuario.usuariosPorContexto}" var="usuario" itemLabel="#{usuario.nome}" itemValue="#{usuario.id}" />
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Data e hora de início:" for="inicio" />
+				<p:calendar id="inicio" pattern="dd/MM/yyyy HH:mm:ss"
+					required="true" label="Data início" />
+
+				<h:outputLabel id="fim_label" value="Data e hora de fim:" for="fim" />
+				<p:calendar id="fim" pattern="dd/MM/yyyy HH:mm:ss" label="Data fim" />
+					
+				<h:outputLabel id="setor_label" value="Setor:" for="setor" />
+				<p:selectOneMenu id="setor">
+					<f:selectItem noSelectionOption="true" />
+					<f:selectItems value="#{bbSetor.setores}" var="setor" itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
+				</p:selectOneMenu>
+					
+				<h:outputText value="Opções avançadas " />
+		        <p:selectBooleanCheckbox onchange="RondaDetalhada.mudarConfiguracoes();" />
+			</h:panelGrid>
+			
+			<p:commandButton value="Aplicar filtro"
+				onclick="RondaDetalhada.aplicarFiltro();" />
+		</p:dialog>
+
+		<p:dialog widgetVar="dlgStatus" header="Montando rota, aguarde..." closable="false"
+			resizable="false" draggable="false" modal="true">
+			
+				<p:graphicImage library="images" name="ajaxloadingbar.gif" />
+		</p:dialog>
+	</h:form>
+
+	<script src="../resources/js/maps/rondaDetalhada.js"></script>
+
+	<script>
+                    google.maps.event.addDomListener(window, 'load', RondaDetalhada.initializarMapa);
+        </script>
+</h:body>
+</html>

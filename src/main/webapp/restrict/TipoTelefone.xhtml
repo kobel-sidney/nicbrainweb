@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formTipoTelefone">
+			<p:panel id="panel" header="#{i18n['label.telephone_type']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idTipoTelefone"
+						value="#{tipoTelefoneBean.model.id}" />
+
+					<h:outputLabel for="nomeTipoTelefone"
+						value="#{i18n['label.telephone_type']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nomeTipoTelefone" size="20"
+						value="#{tipoTelefoneBean.model.nome}" required="true"
+						label="TipoTelefone"
+						requiredMessage="#{i18n['message.required_field.telephone_type']}">
+						<f:validateLength minimum="3" />
+					</p:inputText>
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{tipoTelefoneBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{tipoTelefoneBean.cancel}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this" />
+			</div>
+
+		</h:form>
+	</ui:define>
+</ui:composition>

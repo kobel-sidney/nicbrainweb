@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+
+		<h:form prependId="true" id="formtable">
+			<div align="center" class="estiloDiv">
+				<p:panel id="panel" style="width:50%">
+					<!--                 <h:panelGrid columns="1" > -->
+
+					<p:growl id="msg1" showDetail="true" />
+
+					<p:dataTable id="idTabela" var="item_util"
+						value="#{telefoneUtilBean.listaTelefonesUteis}" paginator="true"
+						rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+							{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+						selection="#{telefoneUtilBean.model}"
+						selectionMode="single">
+
+						<p:column style="width:80px;text-align:center">
+							<h:outputText
+								value="#{item_util.nome} - #{item_util.numero}" />
+						</p:column>
+
+
+					</p:dataTable>
+
+					<!--                 </h:panelGrid> -->
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

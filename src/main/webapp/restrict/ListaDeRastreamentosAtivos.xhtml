@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+ xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core" 
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:p="http://primefaces.org/ui"
+	  template="layout.xhtml">
+	  
+	<ui:define name="tarefas">
+	
+		<f:view beforePhase="#{rastreamentoDeUsuariosBean.beforePhase}"/>
+	
+		<h:form prependId="true" id="formDalistaDeRastreamentosAtivos"  >
+			
+			<div class="estiloDiv" align="center">
+			
+			<p:panel id="panel" style="margin-bottom:10px;" header="#{rastreamentoDeUsuariosBean.cabecalho}">
+		
+       				<p:growl id="mensagens" showDetail="true"/>
+       				
+				    <p:panel id="panelDoDataTable" style="width:60%">
+				    
+				    <div class="div-filtro" style="width:60%">
+       				
+				    	<div align="left">
+				    				    		
+							<h:panelGrid id="panelDoFiltro" columns="4" >
+							    							    
+								<h:outputLabel for="buscaUsuario" value="#{i18n['label.user']}:"/>
+								<p:inputText 	id="buscaUsuario" 
+			       								value="#{rastreamentoDeUsuariosBean.nomeDoUsuarioParaBusca}" >
+							    </p:inputText>
+							    
+							    <h:outputLabel value=""/>
+							    <h:outputLabel value=""/>
+							    							    							    
+								<h:outputLabel for="filtroDataInicio" value="#{i18n['label.start_date']}:"/>
+								<p:calendar id="filtroDataInicio" value="#{rastreamentoDeUsuariosBean.filtroDoPeriodoInicialDoRastreamento}"
+										label="#{i18n['label.start_date']}"
+										mode="popup" effect="fold" navigator="true" 
+										showOn="button" popupIconOnly="true" 
+										readonlyInput="true"
+										pattern="dd/MM/yyyy HH:mm" locale="#{bbLocale.currentLocale.language}"/>
+										
+								<h:outputLabel for="filtroDataFinal" value="#{i18n['label.start_date']}:"/>
+								<p:calendar id="filtroDataFinal" value="#{rastreamentoDeUsuariosBean.filtroDoPeriodoFinalDoRastreamento}"
+										label="#{i18n['label.end_date']}"
+										mode="popup" effect="fold" navigator="true" 
+										showOn="button" popupIconOnly="true" 
+										readonlyInput="true"
+										pattern="dd/MM/yyyy HH:mm" locale="#{bbLocale.currentLocale.language}"/>
+								
+								<h:outputLabel value=""/>
+								
+										
+							</h:panelGrid>
+							
+							
+									
+							<p:commandButton value="#{i18n['button.search']}" action="#{rastreamentoDeUsuariosBean.preparaFiltroParaExecucao}"
+									id="withIcon" update=":formDalistaDeRastreamentosAtivos:mensagens :formDalistaDeRastreamentosAtivos:dataTableDeRastreamentosAtivos" icon="ui-icon-search"/>
+							
+							&nbsp;
+							
+							<p:commandButton value="#{i18n['button.clean']}" action="#{rastreamentoDeUsuariosBean.preparaLimpezaParaExecucao}"
+									id="botaoDeLimpar" update=":formDalistaDeRastreamentosAtivos:panelDoFiltro :formDalistaDeRastreamentosAtivos:dataTableDeRastreamentosAtivos" icon="ui-icon-cancel"/>
+									
+							<br/><br/>
+							
+						</div>
+										    
+				    </div>
+					
+					<div class="div-block">
+					</div>
+				    
+					    <p:dataTable 	id="dataTableDeRastreamentosAtivos" 
+					    				widgetVar="widgetDalistaDeRastreamentosAtivos"
+					    				var="rastreamento" 
+					    				value="#{rastreamentoDeUsuariosBean.listaDeRastreamentos}"
+		                				paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+		                    			paginatorTemplate="	{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+		                    								{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		                    			rowsPerPageTemplate="5,10,15"  paginatorPosition="bottom" 
+		                    			selectionMode="single"  >
+		                    		                    
+		                    <p:ajax event="rowSelect" 
+		                    		listener="#{rastreamentoDeUsuariosBean.onRowSelect}"   
+		                    		update=":formDalistaDeRastreamentosAtivos:mensagens"  />  
+		        			       
+		                    
+		                    <p:column style="width:80px;text-align:center" headerText="#{i18n['label.user']}" >                        
+		                        <h:outputText value="#{rastreamento.usuario.nome}"/>
+		                    </p:column>
+		                    
+		                    <p:column style="width:80px;text-align:center" headerText="#{i18n['label.devices']}" >                        
+		                        <h:outputText value="#{rastreamento.usuario.descricaoDevicesRegistrados}"/>
+		                    </p:column>
+		                    
+		                    <p:column style="width:80px;text-align:center" headerText="#{i18n['label.start_date']}" >                        
+		                        <h:outputText value="#{rastreamento.dataInicioRastreamento}">
+		                        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		                        </h:outputText>
+		                    </p:column>
+		                    
+		                    <p:column style="width:80px;text-align:center" headerText="#{i18n['label.end_date']}" >             
+		                        <h:outputText value="#{rastreamento.dataFimRastreamento}">
+		                        	<f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+		                        </h:outputText>
+		                    </p:column>
+		                    
+		                    <!--  
+		                    <f:facet name="footer">  
+					        	<p:commandButton value="#{i18n['button.set_tracking']}" 
+					        					process="@this" update="@form"
+					        					 action="#{rastreamentoDeUsuariosBean.avancaParaDefinicaoDoRastreamento}"
+					        					 style="width:100%;text-align:center">
+						        	<f:setPropertyActionListener target="#{rastreamentoDeUsuariosBean.usuario}"
+						                      				     value="#{usuario}"/>
+						        </p:commandButton>
+					        </f:facet> 
+					    	-->
+	 					</p:dataTable>    
+	 					
+					</p:panel>
+					
+             </p:panel>      
+             </div>        
+         </h:form>          
+            	
+	</ui:define>
+
+</ui:composition>	  				    

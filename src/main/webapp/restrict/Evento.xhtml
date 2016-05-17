@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formEvento">
+			<p:panel id="panel" header="#{i18n['label.event']}"
+				style="margin-bottom:10px;">
+				<p:growl id="msg0" />
+				<h:panelGrid columns="2">
+					<h:outputLabel />
+					<h:inputHidden id="idEvento" value="#{eventoBean.model.id}" />
+
+					<h:outputLabel for="nome"
+						value="#{i18n['label.event_name']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:inputText id="nome" size="40" value="#{eventoBean.model.nome}"
+						required="true" label="nomeEvento"
+						requiredMessage="#{i18n['message.required_field.event_name']}">
+					</p:inputText>
+
+					<h:outputLabel for="dataInicio"
+						value="#{i18n['label.start_date']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:calendar id="dataInicio" size="20"
+						value="#{eventoBean.model.dataInicio}" required="true"
+						label="dataInicio"
+						requiredMessage="#{i18n['message.required_field.start_date']}"
+						pattern="dd/MM/yyyy HH:mm" />
+
+					<h:outputLabel for="dataFim"
+						value="#{i18n['label.end_date']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:calendar id="dataFim" size="20"
+						value="#{eventoBean.model.dataFim}" required="true"
+						label="dataFim"
+						requiredMessage="#{i18n['message.required_field.end_date']}"
+						pattern="dd/MM/yyyy HH:mm" />
+
+					<h:outputLabel for="observacao"
+						value="#{i18n['label.observacao']}:&nbsp;" />
+					<p:inputText id="observacao" size="40"
+						value="#{eventoBean.model.observacao}" required="false"
+						label="observacao">
+					</p:inputText>
+
+					<h:outputText value="#{i18n['label.active']}:&nbsp;" />
+					<p:selectBooleanCheckbox value="#{eventoBean.model.ativo}" />
+
+					<h:outputLabel for="local"
+						value="#{i18n['label.venue']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="local" value="#{eventoBean.model.local.id}"
+						required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_venue']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbLocal.locaisPorContratante}" var="item"
+							itemLabel="#{item.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="usuarioResponsavel"
+						value="#{i18n['label.responsible']}:&nbsp;#{i18n['label.token.required_field']}" />
+					<p:selectOneMenu id="usuarioResponsavel"
+						value="#{eventoBean.model.usuarioResponsavel.id}" required="true"
+						requiredMessage="#{i18n['message.required_field.choice_a_responsible']}">
+						<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}"
+							itemValue="" />
+						<f:selectItems value="#{bbUsuario.usuariosPorContratante}" var="item"
+							itemLabel="#{item.nome} - #{item.pessoa.nome}" itemValue="#{item.id}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="ronda" value="Ronda: " />
+					<p:selectBooleanCheckbox value="#{eventoBean.model.ronda}" />
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="estiloDiv">
+				<p:commandButton value="#{i18n['button.save']}"
+					action="#{eventoBean.add}" id="withIcon" update="@form"
+					icon="ui-icon-disk" ajax="false" />
+
+				<p:commandButton value="#{i18n['button.cancel']}"
+					actionListener="#{eventoBean.cancel}" icon="ui-icon ui-icon-close"
+					update="@form" process="@this" />
+			</div>
+		</h:form>
+
+
+	</ui:define>
+
+</ui:composition>

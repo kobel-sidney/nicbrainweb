@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:p="http://primefaces.org/ui"
+		template="layout.xhtml">
+
+	<ui:define name="tarefas">
+		<h:form prependId="false" id="formProcedimento">
+			<p:panel id="panel" header="#{i18n['label.procedure']}" style="margin-bottom:10px;">
+				<p:growl id="msg0" autoUpdate="true"/>
+				<p:wizard>
+					<p:tab id="basico" title="#{i18n['button.procedure']}">
+						<h:panelGrid columns="2">
+							<h:outputLabel/>
+							<h:inputHidden id="idProcedimento" value="#{procedimentoBean.model.id}"/>
+							
+							<h:outputLabel for="nomeProcedimento" value="#{i18n['label.name']}:&nbsp;#{i18n['label.token.required_field']}"/>
+							<p:inputText id="nomeProcedimento" value="#{procedimentoBean.model.nome}"
+									required="true" label="#{i18n['label.name']}"
+									requiredMessage="#{i18n['message.required_field.name']}" style="width:100%">
+								<f:validateLength minimum="3"/>
+							</p:inputText>
+							
+							<h:outputLabel for="descricaoProcedimento" value="#{i18n['label.description']}:"/>
+							<p:inputTextarea id="descricaoProcedimento" value="#{procedimentoBean.model.descricao}"
+									label="#{i18n['label.description']}" style="width:100%" rows="6">
+							</p:inputTextarea>
+							
+							<h:outputLabel for="tempoPreviso" value="#{i18n['label.estimated_execution_time']}&nbsp;(#{i18n['label.minutes']}):&nbsp;#{i18n['label.token.required_field']}"/>
+							<p:inputText id="tempoPreviso" value="#{procedimentoBean.model.tempoExecucaoEstimadoAsString}"
+									required="true" requiredMessage="#{i18n['message.required_field.estimated_execution_time']}"
+									validatorMessage="#{i18n['message.alert.accept_only_numbers']}" style="width:100%">
+								<f:validateRegex pattern="^[0-9]{1,}$"/>
+							</p:inputText>
+							
+							<h:outputLabel for="tempoToleranciaInicio" value="#{i18n['label.tolerance_time_to_start']}&nbsp;(#{i18n['label.minutes']}):&nbsp;#{i18n['label.token.required_field']}"/>
+							<p:inputText id="tempoToleranciaInicio" value="#{procedimentoBean.model.tempoToleranciaInicioAsString}"
+									required="true" requiredMessage="#{i18n['message.required_field.tolerance_time_to_start']}"
+									validatorMessage="#{i18n['message.alert.accept_only_numbers']}" style="width:100%">
+								<f:validateRegex pattern="^[0-9]{1,}$"/>
+							</p:inputText>
+							
+							<h:outputLabel for="tempoToleranciaFim" value="#{i18n['label.tolerance_time_to_end']}&nbsp;(#{i18n['label.minutes']}):&nbsp;#{i18n['label.token.required_field']}"/>
+							<p:inputText id="tempoToleranciaFim" value="#{procedimentoBean.model.tempoToleranciaFimAsString}"
+									required="true" requiredMessage="#{i18n['message.required_field.tolerance_time_to_end']}"
+									validatorMessage="#{i18n['message.alert.accept_only_numbers']}" style="width:100%">
+								<f:validateRegex pattern="^[0-9]{1,}$"/>
+							</p:inputText>
+							
+							<h:outputLabel for="tempoToleranciaAntecipado" value="#{i18n['label.tolerance_time_to_anticipating']}&nbsp;(#{i18n['label.minutes']}):"/>
+							<p:inputText id="tempoToleranciaAntecipado" value="#{procedimentoBean.model.tempoToleranciaAntecipadoAsString}"
+									validatorMessage="#{i18n['message.alert.accept_only_numbers']}" style="width:100%">
+								<f:validateRegex pattern="^[0-9]{1,}$"/>
+							</p:inputText>
+							
+							<h:outputLabel for="radioMandatorio" value="#{i18n['label.mandatory']}:&nbsp;#{i18n['label.token.required_field']}"/>
+							<p:selectOneRadio id="radioMandatorio"
+									required="true" requiredMessage="#{i18n['message.required_field.description']}"
+									value="#{procedimentoBean.model.mandatorio}"
+									label="#{i18n['label.active']}">
+								<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+								<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+							</p:selectOneRadio>
+							
+							<h:outputLabel for="radioPatrulha" value="#{i18n['label.patrol']}:&nbsp;#{i18n['label.token.required_field']}"/>
+							<p:selectOneRadio id="radioPatrulha"
+									required="true" requiredMessage="#{i18n['message.required_field.description']}"
+									value="#{procedimentoBean.model.campoCheck}"
+									label="#{i18n['label.active']}">
+								<f:selectItem itemLabel="#{i18n['label.yes']}" itemValue="true" />
+								<f:selectItem itemLabel="#{i18n['label.no']}" itemValue="false" />
+							</p:selectOneRadio>
+							
+							<h:outputLabel for="selectFormulario" value="#{i18n['label.form_profile']}:"/>
+							<p:selectOneMenu id="selectFormulario" value="#{procedimentoBean.idFormulario}" effect="fold"
+									style="width:100%">
+								<f:selectItem itemLabel="#{i18n['text.select_item_3dots']}" itemValue="" />
+								<f:selectItems value="#{bbPerfilFormulario.perfisFormularios}" var="item"
+										itemLabel="#{item.nome}"
+										itemValue="#{item.id}" />
+							</p:selectOneMenu>
+							
+							<h:outputLabel for="picklistMensagem" value="#{i18n['label.messages']}:"/>
+							<p:pickList id="picklistMensagem" value="#{procedimentoBean.dualListModel}"
+									showCheckbox="true"
+									var="item"
+									itemLabel="#{item}"
+									itemValue="#{item}"
+									converter="simplePickListConverter">
+								
+								<f:facet name="sourceCaption">#{i18n['label.messages_available']}</f:facet>
+								<f:facet name="targetCaption">#{i18n['label.selected_messages']}</f:facet>
+								
+								<p:column style="width:75%;">
+									<h:outputText value="#{item.descricao}" />
+								</p:column>
+							</p:pickList>
+						</h:panelGrid>
+					</p:tab>
+					<p:tab id="tempo_estimado" title="#{i18n['label.config_messages']}">
+						
+						<p:dataTable id="idTabela" var="item" value="#{procedimentoBean.dataModelSelecionadas}"
+								paginator="true" rows="10" emptyMessage="#{i18n['message.registry.not_found']}"
+								paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+									{PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15" paginatorPosition="bottom" 
+								selection="#{procedimentoBean.modelSelecionada}" selectionMode="single">
+							
+							<p:column headerText="#{i18n['label.description']}">
+								<h:outputText value="#{item.mensagem.descricao}"/>
+							</p:column>
+							<p:column headerText="#{i18n['label.time_standard_scale']}">
+								<p:inputText value="#{item.tempoEscalaAsString}"
+										validatorMessage="#{i18n['message.alert.accept_only_numbers']}">
+									<f:validateRegex pattern="^[0-9]{1,}$"/>
+								</p:inputText>
+							</p:column>
+						</p:dataTable>
+						
+						<p:commandButton value="#{i18n['button.save']}" action="#{procedimentoBean.add}"
+								id="withIcon" update="@form" icon="ui-icon-disk" ajax="false"/>
+						
+					</p:tab>
+				</p:wizard>
+			</p:panel>
+			
+			<p:commandButton value="#{i18n['button.cancel']}" actionListener="#{procedimentoBean.cancel}"
+					icon="ui-icon ui-icon-close" update="@form" process="@this"/>           
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,461 @@
+body{
+    background: #dbdad9 !important;
+    font-family: Arial, sans-serif !important;	
+    text-align: center;
+    margin:75px 10px 75px 10px;
+}	
+
+#formtable:j_idt48_input {
+    top: 0 !important;
+    width: 180px !important; 
+    height:20px !important;
+}
+
+input{
+    padding: 7px !important;
+    border: 0 inset;
+    font-size: 1em
+}
+textarea{
+    padding: 6px !important;
+    border: solid 1px #fff;
+    width: 600px;
+    height: 85px;
+    margin: 5px 0;
+    color: #747372;
+    font-size: 1em;
+}
+#j_password, #j_username {
+    width: 350px;
+    height: 25px;
+    border:0;
+}
+/* #j_username { */
+/* 	padding-left: 25px; */
+/*     background-image: url('../images/login-user.png'); */
+/*     background-position: 10px center; */
+/*     background-repeat: no-repeat; */
+/*     text-indent: 40px; */
+/* } */
+
+.j_usernameStilo {	
+    padding-left: 25px ;
+    background-image: url('../images/login-user.png') !important;
+    background-position: 10px center !important ;
+    background-repeat: no-repeat !important;
+    text-indent: 40px ;	
+    font-size: 1em !important;	
+}
+
+#j_password {
+    padding-left: 25px;
+    background-image: url('../images/login-pass.png');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    text-indent: 40px;
+}
+#inputNomePerfil{
+    float: left;
+    width: 600px !important	;
+    clear: both;
+}
+.inputCompleteForm, .email,.segmento{width: 600px;}
+.TEL{
+    width: 600px;
+}
+input[type=search] {display: inline}
+
+#login-fields {
+    width: 380px;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+#login-fields a {
+    color:#393937;
+}
+.rfloat-btn{
+    float: right;
+}
+#login-lost{
+    text-align: left;
+    line-height: 20px;
+    margin: 5px;
+    clear: both;
+
+}
+#login-lost a{text-decoration: none;}
+.btn-default{
+    font-size: 1.1em;
+    cursor: pointer;
+    background: #e47e25;
+    border-bottom: solid 3px #ae4325 !important;
+    padding: 10px 20px;
+    margin: 10px;
+    color:#ae4325;
+    border:0;
+    transition: all .5s;
+}
+.btn-default:hover{
+    background: #e59124;
+    border-bottom: solid 3px #b24b2f !important;
+    color:#b24b2f;	
+}
+.search-go{
+    background-image: url('../images/search-go.png');
+    width: 30px;
+    height: 30px;
+    border:none;
+    text-indent:-9000px;
+    cursor: pointer;
+}
+.principal-search input[type=search]{
+    width: 250px;
+    cursor: pointer;
+}
+.principal-search {
+    text-align: right;
+    background: #575655 url('../images/lupa.png') no-repeat top left;
+    width: 330px;
+    padding: 13px 10px;
+    border-bottom: 3px solid #3f3f3e;
+    animate: all 1s;
+}
+
+header{
+    background: #7b7a79 !important;
+    height: 65px !important;
+    border-bottom: 2px solid #3f3f3e;
+    width: 100%;
+}
+#footer{
+    color:#575655;
+    line-height: 50px;
+    position: fixed;
+    bottom: 0;
+    height: 50px;
+    margin-top: -150px;
+    background: #7b7a79;
+    width: 100%;
+    clear: both;
+    padding-left: 25px;
+    z-index: 99999;
+}
+#blocos{
+    width: 100%;
+    display: inline;
+}
+#bloco-esquerdo{
+    background: #c1c0c0;
+    width: 355px;
+    height: 520px;
+    float: left;
+    clear: both;
+    padding:20px;
+}
+#bloco-direito{
+    position: absolute;
+    z-index: 1;
+    height: 520px;
+    float: right;
+    clear: both;
+    left: 450px;
+    top:150px;
+}
+#rfloat{
+    float: right;
+    display: inline-block;
+    position: absolute;
+    margin-top: 37px;	
+    margin-left: 650px
+}
+.navItem {
+    float: left;
+}
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+.clearfix{zoom: 1;}
+#pageNav{margin-right: 1px;}
+
+.logo-header{
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 200px
+}
+.marcador{
+    position: absolute;
+    width: 50px;
+    height: 30px;
+    margin-left: 30px;
+    margin-top: -19px;
+    background: url('../images/marcador-bg.png') no-repeat center right;
+}
+.marcador-contador{
+    float: left;
+    background: #ea5d4c;
+    color: #fff;
+    padding:0 3px;
+    margin: 20px 20px 0 0;
+    cursor: pointer;
+}
+#user-login {
+    float: right;
+    position: static;
+    margin-top: -35px;
+    height: 65px;
+    line-height: 65px;
+    width: 200px;
+    z-index: 999999;
+    padding-left: 50px;
+    border-left: 1px solid #3f3f3e;
+    background: url('../images/avatar-login.png') no-repeat center left;
+}
+.demoHeaders {
+    margin-top: 2em;
+}
+#dialog-link {
+    padding: .4em 1em .4em 20px;
+    text-decoration: none;
+    position: relative;
+}
+#dialog-link span.ui-icon {
+    margin: 0 5px 0 0;
+    position: absolute;
+    left: .2em;
+    top: 50%;
+    margin-top: -8px;
+}
+#icons {
+    margin: 0;
+    padding: 0;
+}
+#icons li {
+    margin: 2px;
+    position: relative;
+    padding: 4px 0;
+    cursor: pointer;
+    float: left;
+    list-style: none;
+}
+#icons span.ui-icon {
+    float: left;
+    margin: 0 4px;
+}
+.fakewindowcontain .ui-widget-overlay {
+    position: absolute;
+}
+
+.marcador-contador{text-align: right; float: right;}
+.ui-accordion .ui-accordion-header {
+    padding: 1em 1em 1em 2.4em;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    margin-top: 2px;
+    min-height: 0;
+}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus{
+    border-bottom: 3px solid #b24b2f;
+}
+.ui-widget-content{
+    border-bottom: 1px solid #ae4325;
+}
+.ui-widget-header{
+    border-bottom: 3px solid #ae4325;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+    border-bottom: 3px solid #e47e25;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
+    border-bottom: 3px solid #e47e25;
+}
+/* ---- botoes meio ---- */
+.adm{
+    background: url('../images/person-icon.png') no-repeat ;
+}
+.adm:hover{ background:
+                url('../images/person-icon.png') no-repeat ;
+}
+
+/* tirar bullets */
+ul {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 350px;
+    font-size:1.3em;
+    text-align:right;
+    transition: all 1s;
+}
+/* posicionar */
+ul li {
+    position: relative;
+}
+/*posicionar submenus*/
+li ul {
+    position: absolute;
+    left: 350px;
+    top: 0;
+    display: none;
+}
+/* link bonitao */
+ul li a {
+    display: block;
+    font-weight: bold;
+    text-decoration: none !important;
+    color: #ae4225;
+    background: #575655;
+    letter-spacing: -1px;
+    padding: 30px 25px 25px 0px;
+    border-bottom: 2px solid #ae4225;
+    transition: all .5s;
+}
+ul li a:hover{
+    border-bottom: 5px solid #b24b2f;
+}
+/* selecionado */
+li.selected{
+    background-color: #e59124 !important;
+}
+/* maldito IE */
+/* Fix IE. Hide from IE Mac \*/
+* html ul li { float: left; }
+* html ul li a { height: 1%; }
+/* End */
+
+/* mostrando o submenu */
+li:hover ul { display: block; }
+
+/* estilizando o hover */
+ul li a:hover{
+    text-decoration:underline;
+    background: #999; }
+.navigation{ background: #e47e25}
+/* --- .botoes meio ---- */
+.spacer{height: 15px; clear: both}
+/* ---  botoes principais = menu esquerdo black --- */
+#blacknav ul li a{
+    background: #fff !important;
+    color:#94a4a4;
+    width: 100px;
+    text-align: center;
+    font-size:70%;
+    padding: 15px 35px;
+    border-bottom:1px solid #404041;
+    margin-top:1px; 
+}
+.newPerfil{
+    color:#ae4325;
+    border-bottom: #ae4325 solid 2px;
+    background: #e47e25;
+    text-align: center;
+    padding-left: 20px;
+    transition: all 1s;
+}
+.newPerfil:hover{
+    color:#b24b2f;
+    background: #e59124;
+}
+.perfil, .avatar, .persons, .edit, .metrics, .roi{
+    color:#333;
+    border-bottom: #424241 solid 3px;
+    transition: all 1s;
+}
+.perfil:hover, .avatar:hover, .persons:hover, .edit:hover, .metrics:hover, .roi:hover{
+    color:#333;
+    border-bottom: #424241 solid 3px;
+}
+.avatar{
+    background: url('../images/avatar.png') no-repeat #575655;
+}
+.avatar:hover{ background:
+                   url('../images/avatar.png') no-repeat #999;
+}
+.persons{
+    background: url('../images/persons.png') no-repeat #575655;
+}
+.persons:hover{ background:
+                    url('../images/persons.png') no-repeat #999;
+}
+.edit{
+    background: url('../images/edit.png') no-repeat #575655;
+}
+.edit:hover{ background:
+                 url('../images/edit.png') no-repeat #999;
+}
+.metrics{
+    background: url('../images/metrics.png') no-repeat #575655;
+}
+.metrics:hover{ background:
+                    url('../images/metrics.png') no-repeat #999;
+}
+.roi{
+    background: url('../images/roi.png') no-repeat #575655;
+}
+.roi:hover{ background:
+                url('../images/roi.png') no-repeat #999;
+}
+/* -- demo2 --*/
+.avatar-photo{
+    width: 133px;
+}
+.avatar-photo-btn{
+    cursor: pointer;
+    height: 50px;
+    padding:10px 22px;
+    color: #393937;
+    background: #616160;
+    visibility: hidden;
+    -webkit-border-bottom-right-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.avatar-photo:hover > .avatar-photo-btn{
+    visibility: visible !important;
+
+}
+
+.miolo-header{
+    color: #f00;
+    background: #222;
+    width: 750px;
+    padding-left: -40px;
+    height: 40px;
+    padding-left: 20px;
+    line-height:40px;
+    margin-top:-65px;
+}
+#miolo1 h2{
+    color: #fff;
+}
+#lmiolo1{
+    float: left;
+}
+#rmiolo1{
+    float: right;
+}
+#miolo2{margin-left:0}
+#lmiolo2{width: 300px; float: left;}
+#rmiolo2{width: 300px; float: right;}
+#feedback { font-size: 1.4em; }
+#selectable .ui-selecting { background: #94a4a4; color: #dadada; }
+#selectable .ui-selected { background: #94a4a4; color: #575655; }
+#selectable { list-style-type: none; margin: 0; padding: 0; }
+#selectable li { padding: 0.4em; font-size: 1.1em; height: 18px; }
+#lmiolo2 ol li, #rmiolo2 ol li {border-bottom: 1px solid #404041 !important; border: 0; color: #94a4a4; background: #fff; padding: 15px 5px 15px 35px; cursor: pointer;}
+#lmiolo2 h2, #rmiolo2 h2{
+    background: #222;
+    height: 40px;
+    padding-left: 20px;
+    line-height: 40px;
+    margin-bottom: 0px
+}
+.logo-fake{
+    margin-left: 200px
+}

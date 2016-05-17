@@ -1,0 +1,35 @@
+/* 
+    Created on : 29/09/2015, 29/09/2015 16:50:41
+    Author     : weverton
+*/
+
+.logo-central {
+	width: 400px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -200px;
+	margin-top: -170px;
+}
+
+.form-top-left {
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
+.page-content-wrapper .mapa-content {
+	padding: 0;
+}
+
+/*
+
+.form-top-right {
+        padding-top: 10px;
+        padding-right: 10px;
+}
+
+*/
+.form-botton-right {
+        padding-bottom: 10px;
+        padding-right: 10px;
+}
