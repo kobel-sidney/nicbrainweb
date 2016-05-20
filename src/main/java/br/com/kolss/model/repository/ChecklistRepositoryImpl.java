@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.com.kolss.model.entities.*;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,10 +22,6 @@ import br.com.kolss.dto.QuantidadeChecklistsPorLocalDTO;
 import br.com.kolss.dto.QuantidadeStatusChecklistPorLocalDTO;
 import br.com.kolss.exception.DaoException;
 import br.com.kolss.filtro.ChecklistFiltro;
-import br.com.kolss.model.entities.Checklist;
-import br.com.kolss.model.entities.ChecklistComentario;
-import br.com.kolss.model.entities.ChecklistMensagem;
-import br.com.kolss.model.entities.StatusEnum;
 
 
 @Repository
@@ -92,7 +89,7 @@ public class ChecklistRepositoryImpl extends AbstractRepository  implements Chec
 		criteria.setResultTransformer(Criteria.ROOT_ENTITY);
 		return criteria.list();
 	}
-	
+
 	/**
 	 * Retorna todos os Checklists Em Aberto que podem ser visualizados pelo
 	 * Usuário Solicitante.<br>
@@ -142,7 +139,10 @@ public class ChecklistRepositoryImpl extends AbstractRepository  implements Chec
 	public List<Checklist> obterPorFiltro(ChecklistFiltro checklistFiltro) {
 		
 		logger.debug("ChecklistRepository.getAllChecklists");
-		return this.criarCriteriaFiltro(checklistFiltro).list();
+
+		Criteria criteria = criarCriteriaFiltro(checklistFiltro);
+		criteria.setResultTransformer(Criteria.ROOT_ENTITY);
+		return criteria.list();
 	}
 	
 	/**
@@ -181,6 +181,16 @@ public class ChecklistRepositoryImpl extends AbstractRepository  implements Chec
 		}
 		if (isValidId(checklistFiltro.getIdStatus())) {
 			criteria.add(Restrictions.eq("status.id", checklistFiltro.getIdStatus()));
+		}
+		//Para evitar de criar um método para cada combinação de status
+		if (checklistFiltro.getStatus() != null) {
+			Long statusIdList[] = new Long[checklistFiltro.getStatus().length];
+
+			for (int i = 0; i < checklistFiltro.getStatus().length; i++) {
+				statusIdList[i] = checklistFiltro.getStatus()[i].getId();
+			}
+
+			criteria.add(Restrictions.in("status.id", statusIdList));
 		}
 		if (checklistFiltro.getDataHoraInicio() != null) {
 			criteria.add(Restrictions.or(

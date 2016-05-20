@@ -1,5 +1,8 @@
 package br.com.kolss.filtro;
 
+import br.com.kolss.model.entities.Status;
+import br.com.kolss.model.entities.StatusEnum;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -13,8 +16,9 @@ public class ChecklistFiltro {
 	private Serializable idUsuarioContexto;
 	private Date DataPrevistaInicio;
 	private Date DataPrevistaFim;
-
-	
+	//Passar array de status que deseja, assim evitamos de criar vários métodos redundantes
+	//Exemplo: obterEmAndamento(), obterEmAgendamento()
+	private StatusEnum[] status;
 
 	public ChecklistFiltro(Serializable filtroIdEvento,
 			Serializable filtroIdLocal,
@@ -115,7 +119,12 @@ public class ChecklistFiltro {
 	public void setDataPrevistaFim(Date dataPrevistaFim) {
 		DataPrevistaFim = dataPrevistaFim;
 	}
-	
-	
-	
+
+	public StatusEnum[] getStatus() {
+		return status;
+	}
+
+	public void setStatus(StatusEnum[] status) {
+		this.status = status;
+	}
 }
