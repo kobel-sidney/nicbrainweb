@@ -7,6 +7,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 
+import br.com.kolss.model.entities.*;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.ToggleEvent;
@@ -21,12 +22,6 @@ import br.com.kolss.datamodel.ChecklistDataModel;
 import br.com.kolss.datamodel.ChecklistMensagemDataModel;
 import br.com.kolss.datamodel.ProcedimentoDataModel;
 import br.com.kolss.filtro.ChecklistFiltro;
-import br.com.kolss.model.entities.Checklist;
-import br.com.kolss.model.entities.Endereco;
-import br.com.kolss.model.entities.Evento;
-import br.com.kolss.model.entities.Local;
-import br.com.kolss.model.entities.OperacaoChecklist;
-import br.com.kolss.model.entities.Procedimento;
 import br.com.kolss.service.ChecklistService;
 import br.com.kolss.service.MensagemService;
 
@@ -109,8 +104,9 @@ public class ListaDeChecklistsDoRastreamentoDeChecklist {
 		ChecklistFiltro checklistFiltro = new ChecklistFiltro();
 		checklistFiltro.setIdEvento(idEvento);
 		checklistFiltro.setIdUsuarioContexto(idDoUsuarioDoContexto);
+		checklistFiltro.setStatus(new StatusEnum[] {StatusEnum.AGUARDANDO, StatusEnum.EM_ANDAMENTO, StatusEnum.FINALIZADA, StatusEnum.PAUSADA});
 		
-		List<Checklist> lst = service.obterNaoCanceladoPorFiltro(checklistFiltro);
+		List<Checklist> lst = service.obterPorFiltro(checklistFiltro);
 		
 		this.dataModel = new ChecklistDataModel(lst);
 		return this.dataModel;
