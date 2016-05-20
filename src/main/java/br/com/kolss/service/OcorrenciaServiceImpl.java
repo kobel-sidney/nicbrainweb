@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import br.com.kolss.model.entities.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,20 +22,6 @@ import br.com.kolss.dto.RetornoAberturaOcorrenciaDTO;
 import br.com.kolss.dto.TipoClassificacaoOcorrenciaDTO;
 import br.com.kolss.enums.RetornoEnum;
 import br.com.kolss.exception.ServiceException;
-import br.com.kolss.model.entities.Atividade;
-import br.com.kolss.model.entities.AtividadeOcorrencia;
-import br.com.kolss.model.entities.ClassificacaoOcorrencia;
-import br.com.kolss.model.entities.ClassificacaoProcedimento;
-import br.com.kolss.model.entities.Evento;
-import br.com.kolss.model.entities.GravidadeOcorrencia;
-import br.com.kolss.model.entities.Local;
-import br.com.kolss.model.entities.Mensagem;
-import br.com.kolss.model.entities.Ocorrencia;
-import br.com.kolss.model.entities.Procedimento;
-import br.com.kolss.model.entities.Status;
-import br.com.kolss.model.entities.StatusEnum;
-import br.com.kolss.model.entities.TipoClassificacao;
-import br.com.kolss.model.entities.Usuario;
 import br.com.kolss.model.repository.OcorrenciaRepository;
 import br.com.kolss.model.repository.TipoClassificacaoRepository;
 import br.com.kolss.util.DataUtil;
@@ -261,6 +248,15 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 		corpoMensagem.append(quebraLinha);
 		corpoMensagem.append("Responsável: ");
 		corpoMensagem.append(usuario.getNome());
+
+		//Todos teefones associados a esse usuario/pessoa
+		if (usuario.getPessoa().getTelefonesPessoais() != null && !usuario.getPessoa().getTelefonesPessoais().isEmpty()) {
+			for (TelefonePessoa telefone : usuario.getPessoa().getTelefonesPessoais()) {
+				corpoMensagem.append(quebraLinha);
+				corpoMensagem.append("Telefone " + telefone.getTipoTelefone() + ": ");
+				corpoMensagem.append(telefone.getNumero());
+			}
+		}
 
 		messageSenderService.enviarMensagem(ocorrencia, mensagem.getId(), tituloMensagem.toString(),
 				corpoMensagem.toString());
