@@ -1,11 +1,7 @@
 package br.com.kolss.service;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import br.com.kolss.model.entities.*;
 import org.apache.log4j.Logger;
@@ -249,13 +245,18 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 		corpoMensagem.append("Responsável: ");
 		corpoMensagem.append(usuario.getNome());
 
-		//Todos teefones associados a esse usuario/pessoa
-		if (usuario.getPessoa().getTelefonesPessoais() != null && !usuario.getPessoa().getTelefonesPessoais().isEmpty()) {
-			for (TelefonePessoa telefone : usuario.getPessoa().getTelefonesPessoais()) {
+		corpoMensagem.append(quebraLinha);
+
+		Set<TelefonePessoa> telefones = usuario.getPessoa().getTelefonesPessoais();
+		if (telefones != null && !telefones.isEmpty()) {
+
+			corpoMensagem.append("Números para contato: ");
+			for (TelefonePessoa telefone : telefones) {
 				corpoMensagem.append(quebraLinha);
-				corpoMensagem.append("Telefone " + telefone.getTipoTelefone() + ": ");
-				corpoMensagem.append(telefone.getNumero());
+				corpoMensagem.append(telefone.getTipoTelefone().getNome() + ": " + telefone.getNumero());
 			}
+		} else {
+			corpoMensagem.append("Nenhum número para contato disponível");
 		}
 
 		messageSenderService.enviarMensagem(ocorrencia, mensagem.getId(), tituloMensagem.toString(),
